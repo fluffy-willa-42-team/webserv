@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 09:13:43 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 10:05:57 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,7 @@ class Request {
 			return (*this);
 		}
 
-		Request(const std::string& input){
-			std::cout << input << std::endl;
-		}
+		Request(const std::string& input) : header(input){}
 };
 
 /* ************************************************************************** */
