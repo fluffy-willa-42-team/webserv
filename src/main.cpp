@@ -9,7 +9,7 @@
 //	Accept-Encoding: gzip, deflate, br
 //	Connection: keep-alive
 
-#define TEST_VALUE "GET/ HTTP/1.1\n\
+#define TEST_VALUE "GET / HTTP/1.1\n\
 Host: www.example.com\n\
 User-Agent: Mozilla/5.0\n\
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\n\
