@@ -10,4 +10,7 @@ class Response {
 		~Response();
 		Response(const Response& other);
 		const Response& operator=(const Response& other);
+
+		virtual std::string toString() = 0;
+		
 };
