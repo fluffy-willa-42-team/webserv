@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 11:35:03 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 12:30:51 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 #include <iostream>
 
 // {FIRST}: {SECOND}
-pair<string, string> parseSingleLine(const string& line){
+bool parseSingleLine(pair<string, string>& res, const string& line){
 	size_t i = 0;
 	while (i < line.length() && line[i] != ':'){
 		i++;
 	}
-	return pair<string, string>(line.substr(0, i), line.substr(i + 2));
+	if (i == line.length())
+		return false;
+	res.first = line.substr(0, i);
+	res.second = line.substr(i + 2);
+	return true;
 }
 
 bool RequestHeader::parse_line(const string& line, size_t index){
@@ -57,18 +61,26 @@ bool RequestHeader::parseStartLine(const string& line){
 }
 
 bool RequestHeader::parseHostHeader(const string& line){
-	pair<string, string> data = parseSingleLine(line);
-	if (data.first != "Host"){
-		cout << "error" << endl;
-		return false;
+	pair<string, string> data;
+	if (!parseSingleLine(data, line) || data.first != "Host")
+		throw InvalidRequest();
+	if (parseSingleLine(data, data.second)){
+		this->host = data.first;
+		// this->port = (size_t) data.second;
 	}
-	cout << data.first << "\t= " << data.second << endl;
-	this->host = data.second;
+	else {
+		this->host = data.second;
+	}
 	return true;
 }
 
 bool RequestHeader::parseHeader(const string& line){
-	pair<string, string> data = parseSingleLine(line);
+	pair<string, string> data;
+	bool status = parseSingleLine(data, line);
+	if (!status){
+		cout << "error" << endl;
+		return false;
+	}
 	cout << data.first << "\t= " << data.second << endl;
 	return true;
 }
