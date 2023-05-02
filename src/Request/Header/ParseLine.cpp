@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 12:30:51 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 12:34:33 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool parseSingleLine(pair<string, string>& res, const string& line){
 	while (i < line.length() && line[i] != ':'){
 		i++;
 	}
-	if (i == line.length())
+	if (i >= line.length() - 1)
 		return false;
 	res.first = line.substr(0, i);
 	res.second = line.substr(i + 2);
@@ -41,7 +41,7 @@ bool RequestHeader::parseStartLine(const string& line){
 		i++;
 	}
 	if (i >= line.length())
-		return false;
+		throw InvalidRequest();
 	this->method = line.substr(0, i);
 	
 	string rest = line.substr(i + 1);
@@ -50,10 +50,10 @@ bool RequestHeader::parseStartLine(const string& line){
 		i++;
 	}
 	if (i >= rest.length())
-		return false;
+		throw InvalidRequest();
 	this->path = rest.substr(0, i);
 	if (rest.length() - i < 1)
-		return false;
+		throw InvalidRequest();
 	this->protocol = rest.substr(i + 1);
 
 	cout << this->protocol << " | " << this->method << " | " << this->path << endl;
@@ -71,16 +71,14 @@ bool RequestHeader::parseHostHeader(const string& line){
 	else {
 		this->host = data.second;
 	}
+	cout << this->host << ":" << this->port << endl;
 	return true;
 }
 
 bool RequestHeader::parseHeader(const string& line){
 	pair<string, string> data;
-	bool status = parseSingleLine(data, line);
-	if (!status){
-		cout << "error" << endl;
-		return false;
-	}
+	if (!parseSingleLine(data, line))
+		throw InvalidRequest();
 	cout << data.first << "\t= " << data.second << endl;
 	return true;
 }

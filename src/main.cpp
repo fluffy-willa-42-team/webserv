@@ -10,7 +10,7 @@
 //	Connection: keep-alive
 
 #define TEST_VALUE "GET / HTTP/1.1\n\
-Host: www.example.com\n\
+Host: www.example.com:\n\
 User-Agent: Mozilla/5.0\n\
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\n\
 Accept-Language: en-GB,en;q=0.5\n\
@@ -19,7 +19,7 @@ Connection: keep-alive"
 
 
 int main(){
-	char test[245] = TEST_VALUE;
+	char test[246] = TEST_VALUE;
 
 	Request header(test);
 	return 0;
