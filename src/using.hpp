@@ -1,41 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Request.hpp                                        :+:      :+:    :+:   */
+/*   using.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 10:34:56 by awillems         ###   ########.fr       */
+/*   Created: 2023/05/02 10:54:46 by awillems          #+#    #+#             */
+/*   Updated: 2023/05/02 10:55:38 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_HPP
-# define REQUEST_HPP
+#ifndef USING_HPP
+# define USING_HPP
 
 /* ************************************************************************** */
 
 #include <iostream>
-#include <RequestHeader.hpp>
 
 /* ************************************************************************** */
 
-class Request {
-	private:
-		RequestHeader header;
-	protected:
-	public:
-		~Request(){}
-		Request(const Request& other) : header(other.header){}
-
-		const Request& operator=(const Request& other){
-			this->header = other.header;
-			return (*this);
-		}
-
-		Request(const std::string& input) : header(input){}
-};
+using std::pair;
+using std::string;
+using std::endl;
+using std::cout;
 
 /* ************************************************************************** */
 
-#endif /* REQUEST_HPP */
+#endif /* USING_HPP */

@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 10:26:14 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 10:55:34 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,25 @@
 #include <sstream>
 #include <string>
 
+#include "using.hpp"
+
 /* ************************************************************************** */
 
 class RequestHeader {
 	private:
-		std::string method;			//	GET
-		std::string path;			//	/test
-		std::string protocol;		//	HTTP/1.1
-		std::string host;			//	Host: www.example.com
-		std::string userAgent;		//	User-Agent: Mozilla/5.0
-		std::string accept;			//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-		std::string connection;		//	Connection: keep-alive
-
-		RequestHeader(){}
+		string method;			//	GET
+		string path;			//	/test
+		string protocol;		//	HTTP/1.1
+		string host;			//	Host: www.example.com
+		string userAgent;		//	User-Agent: Mozilla/5.0
+		string accept;			//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+		string connection;		//	Connection: keep-alive
 
 	// ParseLine.cpp {
-		void parse_line(const std::string& line, size_t index);
-		void parseStartLine(const std::string& line);
-		void parseHostHeader(const std::string& line);
-		void parseHeader(const std::string& line);
+		void parse_line(const string& line, size_t index);
+		void parseStartLine(const string& line);
+		void parseHostHeader(const string& line);
+		void parseHeader(const string& line);
 	// }
 		
 	protected:
@@ -53,9 +53,9 @@ class RequestHeader {
 			return (*this);
 		}
 
-		RequestHeader(const std::string& input){
+		RequestHeader(const string& input){
 			std::stringstream test(input);
-			std::string line;
+			string line;
 
 			size_t i = 0;
 			while (std::getline(test, line))
