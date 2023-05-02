@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 10:34:56 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 11:41:33 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ class Request {
 		RequestHeader header;
 	protected:
 	public:
-		~Request(){}
 		Request(const Request& other) : header(other.header){}
 
 		const Request& operator=(const Request& other){
