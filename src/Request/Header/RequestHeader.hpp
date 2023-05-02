@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 10:24:06 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 10:26:14 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class RequestHeader {
 		std::string accept;			//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
 		std::string connection;		//	Connection: keep-alive
 
+		RequestHeader(){}
 
 	// ParseLine.cpp {
 		void parse_line(const std::string& line, size_t index);
@@ -41,11 +42,14 @@ class RequestHeader {
 		
 	protected:
 	public:
-		RequestHeader(){}
 		~RequestHeader(){}
-		RequestHeader(const RequestHeader& other){(void) other;}
+
+		RequestHeader(const RequestHeader& other){
+			(void) other; // TODO
+		}
+		
 		const RequestHeader& operator=(const RequestHeader& other){
-			(void) other;
+			(void) other; // TODO
 			return (*this);
 		}
 
