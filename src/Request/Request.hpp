@@ -1,11 +1,5 @@
 #include <iostream>
-
-class Header {
-	Header();
-	~Header();
-	Header(const Header& other);
-	const Header& operator=(const Header& other);
-};
+#include <Header.hpp>
 
 class Request {
 	private:
