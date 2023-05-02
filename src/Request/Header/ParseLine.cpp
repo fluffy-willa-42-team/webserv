@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 10:54:32 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/02 10:59:41 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void RequestHeader::parseStartLine(const string& line){
 }
 
 void RequestHeader::parseHostHeader(const string& line){
-	cout << line << endl;
-	parseSingleLine(line);
+	pair<string, string> data = parseSingleLine(line);
+	cout << data.first << " = " << data.second << endl;
 }
 
 void RequestHeader::parseHeader(const string& line){
-	cout << line << endl;
-	parseSingleLine(line);
+	pair<string, string> data = parseSingleLine(line);
+	cout << data.first << " = " << data.second << endl;
 }
