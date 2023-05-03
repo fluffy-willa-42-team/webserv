@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:48 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:45:40 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:46:24 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void test(const string& value, bool success_expected)
 
 	if (can_print(header, success_expected)){
 		cout << "\e[0;36m\"" << value << "\"\e[0m" << endl;
-		cout << "\e[0;34m\"" << "Res: " << header << "\"\e[0m" << endl;
+		cout << "\e[0;34m" << "Res: " << header << "\e[0m" << endl;
 		cout << "Expected: " << (success_expected ? "true" : "false") << endl;
 		cout << "Result:   " << (header.isValid() ? "true" : "false") << endl;
 	}
