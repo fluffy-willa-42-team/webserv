@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:11:56 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:44:53 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@
 /* ************************************************************************** */
 
 class RequestHeader {
-	private:
+	public:
+		RequestHeader(const string& input);
+		
 		bool valid;
 		
 		string method;			//	GET
@@ -35,7 +37,10 @@ class RequestHeader {
 		string userAgent;		//	User-Agent: Mozilla/5.0
 		string accept;			//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
 		string connection;		//	Connection: keep-alive
-
+		
+		class InvalidRequest : public std::exception { public: virtual const char* what() const throw() { return ("Invalid Request"); } };
+	
+	private:
 	// ParseLine.cpp {
 		bool parse_line(const string& line, size_t index);
 		bool parseStartLine(const string& line);
@@ -44,10 +49,6 @@ class RequestHeader {
 	// }
 		
 	protected:
-	public:
-		RequestHeader(const string& input);
-		class InvalidRequest : public std::exception { public: virtual const char* what() const throw() { return ("Invalid Request"); } };
-		bool isValid(){ return this->valid; }
 };
 
 /* ************************************************************************** */
