@@ -6,13 +6,17 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:27:20 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:07:20 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:10:30 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 
 std::ostream& operator<<(std::ostream& out, const Request& req){
+	if (!req.header.valid){
+		out << "Invalid Request";
+		return out;
+	}
 	out << req.header.method << " " << req.header.path << " {" << endl;
 	out << "    protocol: "		<< req.header.protocol	<< endl;
 	out << "    host: "			<< req.header.host	<< ":" << req.header.port << endl;
