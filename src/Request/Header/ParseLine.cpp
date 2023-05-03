@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:38:42 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:52:22 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // {FIRST}: {SECOND}
 bool parseSingleLine(pair<string, string>& res, const string& line, const string& sep){
 	size_t i = line.find(sep);
-	if (i == string::npos && i + sep.length() >= line.length())
+	if (i == string::npos || i + sep.length() > line.length())
 		return false;
 	res.first = line.substr(0, i);
 	res.second = line.substr(i + sep.length());
