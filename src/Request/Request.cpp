@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:27:20 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 11:53:24 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:56:21 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ Request::Request(const std::string& input) :
 }
 
 std::ostream& operator<<(std::ostream& out, const Request& req){
-	if (!req.header.valid){
-		out << "Invalid Request";
-		return out;
-	}
+	// if (!req.header.valid){
+	// 	out << "Invalid Request";
+	// 	return out;
+	// }
 	out << req.header.method << " " << req.header.path << " {" << endl
 	<< "    header: {" << endl
 	<< "        protocol: "		<< req.header.protocol	<< endl

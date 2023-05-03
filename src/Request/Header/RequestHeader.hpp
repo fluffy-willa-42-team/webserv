@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 11:48:20 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:03:32 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,19 @@ class RequestHeader {
 
 		map<string, string> non_mandatory;
 	
-		class InvalidRequest : public std::exception { public: virtual const char* what() const throw() { return ("Invalid Request"); } };
+		class InvalidRequest : public std::exception {
+			private:
+				string message;
+			public:
+				InvalidRequest(): message("Invalid Request"){}
+				InvalidRequest(const string& message): message("Invalid Request"){
+					this->message += ": " + message;
+				}
+				~InvalidRequest() throw() {}
+				virtual const char* what() const throw() {
+					return this->message.c_str();
+				}
+		};
 	
 	private:
 		bool parse_line(const string& line, size_t index);

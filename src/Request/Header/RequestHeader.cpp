@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:13:57 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:04:40 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ RequestHeader::RequestHeader(const string& input)
 			i++;
 		}
 		if (i < 2){
-			throw InvalidRequest();
+			throw InvalidRequest("Missing Content");
 		}
 		this->valid = true;
 	}
-	catch(const InvalidRequest& e){}
+	catch(const InvalidRequest& e){
+		cout << e.what() << endl;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 11:26:52 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:06:05 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ bool RequestHeader::parse_line(const string& line, size_t index){
 bool RequestHeader::parseStartLine(const string& line){
 	size_t i = line.find(' ');
 	if (i == string::npos || i < 1)
-		throw InvalidRequest();
+		throw InvalidRequest("Invalid Host Header");
 	
 	this->method = line.substr(0, i);
 	string rest = line.substr(i + 1);
 	
 	i = rest.find(' ');
 	if (i == string::npos || rest.length() - i - 1 < 1)
-		throw InvalidRequest();
+		throw InvalidRequest("Invalid Host Header");
 	
 	this->path = rest.substr(0, i);
 	this->protocol = rest.substr(i + 1);
@@ -54,14 +54,14 @@ bool RequestHeader::parseHostHeader(const string& line){
 	if (!parseSingleLine(data, line, ": ")
 		|| data.first != "Host"
 		|| data.second.length() < 1)
-		throw InvalidRequest();
+		throw InvalidRequest("Invalid Header");
 	if (parseSingleLine(data, data.second, ":")){
 		this->host = data.first;
 		if (data.second.length() < 1)
-			throw InvalidRequest();
+			throw InvalidRequest("Missing Port");
 		std::istringstream(data.second) >> this->port;
 		if (this->port > 65535)
-			throw InvalidRequest();
+			throw InvalidRequest("Port Invalid");
 	}
 	else {
 		this->host = data.second;
@@ -73,7 +73,7 @@ bool RequestHeader::parseHeader(const string& line){
 	pair<string, string> data;
 	if (!parseSingleLine(data, line, ": ")
 		|| data.first.length() < 1)
-		throw InvalidRequest();
+		throw InvalidRequest("Wrong Header Key");
 	this->non_mandatory[data.first] = data.second;
 	return true;
 }
