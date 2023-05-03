@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:34:10 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:27:11 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void test(const string& value, bool success_expected);
 #define HEADER_TESTS {\
 	{ true,		"Host: www.example.com\n"		},\
 	{ true,		"Host: www.example.com:80\n"	},\
-	{ true,		"Host: www.example.com:80000\n"	},\
+	{ false,	"Host: www.example.com:80000\n"	},\
 	{ true,		"Host: www.example.com:0\n"		},\
 	{ false,	"Host: www.example.com:\n"		},\
 	{ false,	"Host: "						},\

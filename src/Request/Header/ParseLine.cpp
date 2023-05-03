@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:52:22 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:26:52 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ bool RequestHeader::parseHostHeader(const string& line){
 		throw InvalidRequest();
 	if (parseSingleLine(data, data.second, ":")){
 		this->host = data.first;
-		if (data.second.length() < 1){
+		if (data.second.length() < 1)
 			throw InvalidRequest();
-		}
-		// this->port = (size_t) data.second;
+		std::istringstream(data.second) >> this->port;
+		if (this->port > 65535)
+			throw InvalidRequest();
 	}
 	else {
 		this->host = data.second;
