@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:12:13 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:37:46 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ class Request {
 
 		bool isValid(){ return this->header.isValid(); }
 		Request(const std::string& input) : header(input){}
+
+		friend std::ostream& operator<<(std::ostream& out, const Request& req);
 };
 
 /* ************************************************************************** */
