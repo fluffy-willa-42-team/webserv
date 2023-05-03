@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:54:46 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:46:51 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:54:08 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 #include <iostream>
 
 /* ************************************************************************** */
+
+typedef struct unitests {
+    int			success_expected;
+    const char* value;
+}	unitests;
 
 #define VERBOSE_TEST true
 
