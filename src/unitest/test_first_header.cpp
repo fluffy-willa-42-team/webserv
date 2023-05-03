@@ -6,11 +6,12 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:51:55 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:39:43 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include "test.hpp"
 
 void test(const string& value, bool success_expected);
 
@@ -41,7 +42,7 @@ void test(const string& value, bool success_expected);
 }
 
 #define CORRECT_HEADERS_TEST "\
-Host: www.example.com:\n\
+Host: www.example.com\n\
 User-Agent: Mozilla/5.0\n\
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\n\
 Accept-Language: en-GB,en;q=0.5\n\

@@ -6,11 +6,12 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:48 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:09:35 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:39:33 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include "test.hpp"
 
 bool can_print(Request& header, bool success_expected){
 	return (VERBOSE_TEST
@@ -27,6 +28,7 @@ void test(const string& value, bool success_expected)
 
 	if (can_print(header, success_expected)){
 		cout << "\e[0;36m\"" << value << "\"\e[0m" << endl;
+		cout << "Res: " << header << endl;
 		cout << "Expected: " << (success_expected ? "true" : "false") << endl;
 		cout << "Result:   " << (header.isValid() ? "true" : "false") << endl;
 	}

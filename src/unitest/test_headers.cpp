@@ -6,23 +6,27 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:58:32 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:39:38 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include "test.hpp"
 
 void test(const string& value, bool success_expected);
 
-#define HEADER_TESTS_LENGTH 7
+#define HEADER_TESTS_LENGTH 10
 #define HEADER_TESTS {\
-	{ true,		"Host: www.example.com\n"	},\
-	{ false,	"Host: www.example.com:\n"	},\
-	{ false,	"Host: "					},\
-	{ false,	": www.example.com\n"		},\
-	{ false,	"\n"			},\
-	{ false,	""		},\
-	{ false,	"::"		},\
+	{ true,		"Host: www.example.com\n"		},\
+	{ true,		"Host: www.example.com:80\n"	},\
+	{ true,		"Host: www.example.com:80000\n"	},\
+	{ true,		"Host: www.example.com:0\n"		},\
+	{ false,	"Host: www.example.com:\n"		},\
+	{ false,	"Host: "						},\
+	{ false,	": www.example.com\n"			},\
+	{ false,	"\n"							},\
+	{ false,	""								},\
+	{ false,	"::"							},\
 }
 
 #define CORRECT_HEADERS_TEST "GET / HTTP/1.1\n"
