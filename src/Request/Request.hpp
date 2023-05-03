@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 11:41:33 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:12:13 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Request {
 			return (*this);
 		}
 
+		bool isValid(){ return this->header.isValid(); }
 		Request(const std::string& input) : header(input){}
 };
 

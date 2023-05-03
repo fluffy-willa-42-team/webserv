@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 07:29:07 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:17:55 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ bool RequestHeader::parseStartLine(const string& line){
 	
 	this->path = rest.substr(0, i);
 	this->protocol = rest.substr(i + 1);
-
-	cout << "\"" << this->method << "\" \"" << this->path << "\" \"" << this->protocol << "\"" << endl;
 	return true;
 }
 

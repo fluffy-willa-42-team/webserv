@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 12:28:53 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:11:56 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 
 class RequestHeader {
 	private:
+		bool valid;
+		
 		string method;			//	GET
 		string path;			//	/test
 		string protocol;		//	HTTP/1.1
@@ -45,6 +47,7 @@ class RequestHeader {
 	public:
 		RequestHeader(const string& input);
 		class InvalidRequest : public std::exception { public: virtual const char* what() const throw() { return ("Invalid Request"); } };
+		bool isValid(){ return this->valid; }
 };
 
 /* ************************************************************************** */
