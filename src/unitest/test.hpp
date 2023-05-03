@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   test.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/03 08:47:59 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:11:05 by awillems         ###   ########.fr       */
+/*   Created: 2023/05/03 09:39:05 by awillems          #+#    #+#             */
+/*   Updated: 2023/05/03 09:39:23 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Request.hpp"
+#ifndef TEST_HPP
+# define TEST_HPP
 
-//	GET / HTTP/1.1
-//	Host: www.example.com
-//	User-Agent: Mozilla/5.0
-//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-//	Accept-Language: en-GB,en;q=0.5
-//	Accept-Encoding: gzip, deflate, br
-//	Connection: keep-alive
+/* ************************************************************************** */
 
-void test_first_header();
-void test_header();
+typedef struct unitests {
+    int			success_expected;
+    const char* value;
+}	unitests;
 
-int main(){
-	test_first_header();
-	test_header();
-	return 0;
-}
+#define VERBOSE_TEST true
+#define HIDE_SUCCESFULL_TEST false
+
+/* ************************************************************************** */
+
+#endif /* TEST_HPP */
