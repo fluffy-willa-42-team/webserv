@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:44:47 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:08:29 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ RequestHeader::RequestHeader(const string& input)
 			parse_line(line, i);
 			line.clear();
 			i++;
+		}
+		if (i < 2){
+			throw InvalidRequest();
 		}
 		this->valid = true;
 	}
