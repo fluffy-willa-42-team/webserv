@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:27:20 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 11:50:58 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:53:24 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ std::ostream& operator<<(std::ostream& out, const Request& req){
 		out << "        " << ite->first << ": "	<< ite->second << endl;
 	}
 	out << "    }" << endl
-	<< "    data: {";
-	if (req.data.length() > 0){
-		out << endl << req.data << endl << "    ";
-	}
-	out << "}" << endl
+	<< "    data: {"
+	<< ((req.data.length() > 0) ? "\n" + req.data + "\n    " : "")
+	<< "}" << endl
 	<< "}";
 	return out;
 }
