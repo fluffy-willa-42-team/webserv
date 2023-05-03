@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:59 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:14:44 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:47:42 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@
 void test_first_header();
 void test_host_header();
 void test_header();
+void test_data();
 
 int main(){
 	test_first_header();
 	test_host_header();
 	test_header();
+	test_data();
 	return 0;
 }

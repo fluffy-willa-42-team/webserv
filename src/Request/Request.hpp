@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:44:31 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 11:31:49 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,11 @@
 class Request {
 	private:
 		RequestHeader header;
-	protected:
+		string data;
 	public:
-		Request(const Request& other) : header(other.header){}
-
-		const Request& operator=(const Request& other){
-			this->header = other.header;
-			return (*this);
-		}
+		Request(const std::string& input);
 
 		bool isValid(){ return this->header.valid; }
-		Request(const std::string& input) : header(input){}
 
 		friend std::ostream& operator<<(std::ostream& out, const Request& req);
 };
