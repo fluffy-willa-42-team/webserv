@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:48 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:46:24 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:53:28 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,4 @@ void test(const string& value, bool success_expected)
 
 	if (can_print(header, success_expected))
 		cout << endl << endl << endl;
-	else if (VERBOSE_TEST)
-		cout << endl;
 }
