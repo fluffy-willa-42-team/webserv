@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:26:13 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:44:47 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ RequestHeader::RequestHeader(const string& input)
 	{
 		std::stringstream test(input);
 		string line;
+
+		if (input.length() < 1)
+			return ;
 
 		size_t i = 0;
 		while (std::getline(test, line))

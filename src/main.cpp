@@ -48,7 +48,7 @@ Accept-Language: en-GB,en;q=0.5\n\
 Accept-Encoding: gzip, deflate, br\n\
 Connection: keep-alive"
 
-void test(const string& value, unitests& unitest)
+void test(const string& value, bool success_expected)
 {
 	if (VERBOSE_TEST)
 		cout << "\e[0;36m" << value << "\e[0m" << endl;
@@ -56,11 +56,11 @@ void test(const string& value, unitests& unitest)
 	Request header(value);
 
 	if (VERBOSE_TEST){
-		cout << "Expected: " << (unitest.success_expected ? "true" : "false") << endl;
+		cout << "Expected: " << (success_expected ? "true" : "false") << endl;
 		cout << "Result:   " << (header.isValid() ? "true" : "false") << endl;
 	}
 
-	if (header.isValid() == unitest.success_expected){
+	if (header.isValid() == success_expected){
 		cout << "\e[0;32m" << "Success !" << "\e[0m" << endl;
 	}
 	else {
@@ -74,8 +74,9 @@ void test(const string& value, unitests& unitest)
 int main(){
 	unitests unitests_headers[] = HEADER_TESTS;
 
-	for (int i = 0; i < HEADER_TESTS_LENGTH; i++){// + CORRECT_HEADERS_TEST
-		test(string("") + unitests_headers[i].value, unitests_headers[i]);
+	for (int i = 0; i < HEADER_TESTS_LENGTH; i++){
+		test(string("") + unitests_headers[i].value, false);
+		test(string("") + unitests_headers[i].value + CORRECT_HEADERS_TEST, unitests_headers[i].success_expected);
 	}
 	return 0;
 }
