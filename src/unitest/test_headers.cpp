@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:38:48 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:54:01 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Host: www.example.com:420\n"
 void test_header(){
 	unitests unitests_headers[] = HEADER_TESTS;
 
-	cout << "Test Header" << endl;
+	cout << "Test Non Mandatory Header" << endl;
 	for (int i = 0; i < HEADER_TESTS_LENGTH; i++){
 		test(string() + unitests_headers[i].value, false);
 		test(string() + CORRECT_HEADERS_TEST + unitests_headers[i].value, unitests_headers[i].success_expected);
