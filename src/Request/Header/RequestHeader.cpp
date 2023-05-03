@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:18:22 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:26:13 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 RequestHeader::RequestHeader(const string& input)
 	: valid(false), port(80)
 {
-	if (VERBOSE_TEST)
-		cout << "\e[0;36m" << input << "\e[0m" << endl;
 	try
 	{
 		std::stringstream test(input);
@@ -31,9 +29,5 @@ RequestHeader::RequestHeader(const string& input)
 		}
 		this->valid = true;
 	}
-	catch(const InvalidRequest& e)
-	{
-		if (VERBOSE_TEST)
-			std::cerr << e.what() << '\n';
-	}
+	catch(const InvalidRequest& e){}
 }

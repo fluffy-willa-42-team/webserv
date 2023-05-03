@@ -14,6 +14,7 @@ typedef struct unitests {
     const char* value;
 }	unitests;
 
+#define HEADER_TESTS_LENGTH 18
 #define HEADER_TESTS {\
 	{ true,		"GET / HTTP/1.1\n"	},\
 	{ false,	"GET/ HTTP/1.1\n"	},\
@@ -47,8 +48,13 @@ Connection: keep-alive"
 int main(){
 	unitests unitests_headers[] = HEADER_TESTS;
 
-	for (int i = 0; i < 15; i++){
-		Request header(string() + unitests_headers[i].value + CORRECT_HEADERS_TEST);
+	for (int i = 0; i < HEADER_TESTS_LENGTH; i++){
+		string value = string() + unitests_headers[i].value + CORRECT_HEADERS_TEST;
+
+		if (VERBOSE_TEST)
+			cout << "\e[0;36m" << value << "\e[0m" << endl;
+
+		Request header(value);
 		if (header.isValid() == unitests_headers[i].success_expected){
 			cout << "\e[0;32m" << "Success !" << "\e[0m" << endl;
 		}
