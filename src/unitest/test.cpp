@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:48 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:43:44 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:44:55 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void test(const string& value, bool success_expected)
 		cout << "\e[0;31m" << "Failure !" << "\e[0m" << endl;
 	}
 
-	if (VERBOSE_TEST)
+	if (can_print(header, success_expected))
 		cout << endl << endl << endl;
+	else if (VERBOSE_TEST)
+		cout << endl;
 }
