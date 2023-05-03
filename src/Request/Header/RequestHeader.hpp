@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:44:53 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:53:13 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ class RequestHeader {
 		string protocol;		//	HTTP/1.1
 		string host;			//	Host: www.example.com
 		size_t port;			//	Host: www.example.com:8080
-		string userAgent;		//	User-Agent: Mozilla/5.0
-		string accept;			//	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-		string connection;		//	Connection: keep-alive
-		
+
+		map<string, string> non_mandatory;
+	
 		class InvalidRequest : public std::exception { public: virtual const char* what() const throw() { return ("Invalid Request"); } };
 	
 	private:

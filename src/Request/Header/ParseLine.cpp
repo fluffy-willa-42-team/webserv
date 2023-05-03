@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:24:19 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 09:54:30 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ bool RequestHeader::parseHostHeader(const string& line){
 }
 
 bool RequestHeader::parseHeader(const string& line){
-	return true;
 	pair<string, string> data;
 	if (!parseSingleLine(data, line, ": "))
 		throw InvalidRequest();
+	this->non_mandatory[data.first] = data.second;
 	cout << data.first << "\t= " << data.second << endl;
 	return true;
 }
