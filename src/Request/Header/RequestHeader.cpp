@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:08:29 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:13:57 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ RequestHeader::RequestHeader(const string& input)
 			return ;
 
 		size_t i = 0;
-		while (std::getline(test, line))
+		while (std::getline(test, line) && line != "\n")
 		{
 			parse_line(line, i);
 			line.clear();

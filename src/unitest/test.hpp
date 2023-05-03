@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:39:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:42:42 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:33:17 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct unitests {
 }	unitests;
 
 #define VERBOSE_TEST true
-#define HIDE_SUCCESFULL_TEST false
+#define HIDE_SUCCESFULL_TEST true
 
 /* ************************************************************************** */
 

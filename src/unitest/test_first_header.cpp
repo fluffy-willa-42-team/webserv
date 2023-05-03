@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 09:39:43 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:33:50 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ Connection: keep-alive"
 void test_first_header(){
 	unitests unitests_headers[] = HEADER_TESTS;
 
+	cout << "Test First Header" << endl;
 	for (int i = 0; i < HEADER_TESTS_LENGTH; i++){
 		test(string(unitests_headers[i].value), false);
 		test(string(unitests_headers[i].value) + CORRECT_HEADERS_TEST, unitests_headers[i].success_expected);

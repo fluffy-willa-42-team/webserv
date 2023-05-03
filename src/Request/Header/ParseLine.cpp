@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:09:07 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 10:38:42 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // {FIRST}: {SECOND}
 bool parseSingleLine(pair<string, string>& res, const string& line, const string& sep){
 	size_t i = line.find(sep);
-	if (i == string::npos && i + 1 >= line.length())
+	if (i == string::npos && i + sep.length() >= line.length())
 		return false;
 	res.first = line.substr(0, i);
 	res.second = line.substr(i + sep.length());
@@ -51,7 +51,9 @@ bool RequestHeader::parseStartLine(const string& line){
 
 bool RequestHeader::parseHostHeader(const string& line){
 	pair<string, string> data;
-	if (!parseSingleLine(data, line, ": ") || data.first != "Host" || data.second.length() < 1)
+	if (!parseSingleLine(data, line, ": ")
+		|| data.first != "Host"
+		|| data.second.length() < 1)
 		throw InvalidRequest();
 	if (parseSingleLine(data, data.second, ":")){
 		this->host = data.first;
@@ -68,9 +70,9 @@ bool RequestHeader::parseHostHeader(const string& line){
 
 bool RequestHeader::parseHeader(const string& line){
 	pair<string, string> data;
-	if (!parseSingleLine(data, line, ": ") || data.second.length() < 1)
+	if (!parseSingleLine(data, line, ": ")
+		|| data.first.length() < 1)
 		throw InvalidRequest();
 	this->non_mandatory[data.first] = data.second;
-	cout << data.first << "\t= " << data.second << endl;
 	return true;
 }
