@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/02 12:32:18 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 07:21:53 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 RequestHeader::RequestHeader(const string& input)
 	: port(80)
 {
+	cout << "\e[0;36m" << input << "\e[0m" << endl;
 	try
 	{
 		std::stringstream test(input);
@@ -32,4 +33,5 @@ RequestHeader::RequestHeader(const string& input)
 	{
 		std::cerr << e.what() << '\n';
 	}
+	cout << endl;
 }
