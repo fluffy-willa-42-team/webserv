@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:59 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:54:46 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:56:56 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@
 //	Connection: keep-alive
 
 void test_first_header();
+void test_header();
 
 int main(){
-	test_first_header();
+	// test_first_header();
+	test_header();
 	return 0;
 }

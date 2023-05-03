@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:47:48 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 08:54:33 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:59:43 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void test(const string& value, bool success_expected)
 {
 	if (VERBOSE_TEST)
-		cout << "\e[0;36m" << value << "\e[0m" << endl;
+		cout << "\e[0;36m\"" << value << "\"\e[0m" << endl;
 
 	Request header(value);
 
@@ -32,5 +32,5 @@ void test(const string& value, bool success_expected)
 	}
 
 	if (VERBOSE_TEST)
-		cout << endl;
+		cout << endl << endl;
 }
