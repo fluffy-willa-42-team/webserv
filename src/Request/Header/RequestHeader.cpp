@@ -6,11 +6,12 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:11:00 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 12:04:40 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:12:02 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestHeader.hpp"
+#include "test.hpp"
 
 RequestHeader::RequestHeader(const string& input)
 	: valid(false), port(80)
@@ -24,7 +25,7 @@ RequestHeader::RequestHeader(const string& input)
 			return ;
 
 		size_t i = 0;
-		while (std::getline(test, line) && line != "\n")
+		while (std::getline(test, line) && line.length() > 0)
 		{
 			parse_line(line, i);
 			line.clear();
@@ -36,6 +37,7 @@ RequestHeader::RequestHeader(const string& input)
 		this->valid = true;
 	}
 	catch(const InvalidRequest& e){
-		cout << e.what() << endl;
+		if (SHOW_ERROR_IN_PARSING)
+			cout << e.what() << endl;
 	}
 }

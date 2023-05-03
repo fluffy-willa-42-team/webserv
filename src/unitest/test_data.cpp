@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 11:47:24 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:12:31 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Content-Length: 25\n\
 void test_data(){
 	unitests unitests_headers[] = DATA_TESTS;
 
-	cout << "Test First Header" << endl;
+	cout << "Test Data" << endl;
 	for (int i = 0; i < DATA_TESTS_LENGTH; i++){
 		test(string(DATA_TEST) + unitests_headers[i].value, unitests_headers[i].success_expected);
 	}

@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 08:50:55 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 10:54:01 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:10:58 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void test(const string& value, bool success_expected);
 	{ false,	"abc:def\n"		},\
 	{ false,	": def\n"		},\
 	{ false,	"abcs\n"		},\
-	{ false,	"\n"			},\
+	{ true,	"\n"				},\
 	{ true,		""				},\
 }
 
