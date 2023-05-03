@@ -50,11 +50,13 @@ int main(){
 	for (int i = 0; i < 15; i++){
 		Request header(string() + unitests_headers[i].value + CORRECT_HEADERS_TEST);
 		if (header.isValid() == unitests_headers[i].success_expected){
-			cout << "\e[0;36m" << "Success !" << "\e[0m" << endl;
+			cout << "\e[0;32m" << "Success !" << "\e[0m" << endl;
 		}
 		else {
-			cout << "\e[0;31m" << "Success !" << "\e[0m" << endl;
+			cout << "\e[0;31m" << "Failure !" << "\e[0m" << endl;
 		}
+		if (VERBOSE_TEST)
+			cout << endl;
 	}
 	return 0;
 }
