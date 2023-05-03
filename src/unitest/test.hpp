@@ -6,7 +6,7 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:39:05 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 12:12:18 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/03 12:18:31 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ typedef struct unitests {
     const char* value;
 }	unitests;
 
-#define VERBOSE_TEST true
-#define HIDE_SUCCESFULL_TEST true
-#define SHOW_ERROR_IN_PARSING false
+#define VERBOSE_TEST            true
+#define HIDE_SUCCESFULL_TEST    false
+#define SHOW_ERROR_IN_PARSING   false
 
 /* ************************************************************************** */
 
