@@ -7,15 +7,19 @@ void Address::parseAddress(string address, string port){
 	std::istringstream(port) >> this->port;
 	if (this->port > 65535)
 		throw InvalidAddress();
-	for (int i = 0; i < 3; i++){
+
+	int temp = 0;
+	for (int i = 3; i > 0; i--){
 		size_t index = address.find('.');
 		if (index == string::npos){
 			throw InvalidAddress();
 		}
-		cout << ">" << address.substr(0, index) << endl;
+		std::istringstream(address.substr(0, index)) >> temp;
+		this->address += (temp << i * 8);
 		address = address.substr(index + 1);
 	}
-	cout << ">" << address << endl;
+	std::istringstream(address) >> temp;
+	this->address += temp;
 }
 
 std::ostream& operator<<(std::ostream& out, const Address& add){
