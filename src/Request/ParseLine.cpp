@@ -6,11 +6,11 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:21:18 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/03 12:06:05 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/05 09:46:46 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RequestHeader.hpp"
+#include "Request.hpp"
 #include <iostream>
 
 // {FIRST}: {SECOND}
@@ -23,7 +23,7 @@ bool parseSingleLine(pair<string, string>& res, const string& line, const string
 	return true;
 }
 
-bool RequestHeader::parse_line(const string& line, size_t index){
+bool Request::parse_line(const string& line, size_t index){
 	switch (index)
 	{
 		case 0:		return (parseStartLine(line));
@@ -32,7 +32,7 @@ bool RequestHeader::parse_line(const string& line, size_t index){
 	}
 }
 
-bool RequestHeader::parseStartLine(const string& line){
+bool Request::parseStartLine(const string& line){
 	size_t i = line.find(' ');
 	if (i == string::npos || i < 1)
 		throw InvalidRequest("Invalid Host Header");
@@ -49,7 +49,7 @@ bool RequestHeader::parseStartLine(const string& line){
 	return true;
 }
 
-bool RequestHeader::parseHostHeader(const string& line){
+bool Request::parseHostHeader(const string& line){
 	pair<string, string> data;
 	if (!parseSingleLine(data, line, ": ")
 		|| data.first != "Host"
@@ -69,11 +69,11 @@ bool RequestHeader::parseHostHeader(const string& line){
 	return true;
 }
 
-bool RequestHeader::parseHeader(const string& line){
+bool Request::parseHeader(const string& line){
 	pair<string, string> data;
 	if (!parseSingleLine(data, line, ": ")
 		|| data.first.length() < 1)
 		throw InvalidRequest("Wrong Header Key");
-	this->non_mandatory[data.first] = data.second;
+	this->headers[data.first] = data.second;
 	return true;
 }
