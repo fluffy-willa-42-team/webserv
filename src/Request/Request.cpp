@@ -1,7 +1,7 @@
 #include "Request.hpp"
 #include "test.hpp"
 
-Request::Request(const std::string& input) : valid(false), port(80), data("")
+Request::Request(const std::string& input) : valid(false), port(80), data(""), error_message("")
 {
 	try
 	{
@@ -31,6 +31,7 @@ Request::Request(const std::string& input) : valid(false), port(80), data("")
 		this->valid = true;
 	}
 	catch(const InvalidRequest& e){
+		this->error_message = e.what();
 		if (SHOW_ERROR_IN_PARSING)
 			cout << e.what() << endl;
 	}

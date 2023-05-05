@@ -24,6 +24,8 @@ class Request {
 		map<string, string> headers;
 		string data;
 
+		string error_message;
+
 		class InvalidRequest : public std::exception {
 			public:
 				string message;
