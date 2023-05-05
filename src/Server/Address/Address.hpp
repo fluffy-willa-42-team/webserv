@@ -6,6 +6,7 @@
 #include "using.hpp"
 #include <map>
 #include <iomanip>
+#include <sstream>
 
 /* ************************************************************************** */
 
@@ -16,13 +17,15 @@ class Address {
 
 		Address(unsigned int address, unsigned int port)
 			: address(address), port(port){}
+
+		Address(string address)				: address(0), port(0) { parseAddress(address, "80"); }
+		Address(string address, string port): address(0), port(0) { parseAddress(address, port); }
+
+		void parseAddress(string address, string port);
 		
-		friend std::ostream& operator<<(std::ostream& out, const Address& add){
-			out << (add.address >> 24 & 0xFF) << "." << (add.address >> 16 & 0xFF) << "."
-				<< (add.address >> 8 & 0xFF) << "." << (add.address & 0xFF)
-				<< ":" << add.port;
-			return out;
-		}
+		friend std::ostream& operator<<(std::ostream& out, const Address& add);
+
+		class InvalidAddress : public std::exception { public: virtual const char* what() const throw() { return "Invalid Address"; }};
 };
 
 /* ************************************************************************** */
