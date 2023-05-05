@@ -6,18 +6,15 @@
 /*   By: awillems <awillems@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 09:27:20 by awillems          #+#    #+#             */
-/*   Updated: 2023/05/05 09:45:16 by awillems         ###   ########.fr       */
+/*   Updated: 2023/05/05 09:51:19 by awillems         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 #include "test.hpp"
 
-Request::Request(const std::string& input) : data("")
+Request::Request(const std::string& input) : valid(false), port(80), data("")
 {
-	
-	
-		
 	try
 	{
 		std::stringstream test(input);
