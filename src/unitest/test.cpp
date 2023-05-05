@@ -31,3 +31,16 @@ void test(const string& value, bool success_expected)
 	if (can_print(header, success_expected))
 		cout << endl << endl << endl;
 }
+
+void test_first_header();
+void test_host_header();
+void test_header();
+void test_data();
+
+int start_test(){
+	test_first_header();
+	test_host_header();
+	test_header();
+	test_data();
+	return 0;
+}
