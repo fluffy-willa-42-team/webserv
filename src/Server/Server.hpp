@@ -14,9 +14,12 @@ class Server {
 	private:
 		Address address;
 	public:
-		Server(unsigned int address, unsigned int port): address(address, port){
-			cout << "Listening on " << std::hex << std::setfill('0') << std::setw(8) << address << ":" << port << endl;
-			cout << this->address << endl;
+		Server(unsigned int address, unsigned int port) : address(address, port){
+			cout << "Listening on " << this->address << endl;
+		}
+
+		Server(Address add) : address(add.address, add.port){
+			cout << "Listening on " << this->address << endl;
 		}
 };
 
