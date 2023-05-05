@@ -37,10 +37,10 @@ Request::Request(const std::string& input) : valid(false), port(80), data("")
 }
 
 std::ostream& operator<<(std::ostream& out, const Request& req){
-	// if (!req.header.valid){
-	// 	out << "Invalid Request";
-	// 	return out;
-	// }
+	if (!req.valid){
+		out << "Invalid Request";
+		return out;
+	}
 	out << req.method << " " << req.path << " {" << endl
 	<< "    header: {" << endl
 	<< "        protocol: "		<< req.protocol	<< endl
