@@ -4,21 +4,6 @@
 
 
 
-Server::Server(const Address& add) :
-	is_running(false),
-	address(add),
-	server_fd(-1),
-	connection_fd(-1)
-{
-	reset_buffer();
-}
-
-
-
-/* ************************************************************************** */
-
-
-
 void Server::start(){
 	is_running = true;
 	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);

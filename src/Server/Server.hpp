@@ -24,7 +24,7 @@ class Server {
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 	public:
-		Server(const Address& add);
+		Server(const Address& add): is_running(false), address(add), server_fd(-1), connection_fd(-1) { reset_buffer(); };
 		~Server() { stop(); }
 
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
