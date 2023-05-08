@@ -4,28 +4,27 @@
 
 #include <csignal>
 
-map<int, Server *> servers;
+map<int, Server> servers;
 
 int start_test();
 
-void testx(int x){
-	(void) x;
-	servers[8080]->stop(); 
+void shutdown(int signal){
+	(void) signal;
+	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+		Server serv = ite->second;
+		serv.stop();
+		cout << "Serv Stopped" << endl;
+	}
 }
 
 int main(){
 	// start_test();
 
-
 	Address add("0.0.0.0", "8080");
 	
-	Server test(add);
-	servers[8080] = &test;
-	
-	std::signal(SIGINT, &testx);
+	std::signal(SIGINT, &shutdown);
 
-	servers[8080]->start(); 
-
-
+	servers[8080] = Server(add);
+	servers[8080].start();
 	return 0;
 }

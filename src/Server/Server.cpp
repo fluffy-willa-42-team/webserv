@@ -1,11 +1,17 @@
 #include "Server.hpp"
 #include "Request.hpp"
+#include <fcntl.h>
 
 /* ************************************************************************** */
 
 
 #define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!"
 #define TEST_MESSAGE_LEN 74
+
+bool is_fd_open(int fd) {
+    int flags = fcntl(fd, F_GETFD);
+    return (flags != -1 && !(flags & FD_CLOEXEC));
+}
 
 void Server::start(){
 	is_running = true;
@@ -24,21 +30,21 @@ void Server::start(){
 }
 
 void Server::start_loop(){
-	this->loop = true;
-	while(loop)
+	while(is_running)
 	{
-		cout << "\e[0;32m" << "----- Waiting for new connection -----" << "\e[0m" << endl << endl;
+		cout << GREEN << "----- Waiting for new connection -----" << RESET << endl << endl;
 
 		connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen());
 		if (connection_fd < 0){
-			if (is_running)
+			if (is_running){
+				cout << is_running << " " << connection_fd << endl;
 				throw InternalError();
+			}
 			return ;
 		}
 		
 		exec_connection();
 
-		cout << "\e[0;32m" << "----- Hello message sent -----" << "\e[0m" << endl << endl;
 		close(connection_fd);
 	}
 }
@@ -58,9 +64,9 @@ void Server::exec_connection(){
 }
 
 void Server::stop(){
-	this->loop = false;
 	if (!is_running)
 		return ;
+	is_running = false;
 	if (server_fd >= 0){
 		close(server_fd);
 		server_fd = -1;
@@ -70,7 +76,6 @@ void Server::stop(){
 		connection_fd = -1;
 	}
 	cout << "Closed " << address << endl;
-	is_running = false;
 }
 
 
