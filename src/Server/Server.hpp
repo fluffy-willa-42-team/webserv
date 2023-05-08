@@ -5,6 +5,7 @@
 
 #include <map>
 #include <iomanip>
+#include <unistd.h>
 #include "using.hpp"
 #include "Address.hpp"
 
@@ -16,17 +17,14 @@
 
 class Server {
 	private:
+		bool	is_running;
 		Address address;
+		
 		int32_t server_fd;
 		char	buffer[BUFFER_SIZE];
 	public:
-		Server(const Address& add) :
-			address(add),
-			server_fd(-1)
-		{
-			this->reset_buffer();
-			cout << "Listening on " << this->address << endl;
-		}
+		Server(const Address& add);
+		~Server();
 
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 

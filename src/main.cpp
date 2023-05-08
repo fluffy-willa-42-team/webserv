@@ -8,7 +8,7 @@ int main(){
 
 	Address add("0.0.0.0", "1000");
 	Server test(add);
-
+	test.start();
 
 
 	return 0;
