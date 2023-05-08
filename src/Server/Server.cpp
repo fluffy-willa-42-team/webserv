@@ -3,6 +3,8 @@
 /* ************************************************************************** */
 
 
+#define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!"
+#define TEST_MESSAGE_LEN 74
 
 void Server::start(){
 	is_running = true;
@@ -11,11 +13,34 @@ void Server::start(){
 		throw InternalError("failed to created socket server");
 	int status = bind(server_fd, (struct sockaddr *)& address.data, sizeof(address.data));
 	if (status < 0)
-        throw InternalError("failed to bind socket server to port");
-	status = listen(server_fd, 10);
+		throw InternalError("failed to bind socket server to port");
+	status = listen(server_fd, 256);
 	if (status < 0)
 		throw InternalError("failed to listen to socket server");
 	cout << "Listening on " << address << endl;
+	
+	start_loop();
+}
+
+void Server::start_loop(){
+	while(true)
+	{
+		cout << "+++++++ Waiting for new connection ++++++++\n" << endl;
+		if ((connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen()))<0)
+			throw InternalError();
+		
+		exec_connection();
+
+		cout << "------------------Hello message sent-------------------" << endl << endl;
+		close(connection_fd);
+	}
+}
+
+void Server::exec_connection(){
+	read(connection_fd, buffer, BUFFER_SIZE);
+	cout << buffer << endl;
+	reset_buffer();
+	write(connection_fd , TEST_MESSAGE, TEST_MESSAGE_LEN);
 }
 
 void Server::stop(){

@@ -17,17 +17,21 @@
 class Address {
 	public:
 		struct sockaddr_in data;
+		uint32_t len;
 
-		Address(unsigned int address, unsigned int port){
-			memset(&data, 0, sizeof(sockaddr_in));
+		Address(unsigned int address, unsigned int port) : len(sizeof(sockaddr_in)) {
+			memset(&data, 0, len);
 			data.sin_addr.s_addr = address;
 			data.sin_port = htons(port);
 			data.sin_family = AF_INET;
 		}
-		Address(string address)				 { parseAddress(address, "80"); }
-		Address(string address, string port) { parseAddress(address, port); }
+		Address(string address)				 : len(sizeof(sockaddr_in)) { parseAddress(address, "80"); }
+		Address(string address, string port) : len(sizeof(sockaddr_in)) { parseAddress(address, port); }
 
 		void parseAddress(string address, string port);
+
+		sockaddr* get_sockaddr(){ return ((sockaddr *)&data); }
+		socklen_t* get_socklen() { return ((socklen_t *)&len); }
 		
 		friend std::ostream& operator<<(std::ostream& out, const Address& add);
 

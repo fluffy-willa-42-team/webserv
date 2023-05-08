@@ -23,6 +23,9 @@ class Server {
 		int32_t server_fd;
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
+
+		void start_loop();
+		void exec_connection();
 	public:
 		Server(const Address& add): is_running(false), address(add), server_fd(-1), connection_fd(-1) { reset_buffer(); };
 		~Server() { stop(); }
