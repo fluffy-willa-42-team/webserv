@@ -8,7 +8,6 @@ void Address::parseAddress(string address, string port){
 	memset(&this->data, 0, sizeof(address));
 	this->data.sin_family = AF_INET;
 	
-	cout << address << ":" << port << endl;
 	uint16_t port_tmp = 0;
 	std::istringstream(port) >> port_tmp;
 	this->data.sin_port = htons(port_tmp);

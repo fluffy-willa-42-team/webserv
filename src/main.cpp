@@ -6,9 +6,10 @@ int start_test();
 int main(){
 	// start_test();
 
-	Address add("127.10.28.1", "7080");
-	cout << "Listening on " << add << endl;
+	Address add("0.0.0.0", "1000");
+	Server test(add);
 
-	Server test(INADDR_ANY, 80);
+
+
 	return 0;
 }

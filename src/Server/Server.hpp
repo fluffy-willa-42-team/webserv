@@ -10,17 +10,36 @@
 
 /* ************************************************************************** */
 
+# define BUFFER_SIZE 8000
+
+/* ************************************************************************** */
+
 class Server {
 	private:
 		Address address;
+		int32_t server_fd;
+		char	buffer[BUFFER_SIZE];
 	public:
-		Server(unsigned int address, unsigned int port) : address(address, port){
+		Server(const Address& add) :
+			address(add),
+			server_fd(-1)
+		{
+			this->reset_buffer();
 			cout << "Listening on " << this->address << endl;
 		}
 
-		Server(Address add) : address(add){
-			cout << "Listening on " << this->address << endl;
-		}
+		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
+
+		void start();
+
+		class InternalError : public std::exception {
+			public:
+				string message;
+				InternalError(): 						message("Server Internal Error"){}
+				InternalError(const string& message): 	message("Server Internal Error"){ this->message += ": " + message; }
+				~InternalError() throw() {}
+				virtual const char* what() const throw() { return this->message.c_str(); }
+		};
 };
 
 /* ************************************************************************** */
