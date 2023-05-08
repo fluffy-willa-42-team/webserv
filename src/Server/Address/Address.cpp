@@ -11,7 +11,7 @@ void Address::parseAddress(string address, string port){
 	cout << address << ":" << port << endl;
 	uint16_t port_tmp = 0;
 	std::istringstream(port) >> port_tmp;
-	this->address.sin_port = port_tmp;
+	this->address.sin_port = htons(port_tmp);
 
 	int temp = 0;
 	for (int i = 3; i > 0; i--){
@@ -31,6 +31,6 @@ std::ostream& operator<<(std::ostream& out, const Address& add){
 	unsigned int address = add.address.sin_addr.s_addr;
 	out << (address >> 24 & 0xFF) << "." << (address >> 16 & 0xFF) << "."
 		<< (address >> 8 & 0xFF) << "." << (address & 0xFF)
-		<< ":" << add.address.sin_port;
+		<< ":" << ntohs(add.address.sin_port);
 	return out;
 }
