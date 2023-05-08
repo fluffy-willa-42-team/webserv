@@ -57,8 +57,7 @@ void Server::exec_connection(){
 	write(connection_fd , TEST_MESSAGE, TEST_MESSAGE_LEN);
 }
 
-void Server::stop(int signal){
-	(void) signal;
+void Server::stop(){
 	this->loop = false;
 	if (!is_running)
 		return ;

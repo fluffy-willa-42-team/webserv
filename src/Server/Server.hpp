@@ -34,7 +34,7 @@ class Server {
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 
 		void start();
-		void stop(int signal = 0);
+		void stop();
 
 		class InternalError : public std::exception {
 			public:

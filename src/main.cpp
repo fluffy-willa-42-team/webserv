@@ -9,7 +9,7 @@ map<int, Server *> servers;
 int start_test();
 
 void testx(int x){
-	cout << "HEllo: " << x << endl;
+	(void) x;
 	servers[8080]->stop(); 
 }
 
