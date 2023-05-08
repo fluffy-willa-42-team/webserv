@@ -25,7 +25,7 @@ class Server {
 		char	buffer[BUFFER_SIZE];
 	public:
 		Server(const Address& add);
-		~Server();
+		~Server() { this->stop(); }
 
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 

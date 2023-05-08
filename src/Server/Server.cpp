@@ -11,12 +11,6 @@ Server::Server(const Address& add) :
 	connection_fd(-1)
 {
 	this->reset_buffer();
-	cout << "Listening on " << this->address << endl;
-}
-
-Server::~Server()
-{
-	this->stop();
 }
 
 
@@ -36,6 +30,7 @@ void Server::start(){
 	status = listen(server_fd, 10);
 	if (status < 0)
 		throw InternalError("failed to listen to socket server");
+	cout << "Listening on " << this->address << endl;
 }
 
 void Server::stop(){
@@ -49,6 +44,7 @@ void Server::stop(){
 		close(this->connection_fd);
 		this->connection_fd = -1;
 	}
+	cout << "Closed " << this->address << endl;
 	this->is_running = false;
 }
 
