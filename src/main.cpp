@@ -9,6 +9,6 @@ int main(){
 	Address add("127.10.28.1", "7080");
 	cout << "Listening on " << add << endl;
 
-	Server test(0x7f000001, 80);
+	Server test(INADDR_ANY, 80);
 	return 0;
 }

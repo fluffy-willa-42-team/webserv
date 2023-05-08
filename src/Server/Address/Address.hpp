@@ -24,7 +24,6 @@ class Address {
 			this->address.sin_port = port;
 			this->address.sin_family = AF_INET;
 		}
-
 		Address(string address)				 { parseAddress(address, "80"); }
 		Address(string address, string port) { parseAddress(address, port); }
 
