@@ -11,20 +11,25 @@ int start_test();
 void shutdown(int signal){
 	(void) signal;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-		Server serv = ite->second;
-		serv.stop();
-		cout << "Serv Stopped" << endl;
+		ite->second.stop();
+	}
+}
+
+void start(){
+	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+		ite->second.start();
 	}
 }
 
 int main(){
 	// start_test();
 
-	Address add("0.0.0.0", "8080");
-	
 	std::signal(SIGINT, &shutdown);
 
-	servers[8080] = Server(add);
-	servers[8080].start();
+	servers[8001] 	= Server(Address("0.0.0.0", "8001"));
+	servers[8002] 	= Server(Address("0.0.0.0", "8002"));
+	servers[8003] 	= Server(Address("0.0.0.0", "8003"));
+
+	start();
 	return 0;
 }
