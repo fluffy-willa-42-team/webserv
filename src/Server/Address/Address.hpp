@@ -16,13 +16,13 @@
 
 class Address {
 	public:
-		struct sockaddr_in address;
+		struct sockaddr_in data;
 
 		Address(unsigned int address, unsigned int port){
-			memset(&this->address, 0, sizeof(address));
-			this->address.sin_addr.s_addr = address;
-			this->address.sin_port = htons(port);
-			this->address.sin_family = AF_INET;
+			memset(&this->data, 0, sizeof(sockaddr_in));
+			this->data.sin_addr.s_addr = address;
+			this->data.sin_port = htons(port);
+			this->data.sin_family = AF_INET;
 		}
 		Address(string address)				 { parseAddress(address, "80"); }
 		Address(string address, string port) { parseAddress(address, port); }
