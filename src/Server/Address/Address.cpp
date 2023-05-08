@@ -5,12 +5,12 @@
 /* ************************************************************************** */
 
 void Address::parseAddress(string address, string port){
-	memset(&this->data, 0, sizeof(address));
-	this->data.sin_family = AF_INET;
+	memset(&data, 0, sizeof(address));
+	data.sin_family = AF_INET;
 	
 	uint16_t port_tmp = 0;
 	std::istringstream(port) >> port_tmp;
-	this->data.sin_port = htons(port_tmp);
+	data.sin_port = htons(port_tmp);
 
 	int temp = 0;
 	for (int i = 3; i > 0; i--){
@@ -19,11 +19,11 @@ void Address::parseAddress(string address, string port){
 			throw InvalidAddress();
 		}
 		std::istringstream(address.substr(0, index)) >> temp;
-		this->data.sin_addr.s_addr += (temp << i * 8);
+		data.sin_addr.s_addr += (temp << i * 8);
 		address = address.substr(index + 1);
 	}
 	std::istringstream(address) >> temp;
-	this->data.sin_addr.s_addr += temp;
+	data.sin_addr.s_addr += temp;
 }
 
 std::ostream& operator<<(std::ostream& out, const Address& add){

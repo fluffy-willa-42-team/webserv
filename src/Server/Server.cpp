@@ -10,7 +10,7 @@ Server::Server(const Address& add) :
 	server_fd(-1),
 	connection_fd(-1)
 {
-	this->reset_buffer();
+	reset_buffer();
 }
 
 
@@ -20,32 +20,32 @@ Server::Server(const Address& add) :
 
 
 void Server::start(){
-	this->is_running = true;
-	this->server_fd = socket(this->address.data.sin_family, SOCK_STREAM, 0);
-	if (this->server_fd < 0)
+	is_running = true;
+	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
+	if (server_fd < 0)
 		throw InternalError("failed to created socket server");
-	int status = bind(this->server_fd, (struct sockaddr *)&this->address.data, sizeof(this->address.data));
+	int status = bind(server_fd, (struct sockaddr *)&address.data, sizeof(address.data));
 	if (status < 0)
         throw InternalError("failed to bind socket server to port");
 	status = listen(server_fd, 10);
 	if (status < 0)
 		throw InternalError("failed to listen to socket server");
-	cout << "Listening on " << this->address << endl;
+	cout << "Listening on " << address << endl;
 }
 
 void Server::stop(){
 	if (!is_running)
 		return ;
-	if (this->server_fd >= 0){
-		close(this->server_fd);
-		this->server_fd = -1;
+	if (server_fd >= 0){
+		close(server_fd);
+		server_fd = -1;
 	}
-	if (this->connection_fd >= 0){
-		close(this->connection_fd);
-		this->connection_fd = -1;
+	if (connection_fd >= 0){
+		close(connection_fd);
+		connection_fd = -1;
 	}
-	cout << "Closed " << this->address << endl;
-	this->is_running = false;
+	cout << "Closed " << address << endl;
+	is_running = false;
 }
 
 

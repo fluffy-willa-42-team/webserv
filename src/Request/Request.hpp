@@ -33,13 +33,13 @@ class Request {
 				InvalidRequest(): 						message("Invalid Request"){}
 				InvalidRequest(const string& message): 	message("Invalid Request"){ this->message += ": " + message; }
 				~InvalidRequest() throw() {}
-				virtual const char* what() const throw() { return this->message.c_str(); }
+				virtual const char* what() const throw() { return message.c_str(); }
 		};
 		
 	public:
 		Request(const std::string& input);
 
-		bool isValid(){ return this->valid; }
+		bool isValid(){ return valid; }
 
 		friend std::ostream& operator<<(std::ostream& out, const Request& req);
 

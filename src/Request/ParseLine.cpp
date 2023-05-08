@@ -25,15 +25,15 @@ bool Request::parseStartLine(const string& line){
 	if (i == string::npos || i < 1)
 		throw InvalidRequest("Invalid Host Header");
 	
-	this->method = line.substr(0, i);
+	method = line.substr(0, i);
 	string rest = line.substr(i + 1);
 	
 	i = rest.find(' ');
 	if (i == string::npos || rest.length() - i - 1 < 1)
 		throw InvalidRequest("Invalid Host Header");
 	
-	this->path = rest.substr(0, i);
-	this->protocol = rest.substr(i + 1);
+	path = rest.substr(0, i);
+	protocol = rest.substr(i + 1);
 	return true;
 }
 
@@ -44,15 +44,15 @@ bool Request::parseHostHeader(const string& line){
 		|| data.second.length() < 1)
 		throw InvalidRequest("Invalid Header");
 	if (parseSingleLine(data, data.second, ":")){
-		this->host = data.first;
+		host = data.first;
 		if (data.second.length() < 1)
 			throw InvalidRequest("Missing Port");
-		std::istringstream(data.second) >> this->port;
-		if (this->port > 65535)
+		std::istringstream(data.second) >> port;
+		if (port > 65535)
 			throw InvalidRequest("Port Invalid");
 	}
 	else {
-		this->host = data.second;
+		host = data.second;
 	}
 	return true;
 }
@@ -62,6 +62,6 @@ bool Request::parseHeader(const string& line){
 	if (!parseSingleLine(data, line, ": ")
 		|| data.first.length() < 1)
 		throw InvalidRequest("Wrong Header Key");
-	this->headers[data.first] = data.second;
+	headers[data.first] = data.second;
 	return true;
 }

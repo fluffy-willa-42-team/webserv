@@ -25,7 +25,7 @@ class Server {
 		char	buffer[BUFFER_SIZE];
 	public:
 		Server(const Address& add);
-		~Server() { this->stop(); }
+		~Server() { stop(); }
 
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 
@@ -38,7 +38,7 @@ class Server {
 				InternalError(): 						message("Server Internal Error"){}
 				InternalError(const string& message): 	message("Server Internal Error"){ this->message += ": " + message; }
 				~InternalError() throw() {}
-				virtual const char* what() const throw() { return this->message.c_str(); }
+				virtual const char* what() const throw() { return message.c_str(); }
 		};
 };
 

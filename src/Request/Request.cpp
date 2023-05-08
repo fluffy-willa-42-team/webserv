@@ -25,13 +25,13 @@ Request::Request(const std::string& input) : valid(false), port(80), data(""), e
 			if (std::getline(test, line)){
 				size_t data_pos = input.find("\n\n");
 				if (data_pos != string::npos)
-					this->data = input.substr(data_pos + 2);
+					data = input.substr(data_pos + 2);
 			}
 		}
-		this->valid = true;
+		valid = true;
 	}
 	catch(const InvalidRequest& e){
-		this->error_message = e.what();
+		error_message = e.what();
 		if (SHOW_ERROR_IN_PARSING)
 			cout << e.what() << endl;
 	}

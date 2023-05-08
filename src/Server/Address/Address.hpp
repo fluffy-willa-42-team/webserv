@@ -19,10 +19,10 @@ class Address {
 		struct sockaddr_in data;
 
 		Address(unsigned int address, unsigned int port){
-			memset(&this->data, 0, sizeof(sockaddr_in));
-			this->data.sin_addr.s_addr = address;
-			this->data.sin_port = htons(port);
-			this->data.sin_family = AF_INET;
+			memset(&data, 0, sizeof(sockaddr_in));
+			data.sin_addr.s_addr = address;
+			data.sin_port = htons(port);
+			data.sin_family = AF_INET;
 		}
 		Address(string address)				 { parseAddress(address, "80"); }
 		Address(string address, string port) { parseAddress(address, port); }
