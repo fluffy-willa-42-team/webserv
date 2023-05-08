@@ -25,13 +25,14 @@ void Server::start(){
 void Server::start_loop(){
 	while(true)
 	{
-		cout << "+++++++ Waiting for new connection ++++++++\n" << endl;
+		cout << "\e[0;32m" << "----- Waiting for new connection -----" << "\e[0m" << endl << endl;
+		
 		if ((connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen()))<0)
 			throw InternalError();
 		
 		exec_connection();
 
-		cout << "------------------Hello message sent-------------------" << endl << endl;
+		cout << "\e[0;32m" << "----- Hello message sent -----" << "\e[0m" << endl << endl;
 		close(connection_fd);
 	}
 }
