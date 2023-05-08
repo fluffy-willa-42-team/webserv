@@ -18,7 +18,7 @@ class Server {
 			cout << "Listening on " << this->address << endl;
 		}
 
-		Server(Address add) : address(add.address, add.port){
+		Server(Address add) : address(add.address.sin_addr.s_addr, add.address.sin_port){
 			cout << "Listening on " << this->address << endl;
 		}
 };

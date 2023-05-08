@@ -7,19 +7,26 @@
 #include <map>
 #include <iomanip>
 #include <sstream>
+#include <string.h>
+
+#include <netinet/in.h>
+
 
 /* ************************************************************************** */
 
 class Address {
 	public:
-		unsigned int address;
-		unsigned int port;
+		struct sockaddr_in address;
 
-		Address(unsigned int address, unsigned int port)
-			: address(address), port(port){}
+		Address(unsigned int address, unsigned int port){
+			memset(&this->address, 0, sizeof address);
+			this->address.sin_addr.s_addr = address;
+			this->address.sin_port = port;
+			this->address.sin_family = AF_INET;
+		}
 
-		Address(string address)				: address(0), port(0) { parseAddress(address, "80"); }
-		Address(string address, string port): address(0), port(0) { parseAddress(address, port); }
+		Address(string address)				 { parseAddress(address, "80"); }
+		Address(string address, string port) { parseAddress(address, port); }
 
 		void parseAddress(string address, string port);
 		

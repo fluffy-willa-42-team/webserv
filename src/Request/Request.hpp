@@ -8,6 +8,7 @@
 #include <string>
 
 #include "using.hpp"
+#include "Address.hpp"
 
 /* ************************************************************************** */
 
@@ -15,11 +16,11 @@ class Request {
 	private:
 		bool valid;
 
-		string method;			//	GET
-		string path;			//	/test
-		string protocol;		//	HTTP/1.1
-		string host;			//	www.example.com
-		size_t port;			//	8080
+		string	method;			//	GET
+		string	path;			//	/test
+		string	protocol;		//	HTTP/1.1
+		string	host;			//	www.example.com
+		size_t	port;			//	8080
 
 		map<string, string> headers;
 		string data;
