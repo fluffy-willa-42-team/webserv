@@ -5,14 +5,12 @@
 /* ************************************************************************** */
 
 void Address::parseAddress(string address, string port){
-	memset(&this->address, 0, sizeof address);
+	memset(&this->address, 0, sizeof(address));
 	this->address.sin_family = AF_INET;
 	
 	cout << address << ":" << port << endl;
-	unsigned int port_tmp = 0;
+	uint16_t port_tmp = 0;
 	std::istringstream(port) >> port_tmp;
-	if (port_tmp > 65535)
-		throw InvalidAddress();
 	this->address.sin_port = port_tmp;
 
 	int temp = 0;

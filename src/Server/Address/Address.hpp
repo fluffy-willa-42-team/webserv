@@ -19,9 +19,9 @@ class Address {
 		struct sockaddr_in address;
 
 		Address(unsigned int address, unsigned int port){
-			memset(&this->address, 0, sizeof address);
+			memset(&this->address, 0, sizeof(address));
 			this->address.sin_addr.s_addr = address;
-			this->address.sin_port = port;
+			this->address.sin_port = htonl(port);
 			this->address.sin_family = AF_INET;
 		}
 		Address(string address)				 { parseAddress(address, "80"); }
