@@ -21,6 +21,7 @@ class Server {
 		Address address;
 		
 		int32_t server_fd;
+		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 	public:
 		Server(const Address& add);
@@ -29,6 +30,7 @@ class Server {
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 
 		void start();
+		void stop();
 
 		class InternalError : public std::exception {
 			public:

@@ -7,7 +7,8 @@
 Server::Server(const Address& add) :
 	is_running(false),
 	address(add),
-	server_fd(-1)
+	server_fd(-1),
+	connection_fd(-1)
 {
 	this->reset_buffer();
 	cout << "Listening on " << this->address << endl;
@@ -15,13 +16,7 @@ Server::Server(const Address& add) :
 
 Server::~Server()
 {
-	if (!is_running)
-		return ;
-	if (this->server_fd >= 0){
-		close(this->server_fd);
-		this->server_fd = -1;
-	}
-	this->is_running = false;
+	this->stop();
 }
 
 
@@ -38,6 +33,23 @@ void Server::start(){
 	int status = bind(this->server_fd, (struct sockaddr *)&this->address.data, sizeof(this->address.data));
 	if (status < 0)
         throw InternalError("failed to bind socket server to port");
+	status = listen(server_fd, 10);
+	if (status < 0)
+		throw InternalError("failed to listen to socket server");
+}
+
+void Server::stop(){
+	if (!is_running)
+		return ;
+	if (this->server_fd >= 0){
+		close(this->server_fd);
+		this->server_fd = -1;
+	}
+	if (this->connection_fd >= 0){
+		close(this->connection_fd);
+		this->connection_fd = -1;
+	}
+	this->is_running = false;
 }
 
 
