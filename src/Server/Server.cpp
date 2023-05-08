@@ -9,7 +9,7 @@ void Server::start(){
 	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
 	if (server_fd < 0)
 		throw InternalError("failed to created socket server");
-	int status = bind(server_fd, (struct sockaddr *)&address.data, sizeof(address.data));
+	int status = bind(server_fd, (struct sockaddr *)& address.data, sizeof(address.data));
 	if (status < 0)
         throw InternalError("failed to bind socket server to port");
 	status = listen(server_fd, 10);
