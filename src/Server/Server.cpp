@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Request.hpp"
 
 /* ************************************************************************** */
 
@@ -23,12 +24,17 @@ void Server::start(){
 }
 
 void Server::start_loop(){
-	while(true)
+	this->loop = true;
+	while(loop)
 	{
 		cout << "\e[0;32m" << "----- Waiting for new connection -----" << "\e[0m" << endl << endl;
-		
-		if ((connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen()))<0)
-			throw InternalError();
+
+		connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen());
+		if (connection_fd < 0){
+			if (is_running)
+				throw InternalError();
+			return ;
+		}
 		
 		exec_connection();
 
@@ -40,11 +46,20 @@ void Server::start_loop(){
 void Server::exec_connection(){
 	read(connection_fd, buffer, BUFFER_SIZE);
 	cout << buffer << endl;
+
+	Request test(buffer);
+
+	cout << "\e[0;31m" << "----- Test Request -----" << "\e[0m" << endl << endl;
+
+	cout << test << endl;
+
 	reset_buffer();
 	write(connection_fd , TEST_MESSAGE, TEST_MESSAGE_LEN);
 }
 
-void Server::stop(){
+void Server::stop(int signal){
+	(void) signal;
+	this->loop = false;
 	if (!is_running)
 		return ;
 	if (server_fd >= 0){

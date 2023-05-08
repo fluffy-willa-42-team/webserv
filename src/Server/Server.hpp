@@ -18,6 +18,7 @@
 class Server {
 	private:
 		bool	is_running;
+		bool	loop;
 		Address address;
 		
 		int32_t server_fd;
@@ -27,13 +28,13 @@ class Server {
 		void start_loop();
 		void exec_connection();
 	public:
-		Server(const Address& add): is_running(false), address(add), server_fd(-1), connection_fd(-1) { reset_buffer(); };
+		Server(const Address& add): is_running(false), loop(false), address(add), server_fd(-1), connection_fd(-1) { reset_buffer(); };
 		~Server() { stop(); }
 
 		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
 
 		void start();
-		void stop();
+		void stop(int signal = 0);
 
 		class InternalError : public std::exception {
 			public:
