@@ -11,7 +11,7 @@ int start_test();
 
 void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-		ite->second.start_parallel();
+		ite->second.start();
 	}
 }
 

@@ -24,15 +24,15 @@ class Server {
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 
-		void start_loop();
+		void setup();
+		void exec();
+
+		void reset_buffer();
 	public:
-		Server():					is_running(false), address(0, 80), server_fd(-1), connection_fd(-1) { reset_buffer(); };
-		Server(const Address& add): is_running(false), address(add),   server_fd(-1), connection_fd(-1) { reset_buffer(); };
-		~Server() { stop(); }
+		Server();
+		Server(const Address& add);
+		~Server();
 
-		void reset_buffer() { memset(buffer, 0, BUFFER_SIZE); }
-
-		void start_parallel();
 		void start();
 		void stop();
 
