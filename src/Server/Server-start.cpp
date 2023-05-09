@@ -33,10 +33,8 @@ e_try Server::try_connection(){
 	if (connection_fd < 0 && errno == EWOULDBLOCK)	// check if there is a new connection
 		return (NO_CONNECTION);
 	if (connection_fd < 0){		// check if error in accept after having recieved a connection
-		if (is_running){
-			cout << is_running << " " << connection_fd << endl;
+		if (is_running)
 			throw InternalError();
-		}
 		return (END_OF_RUNTIME);
 	}
 	
