@@ -4,6 +4,7 @@
 
 #include <csignal>
 
+bool loop = true;
 map<int, Server> servers;
 
 int start_test();
@@ -13,11 +14,12 @@ void shutdown(int signal){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
+	loop = false;
 }
 
 void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-		ite->second.start();
+		ite->second.start_parallel();
 	}
 }
 
@@ -31,5 +33,8 @@ int main(){
 	servers[8003] 	= Server(Address("0.0.0.0", "8003"));
 
 	start();
+
+	while (loop);
+	
 	return 0;
 }

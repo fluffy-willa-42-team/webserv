@@ -1,18 +1,20 @@
 #include "Server.hpp"
 #include "Request.hpp"
 #include <fcntl.h>
+#include <stdlib.h>
 
 /* ************************************************************************** */
-
 
 #define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!"
 #define TEST_MESSAGE_LEN 74
 
-bool is_fd_open(int fd) {
-    int flags = fcntl(fd, F_GETFD);
-    return (flags != -1 && !(flags & FD_CLOEXEC));
-}
+/* ************************************************************************** */
 
+
+
+/**
+ * @brief Will start the server instance
+ */
 void Server::start(){
 	is_running = true;
 	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
@@ -29,6 +31,10 @@ void Server::start(){
 	start_loop();
 }
 
+/**
+ * @brief Starts the main loop. Its waiting for all connection takes the first
+ * in the backlog and executes it.
+ */
 void Server::start_loop(){
 	while(is_running)
 	{
@@ -49,6 +55,9 @@ void Server::start_loop(){
 	}
 }
 
+/**
+ * @brief Execute a connection
+ */
 void Server::exec_connection(){
 	read(connection_fd, buffer, BUFFER_SIZE);
 	cout << buffer << endl;
@@ -63,6 +72,33 @@ void Server::exec_connection(){
 	write(connection_fd , TEST_MESSAGE, TEST_MESSAGE_LEN);
 }
 
+
+
+/* ************************************************************************** */
+
+
+
+/**
+ * @brief Will start a server inside a fork of the process
+ */
+void Server::start_parallel(){
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		try{
+			this->start();
+		}
+		catch(const std::exception& e){
+			std::cerr << e.what() << '\n';
+		}
+		exit(0);
+	}
+}
+
+
+/**
+ * @brief Stops the server instance
+ */
 void Server::stop(){
 	if (!is_running)
 		return ;
