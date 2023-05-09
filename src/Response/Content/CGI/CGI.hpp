@@ -12,7 +12,7 @@
 class CGIContent : public Content {
 	private:
 	public:
-		~CGIContent(){
+		CGIContent(const string& path) : Content(path){
 			cout << PURPLE << "Constructing a CGI Content" << RESET << endl;
 		};
 };
