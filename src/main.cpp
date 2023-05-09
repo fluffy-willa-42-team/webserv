@@ -26,13 +26,12 @@ void shutdown(int signal){
 int main(){
 	// start_test();
 
-	std::signal(SIGINT, &shutdown);
-
 	servers[8001] = Server(Address("0.0.0.0", "8001"));
 	servers[8002] = Server(Address("0.0.0.0", "8002"));
 	servers[8003] = Server(Address("0.0.0.0", "8003"));
 
 	start();
+	std::signal(SIGINT, &shutdown);
 
 	while (loop);
 	
