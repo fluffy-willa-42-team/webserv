@@ -1,25 +1,21 @@
-#ifndef GET_HPP
-# define GET_HPP
+#ifndef FILE_CONTENT_HPP
+# define FILE_CONTENT_HPP
 
 /* ************************************************************************** */
 
 #include <iostream>
-#include <Response.hpp>
+#include <using.hpp>
+#include <Content.hpp>
 
 /* ************************************************************************** */
 
-class Get : private Response {
+class FileContent : public Content {
 	private:
-	protected:
-
 	public:
-		Get(Request req) : Response(req){}
-
-		std::string toString(){
-			return "";
-		}
+		FileContent(const string& path) : Content(path){}
+		~FileContent(){};
 };
 
 /* ************************************************************************** */
 
-#endif /* GET_HPP */
+#endif /* FILE_CONTENT_HPP */

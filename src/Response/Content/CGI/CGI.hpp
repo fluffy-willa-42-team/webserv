@@ -1,25 +1,20 @@
-#ifndef GET_HPP
-# define GET_HPP
+#ifndef CGI_CONTENT_HPP
+# define CGI_CONTENT_HPP
 
 /* ************************************************************************** */
 
 #include <iostream>
-#include <Response.hpp>
+#include <using.hpp>
+#include <Content.hpp>
 
 /* ************************************************************************** */
 
-class Get : private Response {
+class CGIContent : public Content {
 	private:
-	protected:
-
 	public:
-		Get(Request req) : Response(req){}
-
-		std::string toString(){
-			return "";
-		}
+		~CGIContent(){};
 };
 
 /* ************************************************************************** */
 
-#endif /* GET_HPP */
+#endif /* CGI_CONTENT_HPP */

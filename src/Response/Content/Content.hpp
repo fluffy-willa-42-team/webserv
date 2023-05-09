@@ -1,22 +1,21 @@
-#ifndef RESPONSEHEADER_HPP
-# define RESPONSEHEADER_HPP
+#ifndef CONTENT_HPP
+# define CONTENT_HPP
 
 /* ************************************************************************** */
 
 #include <iostream>
+#include <using.hpp>
 
 /* ************************************************************************** */
 
-class ResponseHeader {
-	private:
+class Content {
 	protected:
+		string path;
 	public:
-		ResponseHeader();
-		~ResponseHeader();
-		ResponseHeader(const ResponseHeader& other);
-		const ResponseHeader& operator=(const ResponseHeader& other);
+		Content(const string& path): path(path){}
+		virtual ~Content() = 0;
 };
 
 /* ************************************************************************** */
 
-#endif /* RESPONSEHEADER_HPP */
+#endif /* CONTENT_HPP */

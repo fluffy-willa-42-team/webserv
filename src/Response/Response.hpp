@@ -3,24 +3,24 @@
 
 /* ************************************************************************** */
 
-#include <iostream>
-#include <ResponseHeader.hpp>
+#include <Request.hpp>
+#include <Content.hpp>
+#include <using.hpp>
 
 /* ************************************************************************** */
 
 class Response {
-	private:
-		ResponseHeader header;
 	protected:
+		const Request&	request;
+		Content*		content;
 
 	public:
-		Response();
-		~Response();
-		Response(const Response& other);
-		const Response& operator=(const Response& other);
+		Response(Request req): request(req){}
+		~Response(){
+			delete content;
+		}
 
 		virtual std::string toString() = 0;
-		
 };
 
 /* ************************************************************************** */

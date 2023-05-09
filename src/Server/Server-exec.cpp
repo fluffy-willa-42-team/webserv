@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Request.hpp"
+#include "Get.hpp"
 
 #define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: "
 
@@ -20,6 +21,8 @@ void Server::exec(){
 	Request test(buffer);
 
 	cout << BLUE << "----- Test Request -----" << RESET << endl << endl;
+
+	Get get(test);
 
 	cout << test << endl;
 
