@@ -23,15 +23,15 @@ typedef enum {
 
 class Server {
 	private:
+		bool	is_running;
+		Address address;
+
 		int32_t server_fd;
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 
-
 		void reset_buffer();
 	public:
-		bool	is_running;
-		Address address;
 
 		Server();
 		Server(const Address& add);
@@ -42,6 +42,11 @@ class Server {
 		e_try try_connection();
 		void exec();
 		void stop();
+
+		bool is_it_running() { return this->is_running; }
+		void print_waiting_msg(){
+			cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
+		}
 
 		class InternalError : public std::exception {
 			public:

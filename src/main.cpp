@@ -13,7 +13,7 @@ void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		try {
 			ite->second.setup();
-			cout << GREEN << "----- Waiting for new connection (" << ite->second.address << ") -----" << RESET << endl << endl;
+			ite->second.print_waiting_msg();
 		}
 		catch(const std::exception& e) {
 			std::cerr << RED << e.what() << RESET << endl;
@@ -22,7 +22,7 @@ void start(){
 	}
 	while (loop){
 		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-			if (ite->second.is_running)
+			if (ite->second.is_it_running())
 				ite->second.try_connection();
 		}
 	}

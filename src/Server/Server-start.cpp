@@ -12,7 +12,7 @@
 void Server::start(){
 	setup();
 
-	cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
+	print_waiting_msg();
 	while(is_running)
 	{
 		e_try res = try_connection();
@@ -22,7 +22,7 @@ void Server::start(){
 		if (res == END_OF_RUNTIME)
 			return ;		
 		
-		cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
+		print_waiting_msg();
 	}
 }
 
@@ -41,6 +41,6 @@ e_try Server::try_connection(){
 	}
 	
 	exec();
-	cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
+	print_waiting_msg();
 	return (SUCCESS);
 }
