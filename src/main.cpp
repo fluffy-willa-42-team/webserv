@@ -11,7 +11,18 @@ int start_test();
 
 void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-		ite->second.start();
+		try {
+			ite->second.setup();
+		}
+		catch(const std::exception& e) {
+			std::cerr << RED << e.what() << RESET << endl;
+		}
+		
+	}
+	while (loop){
+		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+			ite->second.try_connection();
+		}
 	}
 }
 
@@ -32,8 +43,6 @@ int main(){
 
 	std::signal(SIGINT, &shutdown);
 	start();
-
-	while (loop);
 	
 	return 0;
 }

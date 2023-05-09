@@ -13,7 +13,7 @@
 
 # define BUFFER_SIZE 8000
 
-typedef enum e_try {
+typedef enum {
 	SUCCESS,
 	NO_CONNECTION,
 	END_OF_RUNTIME,
