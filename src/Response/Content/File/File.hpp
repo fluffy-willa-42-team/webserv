@@ -12,7 +12,9 @@
 class FileContent : public Content {
 	private:
 	public:
-		FileContent(const string& path) : Content(path){}
+		FileContent(const string& path) : Content(path){
+			cout << PURPLE << "Constructing a File Content" << RESET << endl;
+		}
 		~FileContent(){};
 };
 

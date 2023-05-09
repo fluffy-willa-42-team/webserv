@@ -15,14 +15,14 @@ class Response {
 		Content*		content;
 
 	public:
-		Response(Request req): request(req){
+		Response(const Request& req): request(req){
 			content = content_factory(req.path);
 		}
 		~Response(){
 			delete content;
 		}
 
-		virtual std::string toString() = 0;
+		virtual string toString() = 0;
 };
 
 /* ************************************************************************** */

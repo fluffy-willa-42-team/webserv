@@ -13,12 +13,11 @@ class Post : private Response {
 	protected:
 
 	public:
-		Post();
-		~Post();
-		Post(const Post& other);
-		const Post& operator=(const Post& other);
+		Post(Request req) : Response(req){
+			cout << PURPLE << "Constructing a GET method" << RESET << endl;
+		}
 
-		std::string toString(){}
+		string toString(){}
 };
 
 /* ************************************************************************** */

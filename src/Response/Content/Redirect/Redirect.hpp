@@ -1,5 +1,5 @@
-#ifndef CGI_CONTENT_HPP
-# define CGI_CONTENT_HPP
+#ifndef REDIRECT_CONTENT_HPP
+# define REDIRECT_CONTENT_HPP
 
 /* ************************************************************************** */
 
@@ -9,14 +9,15 @@
 
 /* ************************************************************************** */
 
-class CGIContent : public Content {
+class RedirectContent : public Content {
 	private:
 	public:
-		~CGIContent(){
-			cout << PURPLE << "Constructing a CGI Content" << RESET << endl;
-		};
+		RedirectContent(const string& path) : Content(path){
+			cout << PURPLE << "Constructing a Redirect Content" << RESET << endl;
+		}
+		~RedirectContent(){};
 };
 
 /* ************************************************************************** */
 
-#endif /* CGI_CONTENT_HPP */
+#endif /* REDIRECT_CONTENT_HPP */
