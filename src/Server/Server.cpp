@@ -2,11 +2,14 @@
 #include "Request.hpp"
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string>
+#include <iostream>
+
 
 /* ************************************************************************** */
 
-#define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!"
-#define TEST_MESSAGE_LEN 74
+#define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: "
+#define TEST_MESSAGE_LEN 62
 
 /* ************************************************************************** */
 
@@ -17,10 +20,10 @@
  */
 void Server::start(){
 	is_running = true;
-	server_fd = socket(address.input.sin_family, SOCK_STREAM, 0);
+	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
 	if (server_fd < 0)
 		throw InternalError("failed to created socket server");
-	int status = bind(server_fd, &address.data, address.len);
+	int status = bind(server_fd, address.get_sockaddr(), address.len);
 	if (status < 0)
 		throw InternalError("failed to bind socket server to port");
 	status = listen(server_fd, 256);
@@ -42,7 +45,7 @@ void Server::start_loop(){
 	{
 		cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
 
-		connection_fd = accept(server_fd, &address.data, address.get_socklen());
+		connection_fd = accept(server_fd, NULL, NULL);
 		if (connection_fd < 0){
 			if (is_running){
 				cout << is_running << " " << connection_fd << endl;
@@ -59,6 +62,16 @@ void Server::start_loop(){
 
 
 
+string get_message_test(const Request &req){
+	std::stringstream ss1;
+	ss1 << req;
+
+	std::stringstream ss;
+    ss << TEST_MESSAGE << ss1.str().length() << "\n\n" << ss1.str();
+    string message = ss.str();
+	return message;
+}
+
 /**
  * @brief Execute a connection
  */
@@ -72,8 +85,10 @@ void Server::exec_connection(){
 
 	cout << test << endl;
 
+    string message = get_message_test(test);
+	write(connection_fd , message.c_str(), message.length());
+	
 	reset_buffer();
-	write(connection_fd , TEST_MESSAGE, TEST_MESSAGE_LEN);
 }
 
 
