@@ -6,10 +6,6 @@
 
 /* ************************************************************************** */
 
-/**
- * @brief Starts the main loop. Its waiting for all connection takes the first
- * in the backlog and executes it.
- */
 void Server::start(){
 	setup();
 
@@ -33,9 +29,6 @@ void Server::start(){
 	}
 }
 
-/**
- * @brief Will start the server instance
- */
 void Server::setup(){
 	is_running = true;
 	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
