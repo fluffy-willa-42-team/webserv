@@ -60,5 +60,5 @@ void Server::stop(){
 		close(connection_fd);
 		connection_fd = -1;
 	}
-	cout << endl << CYAN << "Closed " << address << RESET << endl;
+	cout << endl << CYAN << "Closed " << address << RESET;
 }
