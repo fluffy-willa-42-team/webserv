@@ -13,6 +13,12 @@
 
 # define BUFFER_SIZE 8000
 
+typedef enum e_try {
+	SUCCESS,
+	NO_CONNECTION,
+	END_OF_RUNTIME,
+} e_try;
+
 /* ************************************************************************** */
 
 class Server {
@@ -24,8 +30,6 @@ class Server {
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 
-		void setup();
-		void exec();
 
 		void reset_buffer();
 	public:
@@ -33,7 +37,10 @@ class Server {
 		Server(const Address& add);
 		~Server();
 
+		void setup();
 		void start();
+		e_try try_connection();
+		void exec();
 		void stop();
 
 		class InternalError : public std::exception {
