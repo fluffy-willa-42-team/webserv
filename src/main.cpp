@@ -9,18 +9,18 @@ map<int, Server> servers;
 
 int start_test();
 
+void start(){
+	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+		ite->second.start_parallel();
+	}
+}
+
 void shutdown(int signal){
 	(void) signal;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
 	loop = false;
-}
-
-void start(){
-	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-		ite->second.start_parallel();
-	}
 }
 
 int main(){
