@@ -23,9 +23,6 @@ typedef enum {
 
 class Server {
 	private:
-		bool	is_running;
-		Address address;
-		
 		int32_t server_fd;
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
@@ -33,6 +30,9 @@ class Server {
 
 		void reset_buffer();
 	public:
+		bool	is_running;
+		Address address;
+
 		Server();
 		Server(const Address& add);
 		~Server();
