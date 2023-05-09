@@ -12,7 +12,7 @@ Request::Request(const std::string& input) : valid(false), port(80), data(""), e
 			return ;
 
 		size_t i = 0;
-		while (std::getline(test, line) && line.length() > 0)
+		while (std::getline(test, line) && line.length() > 0 && line != "\r")
 		{
 			parse_line(line, i);
 			line.clear();

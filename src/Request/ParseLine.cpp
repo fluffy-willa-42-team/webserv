@@ -3,7 +3,7 @@
 
 // {FIRST}: {SECOND}
 bool parseSingleLine(pair<string, string>& res, const string& line, const string& sep){
-	size_t i = line.find(sep);
+	size_t i = line.find_first_of(sep);
 	if (i == string::npos || i + sep.length() > line.length())
 		return false;
 	res.first = line.substr(0, i);
