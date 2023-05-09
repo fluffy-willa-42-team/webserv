@@ -25,7 +25,6 @@ class Server {
 		char	buffer[BUFFER_SIZE];
 
 		void start_loop();
-		void exec_connection();
 	public:
 		Server():					is_running(false), address(0, 80), server_fd(-1), connection_fd(-1) { reset_buffer(); };
 		Server(const Address& add): is_running(false), address(add),   server_fd(-1), connection_fd(-1) { reset_buffer(); };
