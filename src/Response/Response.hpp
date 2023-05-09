@@ -15,7 +15,9 @@ class Response {
 		Content*		content;
 
 	public:
-		Response(Request req): request(req){}
+		Response(Request req): request(req){
+			content = content_factory(req.path);
+		}
 		~Response(){
 			delete content;
 		}

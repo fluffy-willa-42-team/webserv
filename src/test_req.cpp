@@ -7,4 +7,6 @@ void test_req(){
 	Request req(TEST_GET);
 
 	cout << req << endl;
+
+	Get get(req);
 }

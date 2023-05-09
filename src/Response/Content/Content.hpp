@@ -16,6 +16,8 @@ class Content {
 		virtual ~Content() = 0;
 };
 
+Content* content_factory(const string& path);
+
 /* ************************************************************************** */
 
 #endif /* CONTENT_HPP */

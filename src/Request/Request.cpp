@@ -1,7 +1,7 @@
 #include "Request.hpp"
 #include "test.hpp"
 
-Request::Request(const std::string& input) : valid(false), port(80), data(""), error_message("")
+Request::Request(const std::string& input) : valid(false), error_message(""), port(80), data("")
 {
 	try
 	{
