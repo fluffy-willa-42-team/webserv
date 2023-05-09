@@ -9,7 +9,7 @@ void Address::parseAddress(string address, string port){
 	data.sin_family = AF_INET;
 	
 	uint16_t port_tmp = 0;
-	std::istringstream(port) >> port_tmp;
+	stringstream(port) >> port_tmp;
 	data.sin_port = htons(port_tmp);
 
 	int temp = 0;
@@ -18,11 +18,11 @@ void Address::parseAddress(string address, string port){
 		if (index == string::npos){
 			throw InvalidAddress();
 		}
-		std::istringstream(address.substr(0, index)) >> temp;
+		stringstream(address.substr(0, index)) >> temp;
 		data.sin_addr.s_addr += (temp << i * 8);
 		address = address.substr(index + 1);
 	}
-	std::istringstream(address) >> temp;
+	stringstream(address) >> temp;
 	data.sin_addr.s_addr += temp;
 }
 

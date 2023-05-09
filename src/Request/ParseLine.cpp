@@ -47,7 +47,7 @@ bool Request::parseHostHeader(const string& line){
 		host = data.first;
 		if (data.second.length() < 1)
 			throw InvalidRequest("Missing Port");
-		std::istringstream(data.second) >> port;
+		stringstream(data.second) >> port;
 		if (port > 65535)
 			throw InvalidRequest("Port Invalid");
 	}

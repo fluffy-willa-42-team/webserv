@@ -5,7 +5,7 @@ Request::Request(const std::string& input) : valid(false), port(80), data(""), e
 {
 	try
 	{
-		std::stringstream test(input);
+		stringstream test(input);
 		string line;
 
 		if (input.length() < 1)

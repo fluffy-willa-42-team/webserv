@@ -4,10 +4,10 @@
 #define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: "
 
 string get_message_test(const Request &req){
-	std::stringstream ss1;
+	stringstream ss1;
 	ss1 << req;
 
-	std::stringstream ss;
+	stringstream ss;
     ss << TEST_MESSAGE << ss1.str().length() << "\n\n" << ss1.str();
     string message = ss.str();
 	return message;
