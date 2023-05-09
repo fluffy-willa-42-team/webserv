@@ -8,6 +8,7 @@ bool loop = true;
 map<int, Server> servers;
 
 int start_test();
+void test_req();
 
 void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
@@ -38,6 +39,7 @@ void shutdown(int signal){
 
 int main(){
 	// start_test();
+	test_req();
 
 	//TODO load config file
 
@@ -48,8 +50,6 @@ int main(){
 
 	std::signal(SIGINT, &shutdown);
 	start();
-	
-
 
 	return 0;
 }
