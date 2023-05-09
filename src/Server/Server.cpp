@@ -17,16 +17,16 @@
  */
 void Server::start(){
 	is_running = true;
-	server_fd = socket(address.data.sin_family, SOCK_STREAM, 0);
+	server_fd = socket(address.input.sin_family, SOCK_STREAM, 0);
 	if (server_fd < 0)
 		throw InternalError("failed to created socket server");
-	int status = bind(server_fd, (struct sockaddr *)& address.data, sizeof(address.data));
+	int status = bind(server_fd, &address.data, address.len);
 	if (status < 0)
 		throw InternalError("failed to bind socket server to port");
 	status = listen(server_fd, 256);
 	if (status < 0)
 		throw InternalError("failed to listen to socket server");
-	cout << "Listening on " << address << endl;
+	cout << RED << "Listening on " << address << RESET << endl;
 	
 	start_loop();
 }
@@ -40,9 +40,9 @@ void Server::start(){
 void Server::start_loop(){
 	while(is_running)
 	{
-		cout << GREEN << "----- Waiting for new connection -----" << RESET << endl << endl;
+		cout << GREEN << "----- Waiting for new connection (" << address << ") -----" << RESET << endl << endl;
 
-		connection_fd = accept(server_fd, address.get_sockaddr(), address.get_socklen());
+		connection_fd = accept(server_fd, &address.data, address.get_socklen());
 		if (connection_fd < 0){
 			if (is_running){
 				cout << is_running << " " << connection_fd << endl;
@@ -68,7 +68,7 @@ void Server::exec_connection(){
 
 	Request test(buffer);
 
-	cout << "\e[0;31m" << "----- Test Request -----" << "\e[0m" << endl << endl;
+	cout << BLUE << "----- Test Request -----" << RESET << endl << endl;
 
 	cout << test << endl;
 
@@ -116,7 +116,7 @@ void Server::stop(){
 		close(connection_fd);
 		connection_fd = -1;
 	}
-	cout << endl << "Closed " << address << endl;
+	cout << endl << RED << "Closed " << address << RESET << endl;
 }
 
 
