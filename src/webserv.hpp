@@ -1,9 +1,8 @@
-#ifndef USING_HPP
-# define USING_HPP
+#ifndef WEBSERV_HPP
+# define WEBSERV_HPP
 
 /* ************************************************************************** */
 
-#include <cstdint>
 #include <iostream>
 #include <map>
 
@@ -32,4 +31,4 @@ using std::runtime_error;
 
 /* ************************************************************************** */
 
-#endif /* USING_HPP */
+#endif /* WEBSERV_HPP */
