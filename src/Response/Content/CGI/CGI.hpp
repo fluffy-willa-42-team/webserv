@@ -12,9 +12,7 @@
 class CGIContent : public Content {
 	private:
 	public:
-		CGIContent(const string& path) : Content(path){
-			cout << PURPLE << "Constructing a CGI Content" << RESET << endl;
-		};
+		CGIContent(const string& path);
 		~CGIContent();
 
 		virtual string toString() const;

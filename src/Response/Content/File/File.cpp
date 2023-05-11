@@ -7,5 +7,5 @@ FileContent::FileContent(const string& path) : Content(path){
 FileContent::~FileContent(){}
 
 string FileContent::toString() const {
-	return "";
+	return "[File Content]";
 }
