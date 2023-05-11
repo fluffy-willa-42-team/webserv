@@ -8,7 +8,7 @@
 
 /* ************************************************************************** */
 
-class Delete : private Response {
+class Delete : public Response {
 	private:
 	protected:
 

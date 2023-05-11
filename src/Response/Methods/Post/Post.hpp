@@ -8,7 +8,7 @@
 
 /* ************************************************************************** */
 
-class Post : private Response {
+class Post : public Response {
 	private:
 	protected:
 
@@ -17,7 +17,9 @@ class Post : private Response {
 			cout << PURPLE << "Constructing a GET method" << RESET << endl;
 		}
 
-		string toString(){}
+		string toString(){
+			return "";
+		}
 };
 
 /* ************************************************************************** */

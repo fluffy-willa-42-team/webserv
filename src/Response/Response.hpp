@@ -14,15 +14,23 @@ class Response {
 		const Request&	request;
 		Content*		content;
 
+		class InvalidResponse : public std::exception {
+			public:
+				string message;
+				InvalidResponse(): 						message("Invalid Response"){}
+				InvalidResponse(const string& message):	message("Invalid Response"){ this->message += ": " + message; }
+				~InvalidResponse() throw() {}
+				virtual const char* what() const throw() { return message.c_str(); }
+		};
 	public:
-		Response(const Request& req): request(req){
-			content = content_factory(req.path);
-		}
-		~Response(){
-			delete content;
-		}
+		Response(const Request& req);
+		~Response();
 
 		virtual string toString() = 0;
+
+		friend Response* response_factory(Request req);
+
+		
 };
 
 /* ************************************************************************** */

@@ -8,7 +8,7 @@
 
 /* ************************************************************************** */
 
-class Get : private Response {
+class Get : public Response {
 	private:
 	protected:
 
