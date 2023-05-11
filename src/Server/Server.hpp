@@ -35,8 +35,8 @@ class Server {
 		void reset_buffer();
 
 	public:
-		Server(const string& name);
-		Server(const string& name, const Address& add);
+		Server(const string& name = "webserv");
+		Server(const Address& add, const string& name = "webserv");
 		~Server();
 
 		void setup();

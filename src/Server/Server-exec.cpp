@@ -1,6 +1,6 @@
 #include "Server.hpp"
 #include "Request.hpp"
-#include "Get.hpp"
+#include "Response.hpp"
 
 #define TEST_MESSAGE "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: "
 
@@ -18,15 +18,13 @@ void Server::exec(){
 	read(connection_fd, buffer, BUFFER_SIZE);
 	cout << buffer << endl;
 
-	Request test(buffer);
+	Request req(buffer);
 
-	cout << BLUE << "----- Test Request -----" << RESET << endl << endl;
+	Response* res = response_factory(req, config);
+	if (!res)
+		cout << "EREREROOOR" << endl;
 
-	Get get(test, config);
-
-	cout << test << endl;
-
-	string message = get_message_test(test);
+	string message = res->toString();
 	write(connection_fd , message.c_str(), message.length());
 	
 	reset_buffer();

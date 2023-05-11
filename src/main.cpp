@@ -44,12 +44,12 @@ void webserv(){
 	//TODO load config file
 
 	//TODO setup Server with config
-	// servers[8001] = Server("James",		Address("0.0.0.0", "8001"));
-	// servers[8002] = Server("Alexandre",	Address("0.0.0.0", "8002"));
-	// servers[8003] = Server("Frederick",	Address("0.0.0.0", "8003"));
+	servers[8001] = Server(Address("0.0.0.0", "8001"));
+	servers[8002] = Server(Address("0.0.0.0", "8002"));
+	servers[8003] = Server(Address("0.0.0.0", "8003"));
 
-	// std::signal(SIGINT, &shutdown);
-	// start();
+	std::signal(SIGINT, &shutdown);
+	start();
 }
 
 int main(){

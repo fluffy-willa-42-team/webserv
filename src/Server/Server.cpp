@@ -16,7 +16,7 @@ Server::Server(const string& name):
 	reset_buffer();
 };
 
-Server::Server(const string& name, const Address& add):
+Server::Server(const Address& add, const string& name):
 	is_running(false),
 	address(add),
 	server_fd(-1),
