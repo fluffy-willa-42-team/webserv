@@ -1,6 +1,6 @@
 #include <Delete.hpp>
 
-Delete::Delete(const Request& req) : Response(req){
+Delete::Delete(const Request& req, const Config& config) : Response(req, config){
 	cout << PURPLE << "Constructing a DELETE method" << RESET << endl;
 }
 

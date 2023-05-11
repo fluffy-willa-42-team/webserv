@@ -1,19 +1,16 @@
 #include <Get.hpp>
 
-string get_now();
-
-Get::Get(const Request& req) : Response(req){
+Get::Get(const Request& req, const Config& config) : Response(req, config){
 	cout << PURPLE << "Constructing a GET method" << RESET << endl;
 }
 
 string Get::toString() const {
 	stringstream res;
-		res << PROTOCOL << " " << "[Status code]" << " " << "[Status Message]" << endl
-			<< "Date: " 
-			<< get_now() << endl
-			<< "Server: " << "[Server name]";
+		res << PROTOCOL << " " << 200 << " " << "OK" << endl
+			<< "Date: " << get_now() << endl
+			<< "Server: " << config.name;
 	
-	if (!content)
+	if (content)
 		res	<< endl << *content;
 	return res.str();
 }

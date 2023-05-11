@@ -6,8 +6,26 @@
 
 /* ************************************************************************** */
 
-Server::Server():					is_running(false), address(0, 80), server_fd(-1), connection_fd(-1) { reset_buffer(); };
-Server::Server(const Address& add): is_running(false), address(add)  , server_fd(-1), connection_fd(-1) { reset_buffer(); };
+Server::Server(const string& name):
+	is_running(false),
+	address(0, 80),
+	server_fd(-1),
+	connection_fd(-1),
+	config(name)
+{
+	reset_buffer();
+};
+
+Server::Server(const string& name, const Address& add):
+	is_running(false),
+	address(add),
+	server_fd(-1),
+	connection_fd(-1),
+	config(name)
+{
+	reset_buffer();
+};
+
 Server::~Server() { stop(); }
 
 /* ************************************************************************** */

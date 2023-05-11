@@ -22,7 +22,7 @@ void Server::exec(){
 
 	cout << BLUE << "----- Test Request -----" << RESET << endl << endl;
 
-	Get get(test);
+	Get get(test, config);
 
 	cout << test << endl;
 

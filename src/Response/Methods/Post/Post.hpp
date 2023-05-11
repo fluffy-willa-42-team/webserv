@@ -12,7 +12,7 @@ class Post : public Response {
 	private:
 		// uint32_t 
 	public:
-		Post(const Request& req);
+		Post(const Request& req, const Config& config);
 
 		string toString() const;
 };

@@ -24,9 +24,11 @@ typedef struct {
     const char* type;
 }	t_extension;
 
-void populate_extention_map(map<string, string>& extention_map){
+map<string, string> get_extension_map(){
+	map<string, string> res;
 	t_extension array[] = EXTENSION;
 	for (int i = 0; i < NB_EXTENSION; i++){
-		extention_map[(array[i].extension)] = array[i].type;
+		res[(array[i].extension)] = array[i].type;
 	}
+	return res;
 }

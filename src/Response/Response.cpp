@@ -1,7 +1,10 @@
 #include "Response.hpp"
 
-Response::Response(const Request& req): req(req){
-	content = content_factory(req.path);
+Response::Response(const Request& req, const Config& config):
+	config(config),
+	req(req)
+{
+	content = content_factory(req.path, config);
 }
 
 Response::~Response(){

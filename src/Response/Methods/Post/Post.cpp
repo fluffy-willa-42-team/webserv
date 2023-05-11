@@ -1,6 +1,6 @@
 #include <Post.hpp>
 
-Post::Post(const Request& req) : Response(req){
+Post::Post(const Request& req, const Config& config) : Response(req, config){
 	cout << PURPLE << "Constructing a POST method" << RESET << endl;
 }
 

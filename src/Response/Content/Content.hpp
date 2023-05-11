@@ -4,6 +4,7 @@
 /* ************************************************************************** */
 
 #include <webserv.hpp>
+#include <Config.hpp>
 
 /* ************************************************************************** */
 
@@ -24,7 +25,7 @@ class Content {
 		friend std::ostream& operator<<(std::ostream& out, const Content& content);
 };
 
-Content* content_factory(const string& path);
+Content* content_factory(const string& path, const Config& config);
 
 /* ************************************************************************** */
 

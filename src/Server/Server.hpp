@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "webserv.hpp"
 #include "Address.hpp"
+#include "Config.hpp"
 
 /* ************************************************************************** */
 
@@ -30,11 +31,12 @@ class Server {
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 
+		Config	config;
 		void reset_buffer();
-	public:
 
-		Server();
-		Server(const Address& add);
+	public:
+		Server(const string& name);
+		Server(const string& name, const Address& add);
 		~Server();
 
 		void setup();

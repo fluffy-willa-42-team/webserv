@@ -12,7 +12,7 @@ class Delete : public Response {
 	private:
 		// uint32_t 
 	public:
-		Delete(const Request& req);
+		Delete(const Request& req, const Config& config);
 
 		string toString() const;
 };
