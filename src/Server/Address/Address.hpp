@@ -6,7 +6,6 @@
 #include "webserv.hpp"
 #include <map>
 #include <iomanip>
-#include <sstream>
 #include <string.h>
 
 #include <netinet/in.h>

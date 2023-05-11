@@ -1,6 +1,5 @@
 #include "webserv.hpp"
 
-#include <sstream>
 #include <ctime>
 #include <cstring>
 

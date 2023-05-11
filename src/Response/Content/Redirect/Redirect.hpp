@@ -3,7 +3,6 @@
 
 /* ************************************************************************** */
 
-#include <iostream>
 #include <webserv.hpp>
 #include <Content.hpp>
 

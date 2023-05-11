@@ -3,7 +3,6 @@
 
 /* ************************************************************************** */
 
-#include <iostream>
 #include <webserv.hpp>
 
 /* ************************************************************************** */
@@ -13,6 +12,7 @@ class Content {
 		string path;
 		string type;
 		size_t length;
+		string data;
 	public:
 		bool special_code;
 
