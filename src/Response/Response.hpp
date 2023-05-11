@@ -11,7 +11,7 @@
 
 class Response {
 	protected:
-		const Request&	request;
+		const Request&	req;
 		Content*		content;
 
 		class InvalidResponse : public std::exception {

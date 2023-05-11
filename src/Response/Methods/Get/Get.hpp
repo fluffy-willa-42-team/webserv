@@ -10,8 +10,7 @@
 
 class Get : public Response {
 	private:
-	protected:
-
+		// uint32_t 
 	public:
 		Get(const Request& req);
 
