@@ -9,7 +9,7 @@ typedef struct unitests {
 }	unitests;
 
 #define VERBOSE_TEST            true
-#define HIDE_SUCCESFULL_TEST    true
+#define HIDE_SUCCESFULL_TEST    false
 #define SHOW_ERROR_IN_PARSING   true
 
 /* ************************************************************************** */

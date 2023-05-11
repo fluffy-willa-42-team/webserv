@@ -59,7 +59,5 @@ bool Request::parseHeader(const string& line){
 		|| data.first.length() < 1)
 		throw InvalidRequest("Wrong Header Key");
 	headers[data.first] = data.second;
-	cout << data.first << endl;
-	cout << data.second << endl;
 	return true;
 }
