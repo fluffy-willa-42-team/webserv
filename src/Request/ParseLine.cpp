@@ -1,15 +1,8 @@
 #include "Request.hpp"
 #include <iostream>
 
-// {FIRST}: {SECOND}
-bool parseSingleLine(pair<string, string>& res, const string& line, const string& sep){
-	size_t i = line.find_first_of(sep);
-	if (i == string::npos || i + sep.length() > line.length())
-		return false;
-	res.first = line.substr(0, i);
-	res.second = line.substr(i + sep.length());
-	return true;
-}
+bool has_input(const string& line, const string& input);
+bool parseSingleLine(pair<string, string>& res, const string& line, const string& sep);
 
 bool Request::parse_line(const string& line, size_t index){
 	switch (index)
@@ -34,6 +27,8 @@ bool Request::parseStartLine(const string& line){
 	
 	path = rest.substr(0, i);
 	protocol = rest.substr(i + 1);
+	if (protocol != PROTOCOL)
+		throw InvalidRequest("Invalid Host Header");
 	return true;
 }
 
@@ -60,8 +55,11 @@ bool Request::parseHostHeader(const string& line){
 bool Request::parseHeader(const string& line){
 	pair<string, string> data;
 	if (!parseSingleLine(data, line, ": ")
+		|| has_input(data.first, ":")
 		|| data.first.length() < 1)
 		throw InvalidRequest("Wrong Header Key");
 	headers[data.first] = data.second;
+	cout << data.first << endl;
+	cout << data.second << endl;
 	return true;
 }

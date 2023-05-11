@@ -8,6 +8,7 @@ void test(const string& value, bool success_expected);
 	{ true,		"GET / HTTP/1.1\n"	},\
 	{ false,	"GET/ HTTP/1.1\n"	},\
 	{ false,	"GET /HTTP/1.1\n"	},\
+	{ false,	"GET / abc.cpp\n"	},\
 	{ false,	"GET /\n"			},\
 	{ false,	"GET / \n"			},\
 	{ false,	"GET /abc\n"		},\

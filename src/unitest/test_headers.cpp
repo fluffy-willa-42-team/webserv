@@ -9,6 +9,8 @@ void test(const string& value, bool success_expected);
 	{ true,		"abc: \n"		},\
 	{ false,	"abc:\n"		},\
 	{ false,	"abc:def\n"		},\
+	{ false,	"abc:def: xd\n"	},\
+	{ false,	"abc:def: \n"	},\
 	{ false,	": def\n"		},\
 	{ false,	"abcs\n"		},\
 	{ true,	"\n"				},\
