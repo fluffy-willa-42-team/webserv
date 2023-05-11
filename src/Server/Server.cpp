@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include "Request.hpp"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <fcntl.h>
 
 /* ************************************************************************** */

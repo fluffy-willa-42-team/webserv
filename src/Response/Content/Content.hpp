@@ -12,7 +12,10 @@ class Content {
 	protected:
 		string path;
 	public:
-		Content(const string& path): path(path){}
+		string type;
+		size_t length;
+		
+		Content(const string& path): path(path), type(""), length(0){}
 		virtual ~Content() = 0;
 
 		virtual string toString() const = 0;
