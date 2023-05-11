@@ -8,17 +8,17 @@ Get::Get(const Request& req) : Response(req){
 
 string Get::toString() const {
 	stringstream res;
-	res << PROTOCOL << " " << "[Status code]" << " " << "[Status Message]" << endl
-		<< "Date: "				<< get_now()			<< endl
-		<< "Server: "			<< "[Server name]"		<< endl;
+		res << PROTOCOL << " " << "[Status code]" << " " << "[Status Message]" << endl
+			<< "Date: "				<< get_now()			<< endl
+			<< "Server: "			<< "[Server name]"		<< endl;
 	
 	if (!content)
-	res	<< "Content-Length: "	<< 0					<< endl;
+		res	<< "Content-Length: "	<< 0					<< endl;
 	else
-	res	<< "Content-Length: "	<< content->length		<< endl
-		<< "Content-Type: "		<< content->type		<< endl
-		<< endl
-		<< *content;
+		res	<< "Content-Length: "	<< content->length		<< endl
+			<< "Content-Type: "		<< content->type		<< endl
+			<< endl
+			<< *content;
 	
 	return res.str();
 }
