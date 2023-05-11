@@ -37,6 +37,20 @@ Request::Request(const std::string& input) : valid(false), error_message(""), po
 	}
 }
 
+Request::Request(const Request& other):
+	valid		(other.valid),
+	error_message (other.error_message),
+	method		(other.method),
+	path		(other.path),
+	protocol	(other.protocol),
+	host		(other.host),
+	port		(other.port),
+	headers		(other.headers),
+	data		(other.data)
+{
+	cout << *this << endl;
+}
+
 std::ostream& operator<<(std::ostream& out, const Request& req){
 	if (!req.valid){
 		out << "Invalid Request";

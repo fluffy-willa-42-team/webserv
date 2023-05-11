@@ -13,13 +13,9 @@ class Get : public Response {
 	protected:
 
 	public:
-		Get(Request req) : Response(req){
-			cout << PURPLE << "Constructing a GET method" << RESET << endl;
-		}
+		Get(const Request& req);
 
-		string toString(){
-			return "";
-		}
+		string toString();
 };
 
 /* ************************************************************************** */

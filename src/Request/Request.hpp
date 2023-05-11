@@ -37,7 +37,8 @@ class Request {
 		map<string, string> headers;
 		string data;
 
-		Request(const std::string& input);
+		Request(const string& input);
+		Request(const Request& other);
 
 		bool isValid(){ return valid; }
 

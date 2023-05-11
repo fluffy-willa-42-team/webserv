@@ -8,5 +8,10 @@ void test_req(){
 
 	cout << req << endl;
 
-	Get get(req);
+	Response* res = response_factory(req);
+	
+	if (!res)
+		throw runtime_error("No Response");
+	cout << "test" << endl;
+	cout << res->toString() << endl;
 }

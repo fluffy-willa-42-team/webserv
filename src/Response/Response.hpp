@@ -28,10 +28,10 @@ class Response {
 
 		virtual string toString() = 0;
 
-		friend Response* response_factory(Request req);
-
-		
+		friend Response* response_factory(const Request& req);
 };
+
+Response* response_factory(const Request& req);
 
 /* ************************************************************************** */
 
