@@ -3,11 +3,11 @@
 
 string response_for_code(int code, const Config& config){
 	stringstream ss1;
-	ss1	<< "<html>"
-		<< "    <h1>"
-		<<          code << ": " << config.status_codes.at(code)
-		<< "    </h1>"
-		<< "</html>";
+	ss1	<<	"<html>"
+		<<		"<h1>"
+		<<	        code << ": " << config.status_codes.at(code)
+		<<		"</h1>"
+		<<	"</html>";
 
 	string message = ss1.str();
 
