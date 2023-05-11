@@ -12,12 +12,11 @@ class Content {
 	protected:
 		string path;
 		string type;
-		size_t length;
 		string data;
 	public:
 		bool special_code;
 
-		Content(const string& path): path(path), type(""), length(0), special_code(false){}
+		Content(const string& path): path(path), type(""), special_code(false){}
 		virtual ~Content() = 0;
 
 		virtual string toString() const = 0;
