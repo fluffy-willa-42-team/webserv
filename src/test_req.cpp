@@ -12,6 +12,5 @@ void test_req(){
 	
 	if (!res)
 		throw runtime_error("No Response");
-	cout << "test" << endl;
 	cout << *res << endl;
 }

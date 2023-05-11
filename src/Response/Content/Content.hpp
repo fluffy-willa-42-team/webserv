@@ -14,6 +14,10 @@ class Content {
 	public:
 		Content(const string& path): path(path){}
 		virtual ~Content() = 0;
+
+		virtual string toString() const = 0;
+
+		friend std::ostream& operator<<(std::ostream& out, const Content& content);
 };
 
 Content* content_factory(const string& path);

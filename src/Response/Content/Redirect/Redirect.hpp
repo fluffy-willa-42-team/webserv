@@ -12,10 +12,10 @@
 class RedirectContent : public Content {
 	private:
 	public:
-		RedirectContent(const string& path) : Content(path){
-			cout << PURPLE << "Constructing a Redirect Content" << RESET << endl;
-		}
-		~RedirectContent(){};
+		RedirectContent(const string& path);
+		~RedirectContent();
+
+		virtual string toString() const;
 };
 
 /* ************************************************************************** */

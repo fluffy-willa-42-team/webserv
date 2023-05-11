@@ -37,7 +37,7 @@ void shutdown(int signal){
 	loop = false;
 }
 
-int main(){
+void webserv(){
 	// start_test();
 	test_req();
 
@@ -50,6 +50,17 @@ int main(){
 
 	// std::signal(SIGINT, &shutdown);
 	// start();
+}
 
+int main(){
+	try
+	{
+		webserv();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return 1;
+	}
 	return 0;
 }

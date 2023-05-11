@@ -6,7 +6,13 @@ Get::Get(const Request& req) : Response(req){
 
 string Get::toString() const {
 	stringstream res;
-	res << req.protocol << " " << req;
+	res << "HTTP/1.1" << " " << "[Status code]" << " " << "[Status Message]" << endl
+		<< "Date: " << "[Date]" << endl
+		<< "Server: " << "[Server name]" << endl
+		<< "Content-Length: " << "[Content Length]" << endl
+		<< "Content-Type: [Content Type]" << endl
+		<< endl
+		<< content;
 	return res.str();
 }
 
