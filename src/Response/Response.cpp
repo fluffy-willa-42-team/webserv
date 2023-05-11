@@ -7,3 +7,8 @@ Response::Response(const Request& req): request(req){
 Response::~Response(){
 	delete content;
 }
+
+std::ostream& operator<<(std::ostream& out, const Response& res){
+	out << res.toString();
+	return out;
+}

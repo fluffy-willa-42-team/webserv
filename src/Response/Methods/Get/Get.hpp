@@ -15,7 +15,7 @@ class Get : public Response {
 	public:
 		Get(const Request& req);
 
-		string toString();
+		string toString() const;
 };
 
 /* ************************************************************************** */

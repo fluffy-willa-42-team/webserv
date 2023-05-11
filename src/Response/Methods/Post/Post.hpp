@@ -17,7 +17,7 @@ class Post : public Response {
 			cout << PURPLE << "Constructing a GET method" << RESET << endl;
 		}
 
-		string toString(){
+		string toString() const {
 			return "";
 		}
 };

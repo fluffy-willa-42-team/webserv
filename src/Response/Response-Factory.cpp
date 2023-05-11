@@ -3,9 +3,8 @@
 #include "Delete.hpp"
 
 Response* response_factory(const Request& req){
-	if (req.method == "GET"){
+	if (req.method == "GET")
 		return new Get(req);
-	}
 	if (req.method == "POST")
 		return new Post(req);
 	if (req.method == "DELETE")

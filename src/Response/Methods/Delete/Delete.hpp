@@ -17,7 +17,7 @@ class Delete : public Response {
 			cout << PURPLE << "Constructing a Delete method" << RESET << endl;
 		}
 
-		string toString(){
+		string toString() const {
 			return "";
 		}
 };

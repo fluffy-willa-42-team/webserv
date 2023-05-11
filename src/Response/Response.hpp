@@ -26,9 +26,11 @@ class Response {
 		Response(const Request& req);
 		~Response();
 
-		virtual string toString() = 0;
+		virtual string toString() const = 0;
 
 		friend Response* response_factory(const Request& req);
+
+		friend std::ostream& operator<<(std::ostream& out, const Response& res);
 };
 
 Response* response_factory(const Request& req);
