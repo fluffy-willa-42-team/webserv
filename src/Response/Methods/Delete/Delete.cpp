@@ -1,10 +1,10 @@
-#include <Get.hpp>
+#include <Delete.hpp>
 
-Get::Get(const Request& req) : Response(req){
-	cout << PURPLE << "Constructing a GET method" << RESET << endl;
+Delete::Delete(const Request& req) : Response(req){
+	cout << PURPLE << "Constructing a DELETE method" << RESET << endl;
 }
 
-string Get::toString() const {
+string Delete::toString() const {
 	stringstream res;
 	res << "HTTP/1.1" << " " << "[Status code]" << " " << "[Status Message]" << endl
 		<< "Date: "				<< "[Date]"				<< endl

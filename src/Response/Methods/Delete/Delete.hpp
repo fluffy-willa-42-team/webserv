@@ -10,16 +10,11 @@
 
 class Delete : public Response {
 	private:
-	protected:
-
+		// uint32_t 
 	public:
-		Delete(Request req) : Response(req){
-			cout << PURPLE << "Constructing a Delete method" << RESET << endl;
-		}
+		Delete(const Request& req);
 
-		string toString() const {
-			return "";
-		}
+		string toString() const;
 };
 
 /* ************************************************************************** */

@@ -10,16 +10,11 @@
 
 class Post : public Response {
 	private:
-	protected:
-
+		// uint32_t 
 	public:
-		Post(Request req) : Response(req){
-			cout << PURPLE << "Constructing a GET method" << RESET << endl;
-		}
+		Post(const Request& req);
 
-		string toString() const {
-			return "";
-		}
+		string toString() const;
 };
 
 /* ************************************************************************** */
