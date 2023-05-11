@@ -2,7 +2,9 @@
 
 Response::Response(const Request& req, const Config& config):
 	config(config),
-	req(req)
+	req(req),
+	code(200),
+	send_content_or_code_msg(false)
 {
 	content = content_factory(req.path, config);
 }

@@ -4,15 +4,38 @@ Get::Get(const Request& req, const Config& config) : Response(req, config){
 	cout << PURPLE << "Constructing a GET method" << RESET << endl;
 }
 
+static string response_for_code(int code, const Config& config){
+	stringstream ss1;
+	ss1 << code << ": " << config.status_codes.at(code);
+
+	string message = ss1.str();
+
+	stringstream ss2;
+	ss2	<< PROTOCOL << " " << code << " " << config.status_codes.at(code) << endl
+		<< "Date: " << get_now() << endl
+		<< "Server: " << config.name << endl
+		<< "Content-Type: " << "text/plain" << endl
+		<< "Content-Length: " << message.length() << endl
+		<< endl
+		<< message;
+
+	return ss2.str();
+}
+
 string Get::toString() const {
 	stringstream res;
-		res << PROTOCOL << " " << 200 << " " << "OK" << endl
+	
+	if (send_content_or_code_msg){
+		res << PROTOCOL << " " << code << " " << config.status_codes.at(code) << endl
 			<< "Date: " << get_now() << endl
 			<< "Server: " << config.name;
-	
-	if (content)
-		res	<< endl << *content;
-	return res.str();
+		if (content)
+			res	<< endl << *content;
+		return res.str();
+	}
+	else {
+		return response_for_code(404, config);
+	}
 }
 
 /*

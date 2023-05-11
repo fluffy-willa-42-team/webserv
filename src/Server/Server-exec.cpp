@@ -13,6 +13,9 @@ void Server::exec(){
 		throw runtime_error("response is null");
 
 	string message = res->toString();
+
+	cout << message << endl;
+
 	write(connection_fd , message.c_str(), message.length());
 	
 	reset_buffer();
