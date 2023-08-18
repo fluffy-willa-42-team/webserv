@@ -4,8 +4,6 @@ string openFile(const string& folder, const string& path){
     ifstream inputFile;
     inputFile.open((folder + path).c_str());
 
-	cout << "path: " << path << endl;
-
     if (inputFile.is_open()) {
         stringstream buffer;
         buffer << inputFile.rdbuf();

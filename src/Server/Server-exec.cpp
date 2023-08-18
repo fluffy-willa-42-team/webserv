@@ -4,7 +4,7 @@
 
 void Server::exec(){
 	read(connection_fd, buffer, BUFFER_SIZE);
-	cout << buffer << endl;
+	cout << CYAN << buffer << RESET << endl;
 
 	Request req(buffer);
 

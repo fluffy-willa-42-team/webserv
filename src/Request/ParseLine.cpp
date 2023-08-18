@@ -30,7 +30,6 @@ bool Request::parseStartLine(const string& line){
 	path = rest.substr(0, i);
 	protocol = rest.substr(i + 1);
 	if (protocol != PROTOCOL){
-		cout << line << " " << protocol << " " << PROTOCOL << endl;
 		throw InvalidRequest("Invalid Host Header3");
 	}
 	return true;
