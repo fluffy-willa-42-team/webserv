@@ -10,9 +10,9 @@
 
 class Content {
 	protected:
-		string path;
-		string type;
-		string data;
+		string path;	// Path to content
+		string type;	// 
+		string data;	// 
 	public:
 		bool special_code;
 

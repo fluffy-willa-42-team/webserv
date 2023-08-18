@@ -7,17 +7,12 @@ Get::Get(const Request& req, const Config& config) : Response(req, config){
 string Get::toString() const {
 	stringstream res;
 	
-	if (send_content_or_code_msg){
-		res << PROTOCOL << " " << code << " " << config.status_codes.at(code) << endl
-			<< "Date: " << get_now() << endl
-			<< "Server: " << config.name;
-		if (content)
-			res	<< endl << *content;
-		return res.str();
-	}
-	else {
-		return response_for_code(404, config);
-	}
+	res << PROTOCOL << " " << code << " " << config.status_codes.at(code) << endl
+		<< "Date: " << get_now() << endl
+		<< "Server: " << config.name;
+	if (content)
+		res	<< endl << *content;
+	return res.str();
 }
 
 /*

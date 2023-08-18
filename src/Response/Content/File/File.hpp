@@ -15,6 +15,15 @@ class FileContent : public Content {
 		~FileContent();
 
 		virtual string toString() const;
+
+		class FileNotFound : public std::exception {
+			public:
+				string message;
+				FileNotFound(): 						message("File Not Found"){}
+				FileNotFound(const string& message): 	message("File Not Found"){ this->message += ": " + message; }
+				~FileNotFound() throw() {}
+				virtual const char* what() const throw() { return message.c_str(); }
+		};
 };
 
 /* ************************************************************************** */
