@@ -23,6 +23,4 @@ void replace_string(string& input, const string& pattern_in, const string& patte
         input.replace(pos, pattern_in.length(), pattern_out);
         pos += pattern_out.length();
     }
-
-    std::cout << "Modified string: " << input << std::endl;
 }

@@ -21,7 +21,6 @@ FileContent::FileContent(const string& path, const Config& config) : Content(pat
 	cout << PURPLE << "Constructing a File Content" << RESET << endl;
 	type = "text/html";
 
-	(void) config;
 	try
 	{
 		data = openFile("/home/willa/19/webserv/static/", path);
@@ -31,6 +30,7 @@ FileContent::FileContent(const string& path, const Config& config) : Content(pat
 		std::stringstream ss;
 		ss << path << " does not exist";
 		data = generate_error_page(404, config, ss.str());
+		add_special_code(404);
 	}
 }
 

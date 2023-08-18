@@ -5,6 +5,11 @@ Post::Post(const Request& req, const Config& config) : Response(req, config){
 }
 
 string Post::toString() const {
+	string test = content->toString();
+	// if (content->special_code){
+		
+	// }
+
 	stringstream res;
 	res << PROTOCOL << " " << "[Status code]" << " " << "[Status Message]" << endl
 		<< "Date: "		<< get_now()		<< endl

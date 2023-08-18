@@ -6,8 +6,13 @@ Get::Get(const Request& req, const Config& config) : Response(req, config){
 
 string Get::toString() const {
 	stringstream res;
-	
-	res << PROTOCOL << " " << code << " " << config.status_codes.at(code) << endl
+
+	int final_code = (content->special_code ? content->getSpecialCode() : code);
+
+	cout << final_code << endl;
+	string test = config.status_codes.at(final_code);
+
+	res << PROTOCOL << " " << final_code << " " << config.status_codes.at(final_code) << endl
 		<< "Date: " << get_now() << endl
 		<< "Server: " << config.name;
 	if (content)
