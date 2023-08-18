@@ -38,8 +38,6 @@ class Response {
 
 Response* response_factory(const Request& req, const Config& config);
 
-string response_for_code(int code, const Config& config);
-
 /* ************************************************************************** */
 
 #endif /* RESPONSE_HPP */
