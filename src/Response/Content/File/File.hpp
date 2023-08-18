@@ -11,7 +11,7 @@
 class FileContent : public Content {
 	private:
 	public:
-		FileContent(const string& path);
+		FileContent(const string& path, const Config& config);
 		~FileContent();
 
 		virtual string toString() const;

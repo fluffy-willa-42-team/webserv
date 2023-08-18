@@ -17,17 +17,19 @@ string openFile(const string& path){
     }
 }
 
-FileContent::FileContent(const string& path) : Content(path){
+FileContent::FileContent(const string& path, const Config& config) : Content(path){
 	cout << PURPLE << "Constructing a File Content" << RESET << endl;
 	type = "text/html";
 
+
+	(void) config;
 	try
 	{
 		data = openFile(path);
 	}
 	catch(const FileContent::FileNotFound& e)
 	{
-		data = openFile("/error.html");
+		data = openFile("/error.html"); // ADD config link for error page
 	}
 }
 

@@ -18,5 +18,5 @@ Content* content_factory(const string& path, const Config& config){
 	// if (is_cgi)
 	// 	return new CGIContent(path);
 
-	return new FileContent(path);
+	return new FileContent(path, config);
 }

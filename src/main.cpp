@@ -39,7 +39,7 @@ void shutdown(int signal){
 
 void webserv(){
 	// start_test();
-	test_req();
+	// test_req();
 
 	//TODO load config file
 

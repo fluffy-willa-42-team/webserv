@@ -7,14 +7,10 @@ Post::Post(const Request& req, const Config& config) : Response(req, config){
 string Post::toString() const {
 	stringstream res;
 	res << PROTOCOL << " " << "[Status code]" << " " << "[Status Message]" << endl
-		<< "Date: "				<< "[Date]"				<< endl
-		<< "Server: "			<< "[Server name]"		<< endl
-		<< "Content-Length: "	<< "[Content Length]"	<< endl
-		<< "Content-Type: "		<< "[Content Type]"		<< endl;
-	
+		<< "Date: "		<< get_now()		<< endl
+		<< "Server: "	<< config.name		<< endl;
 	if (content)
-	res << endl
-		<< *content;
+		res	<< endl << *content;
 	
 	return res.str();
 }

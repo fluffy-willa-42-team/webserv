@@ -14,6 +14,8 @@ class Config {
 		map<int, string> status_codes;
 		map<string, string> extension_types;
 
+		// map<string, string> paths;
+
 		Config(const string& server_name);
 
 		friend std::ostream& operator<<(std::ostream& out, const Config& req);
