@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <map>
 
 /* ************************************************************************** */
@@ -33,7 +34,9 @@ using std::string;
 using std::stringstream;
 using std::endl;
 using std::cout;
+using std::cerr;
 using std::runtime_error;
+using std::ifstream;
 
 /* ************************************************************************** */
 
