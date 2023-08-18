@@ -2,20 +2,7 @@
 
 string openFile(const string& folder, const string& path);
 void replace_string(string& input, const string& pattern_in, const string& pattern_out);
-
-string generate_error_page(int error_code, const Config& config, const string& message){
-	string error_file = openFile("/home/willa/19/webserv/errors/", "/error.html");
-
-	std::stringstream ss;
-    ss << error_code;
-
-	replace_string(error_file, "{{code}}", ss.str());
-	replace_string(error_file, "{{error_desc}}", config.status_codes.at(error_code));
-	if (message.length() > 0){
-		replace_string(error_file, "{{error_message}}", message);
-	}
-	return error_file;
-}
+string generate_error_page(int error_code, const Config& config, const string& message);
 
 FileContent::FileContent(const string& path, const Config& config) : Content(path){
 	cout << PURPLE << "Constructing a File Content" << RESET << endl;
