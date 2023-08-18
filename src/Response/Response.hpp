@@ -16,7 +16,6 @@ class Response {
 		const Request&	req;
 		Content*		content;
 		int code;
-		bool send_content_or_code_msg;
 
 		class InvalidResponse : public std::exception {
 			public:
