@@ -3,7 +3,10 @@
 		<title>An Error Occured</title>
 	</head>
 	<body>
-		<h1>An Error Occured</h1>
+		<div>
+			<h1>{{code}}: {{error_desc}}</h1>
+			<h2>{{error_message}}</h2>
+		</div>
 	</body>
 </html>
 
@@ -12,7 +15,7 @@
 		background-color: crimson;
 	}
 
-	h1 {
+	div {
 		color: white;
 		text-align: center;
 		padding: 5em;
