@@ -8,11 +8,6 @@ void Server::exec(){
 
 	Request req(buffer);
 
-	if (!req.isValid()){
-		cout << RED << "Invalid Request" << endl;
-		return ;
-	}
-
 	Response* res = response_factory(req, config);
 	if (!res)
 		throw runtime_error("response is null");
