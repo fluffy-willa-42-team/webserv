@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <map>
+#include <vector>
 
 /* ************************************************************************** */
 
@@ -30,6 +31,7 @@
 
 using std::pair;
 using std::map;
+using std::vector;
 using std::string;
 using std::stringstream;
 using std::endl;
