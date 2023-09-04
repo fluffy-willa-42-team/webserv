@@ -29,12 +29,13 @@ class Server {
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
 
-		const string get_address();
 		t_setup setup();
 		
 	public:
 		Server(u_int32_t address, u_int16_t port);
 		~Server();
+
+		const string get_address();
 };
 
 /******************************************************************************/
