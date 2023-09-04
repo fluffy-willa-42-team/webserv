@@ -22,20 +22,19 @@ class Server {
 	private:
 		sockaddr_in address_struct;
 
-		const string get_address();
-	public:
 		const u_int32_t address;
 		const u_int16_t port;
 
 		int32_t server_fd;
 		int32_t connection_fd;
 		char	buffer[BUFFER_SIZE];
+
+		const string get_address();
+		t_setup setup();
 		
+	public:
 		Server(u_int32_t address, u_int16_t port);
 		~Server();
-	private:
-		t_setup setup();
-
 };
 
 /******************************************************************************/
