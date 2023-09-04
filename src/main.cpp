@@ -6,6 +6,7 @@ bool loop = true;
 map<int, Server> servers;
 
 void start(){
+	// Setup every server and delete all that fail setup
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
@@ -13,9 +14,21 @@ void start(){
 			servers.erase(ite);
 		}
 	}
+	// Return if all failed to start
 	if (servers.size() < 1){
 		return ;
 	}
+	// Execute start_parallel of all server at each execution.
+	/*
+
+	| 1 | 2 | 3 |            | 1 | 2 | 3 |            | 1 | 2 | 3 |
+	|---|---|---|     =>     |---|---|---|     =>     |---|---|---|
+	| x |   |   |            |   | x |   |            |   |   | x |
+      ^															|
+	  |															|
+      O---------------------------------------------------------O
+	
+	*/
 	while (loop){
 		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 			ite->second.start_parallel();

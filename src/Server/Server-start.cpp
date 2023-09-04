@@ -62,11 +62,12 @@ t_setup Server::setup(){
 void Server::start(){
 	while(is_running)
 	{
+		cout << get_address() << endl;
 		connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
 		if (connection_fd < 0 && errno == EWOULDBLOCK){	// check if there is a new connection
 			continue ;
 		}
-		if (connection_fd < 0){		// check if error in accept after having recieved a connection
+		if (connection_fd < 0){		
 			return ;
 		}	
 		print_waiting_msg();
@@ -75,7 +76,9 @@ void Server::start(){
 
 void Server::start_parallel(){
 	connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
-	if (connection_fd < 0 || (connection_fd < 0 && errno == EWOULDBLOCK)){	// check if there is a new connection
+	if (connection_fd < 0 // check if error in accept after having recieved a connection
+		|| (connection_fd < 0 && errno == EWOULDBLOCK)	// check if there is a new connection
+	){
 		return ;
 	}
 	print_waiting_msg();
