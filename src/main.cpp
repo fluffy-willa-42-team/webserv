@@ -7,12 +7,16 @@ map<int, Server> servers;
 
 void start(){
 	// Setup every server and delete all that fail setup
-	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
 			cout << res.code << " " << res.err << " " << res.message << endl;
-			servers.erase(ite);
-			cout << "HERE" << endl;
+			std::map<int, Server>::iterator temp = ite;
+			ite++;
+			servers.erase(temp);
+		}
+		else {
+			ite++;
 		}
 	}
 	// Return if all failed to start
@@ -31,12 +35,17 @@ void start(){
 	
 	*/
 	while (loop){
-		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 			e_status status = ite->second.try_exec();
 			if (status == S_STOP){
+				cout << "Erasing" << ite->first << endl;
 				ite->second.stop();
-				servers.erase(ite);
-				cout << "HERE" << endl;
+				std::map<int, Server>::iterator temp = ite;
+				ite++;
+				servers.erase(temp);
+			}
+			else {
+				ite++;
 			}
 		}
 	}
@@ -44,7 +53,8 @@ void start(){
 
 void shutdown(int signal){
 	(void) signal;
-	cout << endl;
+	loop = false;
+	cout << endl << "STOP" << endl;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
