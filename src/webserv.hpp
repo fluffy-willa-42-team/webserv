@@ -42,6 +42,7 @@ using std::cerr;
 using std::runtime_error;
 using std::ifstream;
 using std::memset;
+using std::exception;
 
 /* ************************************************************************** */
 

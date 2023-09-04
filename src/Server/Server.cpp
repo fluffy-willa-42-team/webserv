@@ -2,24 +2,50 @@
 
 #include <unistd.h>
 
-Server::Server(u_int32_t address, u_int16_t port)
-: address(address), port(port), server_fd(-1), connection_fd(-1)
+Server::Server()
+: address(0), port(0), server_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(buffer, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 	address_struct.sin_addr.s_addr = address;
 	address_struct.sin_port = port;
+}
 
-	cout << CYAN << "Starting Server      : " << this->get_address() << RESET << endl;
-
-	t_setup res = setup();
-	if (res.code != 0){
-		cout << res.code << " " << res.err << " " << res.message << endl;
-	}
+Server::Server(u_int32_t address, u_int16_t port)
+: address(address), port(port), server_fd(-1), connection_fd(-1), is_running(false)
+{
+	memset(buffer, 0, sizeof(address_struct));
+	memset(buffer, 0, BUFFER_SIZE);
+	address_struct.sin_addr.s_addr = address;
+	address_struct.sin_port = port;
 }
 
 Server::~Server(){
-	close(server_fd);
-	close(connection_fd);
-	cout << CYAN << "Shutting down Server : " << this->get_address() << RESET << endl;
+	if (server_fd >= 0){
+		close(server_fd);
+		server_fd = -1;
+	}
+	if (connection_fd >= 0){
+		close(connection_fd);
+		connection_fd = -1;
+	}
+}
+
+const Server& Server::operator=(const Server& other)
+{
+	address = other.address;
+	port = other.port;
+
+	server_fd = -1;
+	connection_fd = -1;
+
+	is_running = false;
+
+	memset(buffer, 0, sizeof(address_struct));
+	memset(buffer, 0, BUFFER_SIZE);
+
+	address_struct.sin_addr.s_addr = address;
+	address_struct.sin_port = port;
+
+	return *this;
 }
