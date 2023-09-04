@@ -16,6 +16,11 @@ typedef struct {
 	string message;
 }	t_setup;
 
+typedef enum {
+	S_CONTINUE,
+	S_STOP,
+}	e_status;
+
 /******************************************************************************/
 
 class Server {
@@ -40,8 +45,7 @@ class Server {
 		const Server& operator=(const Server& other);
 
 		t_setup setup();
-		void start();
-		void start_parallel();
+		e_status try_exec();
 		void stop();
 		void exec();
 

@@ -12,13 +12,14 @@ void start(){
 		if (res.code != 0){
 			cout << res.code << " " << res.err << " " << res.message << endl;
 			servers.erase(ite);
+			cout << "HERE" << endl;
 		}
 	}
 	// Return if all failed to start
 	if (servers.size() < 1){
 		return ;
 	}
-	// Execute start_parallel of all server at each execution.
+	// Execute try_exec of all server at each execution.
 	/*
 
 	| 1 | 2 | 3 |            | 1 | 2 | 3 |            | 1 | 2 | 3 |
@@ -31,7 +32,12 @@ void start(){
 	*/
 	while (loop){
 		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
-			ite->second.start_parallel();
+			e_status status = ite->second.try_exec();
+			if (status == S_STOP){
+				ite->second.stop();
+				servers.erase(ite);
+				cout << "HERE" << endl;
+			}
 		}
 	}
 }

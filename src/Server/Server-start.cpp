@@ -59,31 +59,28 @@ t_setup Server::setup(){
 
 
 
-void Server::start(){
-	while(is_running)
-	{
-		connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
-		if (connection_fd < 0 && errno == EWOULDBLOCK){	// check if there is a new connection
-			continue ;
-		}
-		if (connection_fd < 0){		
-			return ;
-		}
-		exec();
-		print_waiting_msg();
+e_status Server::try_exec(){
+	if (!is_running){
+		return S_STOP;
 	}
-}
 
-void Server::start_parallel(){
-	connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
-	// cout << server_fd << "   " << connection_fd << "   " << errno << endl;
-	if (connection_fd < 0 // check if error in accept after having recieved a connection
-		|| (connection_fd < 0 && errno == EWOULDBLOCK)	// check if there is a new connection
-	){
-		return ;
+	// get new connection (non-blocking due to setup)
+	connection_fd = accept(server_fd, NULL, NULL);	
+
+	// check if there is a new connection
+	if (connection_fd < 0 && errno == EWOULDBLOCK){
+		return S_CONTINUE;
+	}
+
+	// check if error in accept after having recieved a connection
+	if (connection_fd < 0) 
+	{
+		cout << "STOP" << endl;
+		return S_STOP;
 	}
 	exec();
 	print_waiting_msg();
+	return S_CONTINUE;
 }
 
 
