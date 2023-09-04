@@ -43,6 +43,7 @@ class Server {
 		void start();
 		void start_parallel();
 		void stop();
+		void exec();
 
 		const string get_address();
 		bool is_it_running();
