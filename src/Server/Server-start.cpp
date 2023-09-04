@@ -15,6 +15,10 @@ t_setup ret(u_int32_t code, const string& message){
 	return res;
 }
 
+
+
+
+
 t_setup Server::setup(){
 	cout << CYAN << "Starting Server      : " << this->get_address() << RESET << endl;
 	
@@ -45,12 +49,17 @@ t_setup Server::setup(){
 	}
 	
 	cout << CYAN << "Listening on         : " << get_address() << RESET << endl;
+	is_running = true;
+	print_waiting_msg();
 
 	return ret(0, "success");
 }
 
+
+
+
+
 void Server::start(){
-	print_waiting_msg();
 	while(is_running)
 	{
 		connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
@@ -63,6 +72,17 @@ void Server::start(){
 		print_waiting_msg();
 	}
 }
+
+void Server::start_parallel(){
+	connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
+	if (connection_fd < 0 || (connection_fd < 0 && errno == EWOULDBLOCK)){	// check if there is a new connection
+		return ;
+	}
+	print_waiting_msg();
+}
+
+
+
 
 
 void Server::stop(){

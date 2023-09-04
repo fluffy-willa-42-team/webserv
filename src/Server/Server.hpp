@@ -41,6 +41,7 @@ class Server {
 
 		t_setup setup();
 		void start();
+		void start_parallel();
 		void stop();
 
 		const string get_address();

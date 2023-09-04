@@ -1,5 +1,6 @@
 #include "webserv.hpp"
 #include "Server.hpp"
+#include <csignal>
 
 bool loop = true;
 map<int, Server> servers;
@@ -11,13 +12,20 @@ void start(){
 			cout << res.code << " " << res.err << " " << res.message << endl;
 			servers.erase(ite);
 		}
-		ite->second.start();
 	}
-	// while (loop);
+	if (servers.size() < 1){
+		return ;
+	}
+	while (loop){
+		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+			ite->second.start_parallel();
+		}
+	}
 }
 
 void shutdown(int signal){
 	(void) signal;
+	cout << endl;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
@@ -26,7 +34,10 @@ void shutdown(int signal){
 
 void webserv(){
 	servers[8001] = Server(0, 8001);
+	servers[8002] = Server(0, 8002);
+	servers[8003] = Server(0, 8003);
 
+	std::signal(SIGINT, &shutdown);
 	start();
 }
 
