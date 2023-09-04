@@ -44,7 +44,7 @@ t_setup Server::setup(){
 	}
 
 	// listens to port for new TCP connection
-	if (listen(server_fd, 256)){
+	if (listen(server_fd, 256) < 0){
 		return ret(5, "failed to listen to socket server");
 	}
 	
@@ -76,10 +76,10 @@ void Server::start(){
 
 void Server::start_parallel(){
 	connection_fd = accept(server_fd, NULL, NULL);	// get new connection (non-blocking due to setup)
+	// cout << server_fd << "   " << connection_fd << "   " << errno << endl;
 	if (connection_fd < 0 // check if error in accept after having recieved a connection
 		|| (connection_fd < 0 && errno == EWOULDBLOCK)	// check if there is a new connection
 	){
-		cout << "hello" << endl;
 		return ;
 	}
 	exec();
