@@ -8,7 +8,7 @@ Server::Server()
 	memset(buffer, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 	address_struct.sin_addr.s_addr = address;
-	address_struct.sin_port = port;
+	address_struct.sin_port = htons(port);
 }
 
 Server::Server(u_int32_t address, u_int16_t port)
@@ -17,7 +17,7 @@ Server::Server(u_int32_t address, u_int16_t port)
 	memset(buffer, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 	address_struct.sin_addr.s_addr = address;
-	address_struct.sin_port = port;
+	address_struct.sin_port = htons(port);
 }
 
 Server::~Server(){
@@ -45,7 +45,7 @@ const Server& Server::operator=(const Server& other)
 	memset(buffer, 0, BUFFER_SIZE);
 
 	address_struct.sin_addr.s_addr = address;
-	address_struct.sin_port = port;
+	address_struct.sin_port = htons(port);
 
 	return *this;
 }
