@@ -1,8 +1,10 @@
 #include "webserv.hpp"
+#include "Server.hpp"
 
 // map<int, Server> servers;
 
 void webserv(){
+	Server(4876767, 456);
 }
 
 int main(){
