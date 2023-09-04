@@ -52,6 +52,7 @@ void start(){
 void shutdown(int signal){
 	(void) signal;
 	loop = false;
+	cout << endl;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
