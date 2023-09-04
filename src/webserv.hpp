@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <cstdlib>
+#include <cstring>
 
 /* ************************************************************************** */
 
@@ -40,6 +41,7 @@ using std::cout;
 using std::cerr;
 using std::runtime_error;
 using std::ifstream;
+using std::memset;
 
 /* ************************************************************************** */
 

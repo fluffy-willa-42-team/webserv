@@ -4,7 +4,10 @@
 // map<int, Server> servers;
 
 void webserv(){
-	Server(0x0605010A, 456);
+	cout << sizeof(sockaddr_in) << endl;
+	// Server test(0x0605010A, 1456);
+	Server test(0, 1456);
+	// test.setup();
 	// Server(0x0705010A, 456);
 }
 
