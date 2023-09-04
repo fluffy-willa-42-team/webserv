@@ -4,7 +4,8 @@
 // map<int, Server> servers;
 
 void webserv(){
-	Server(4876767, 456);
+	Server(0x0605010A, 456);
+	// Server(0x0705010A, 456);
 }
 
 int main(){
