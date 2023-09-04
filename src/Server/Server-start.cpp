@@ -79,6 +79,7 @@ void Server::start_parallel(){
 	if (connection_fd < 0 // check if error in accept after having recieved a connection
 		|| (connection_fd < 0 && errno == EWOULDBLOCK)	// check if there is a new connection
 	){
+		cout << "hello" << endl;
 		return ;
 	}
 	exec();
