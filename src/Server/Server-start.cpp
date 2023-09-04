@@ -65,7 +65,7 @@ e_status Server::try_exec(){
 	}
 
 	// get new connection (non-blocking due to setup)
-	connection_fd = accept(server_fd, NULL, NULL);	
+	connection_fd = accept(server_fd, NULL, NULL);
 
 	// check if there is a new connection
 	if (connection_fd < 0 && errno == EWOULDBLOCK){
@@ -73,7 +73,7 @@ e_status Server::try_exec(){
 	}
 
 	// check if error in accept after having recieved a connection
-	if (connection_fd < 0) 
+	if (connection_fd < 0)
 	{
 		cout << "STOP" << endl;
 		return S_STOP;
