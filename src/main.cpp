@@ -10,7 +10,6 @@ void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
-			cout << res.code << " " << res.err << " " << res.message << endl;
 			std::map<int, Server>::iterator temp = ite;
 			ite++;
 			servers.erase(temp);
@@ -38,7 +37,6 @@ void start(){
 		for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 			e_status status = ite->second.try_exec();
 			if (status == S_STOP){
-				cout << "Erasing" << ite->first << endl;
 				ite->second.stop();
 				std::map<int, Server>::iterator temp = ite;
 				ite++;
@@ -54,7 +52,6 @@ void start(){
 void shutdown(int signal){
 	(void) signal;
 	loop = false;
-	cout << endl << "STOP" << endl;
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end(); ite++){
 		ite->second.stop();
 	}
