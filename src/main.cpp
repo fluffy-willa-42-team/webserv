@@ -10,7 +10,6 @@ void start(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
-			cout << CYAN << "Shutting down Server : " << ite->second.get_address() << RESET << endl;
 			std::map<int, Server>::iterator temp = ite;
 			ite++;
 			servers.erase(temp);

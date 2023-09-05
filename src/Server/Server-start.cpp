@@ -20,8 +20,6 @@ t_setup ret(u_int32_t code, const string& message){
 
 
 t_setup Server::setup(){
-	cout << CYAN << "Starting Server      : " << this->get_address() << RESET << endl;
-	
 	// Create Socket file descriptor for server
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd < 0){
