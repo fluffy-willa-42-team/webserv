@@ -5,5 +5,6 @@
 string error(u_int32_t code, const string& message);
 
 const string http(const string& req){
+	// Parse_request()
 	return error(404, "This Page has not been Found");
 }

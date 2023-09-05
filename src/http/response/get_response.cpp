@@ -4,7 +4,9 @@ map<u_int32_t, string>& get_codes_map();
 static map<u_int32_t, string>& codes_map = get_codes_map();
 
 string get_response(u_int32_t code, map<string, string> headers, string body){
-	headers["Content-Length"] = body.length();
+	stringstream length_str;
+	length_str << body.length();
+	headers["Content-Length"] = length_str.str();
 
 	const string description = codes_map[code];
 
