@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-const string& parse_http(const string& req);
+const string http(const string& req);
 
 void Server::exec(){
 	read(connection_fd, buffer, BUFFER_SIZE);
@@ -10,7 +10,7 @@ void Server::exec(){
 
 	// TODO Ensure the buffer has all the request
 
-	string response = parse_http(buffer);
+	string response = http(buffer);
 
 	cout << response << endl;
 

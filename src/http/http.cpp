@@ -4,14 +4,6 @@
 
 string error(u_int32_t code, const string& message);
 
-const string parse_http(const string& req){
-	// stringstream ss(req);
-	// string line;
-
-	// while (std::getline(ss, line) && line.length() > 0 && line != "\r"){
-	// 	cout << line;
-	// }
-	// const string res = Error(404, "Not Found").http();
+const string http(const string& req){
 	return error(404, "Page not Found");
-	// return "";
 }
