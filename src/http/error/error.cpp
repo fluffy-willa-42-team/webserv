@@ -28,7 +28,7 @@ void replace_string(string& input, const string& pattern_in, const string& patte
 }
 
 string error(u_int32_t code, const string& message){
-	string error_file = readFileIntoString("./errors/error.html");
+	string error_file = readFileIntoString("./error.html");
 	stringstream code_str; code_str << code;
 	replace_string(error_file, "{{code}}", code_str.str());
 	replace_string(error_file, "{{error_desc}}", codes_map[code]);
