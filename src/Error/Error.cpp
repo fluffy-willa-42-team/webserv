@@ -1,33 +1,18 @@
 #include "Error.hpp"
 
-string readFileIntoString(const string& path) {
-    ifstream input_file(path);
-    if (!input_file.is_open()) {
-        cerr << "Could not open the file - '"
-             << path << "'" << endl;
-        exit(EXIT_FAILURE);
-    }
-    return string(
-		std::istreambuf_iterator<char>(input_file),
-		std::istreambuf_iterator<char>()
-	);
-}
-
-void replace_string(string& input, const string& pattern_in, const string& pattern_out){
-    size_t pos = 0;
-
-    while ((pos = input.find(pattern_in, pos)) != std::string::npos) {
-        input.replace(pos, pattern_in.length(), pattern_out);
-        pos += pattern_out.length();
-    }
-}
+string readFileIntoString(const string& path);
+void replace_string(string& input, const string& pattern_in, const string& pattern_out);
 
 Error::Error()
-: code(0), message(""), description("")
+: code(0), description(""), message("")
 {}
 
-Error::Error(u_int32_t code, string message, string description)
-: code(code), message(message), description(description)
+Error::Error(u_int32_t code, string description)
+: code(code), description(description)
+{}
+
+Error::Error(u_int32_t code, string description, string message)
+: code(code), description(description), message(message)
 {}
 
 Error::~Error(){}
@@ -41,27 +26,29 @@ const Error& Error::operator=(const Error& other){
 
 const string Error::http(){
 	string error_file = readFileIntoString("./errors/error.html");
-	replace_string(error_file, "{{code}}", code);
-	replace_string(error_file, "{{error_desc}}", message);
+	stringstream code_str; code_str << code;
+	replace_string(error_file, "{{code}}", code_str.str());
+	replace_string(error_file, "{{error_desc}}", description);
 	if (message.length() > 0){
 		replace_string(error_file, "{{error_message}}", message);
+	}
+	else {
+		replace_string(error_file, "{{error_message}}", "");
 	}
 
 	map<string, string> header;
 	header["Content-Type"] = "text/html";
-	header["Content-Length"] = "text/html";
-	return ;
-}
-// 	"HTTP/1.1 200 OK
-// Content-Type: text/html
-// Content-Length: 112
+	header["Content-Length"] = error_file.length();
 
-// <html>
-// <head>
-// 	<title>200 OK</title>
-// 	</head>
-// 	<body>
-// 			<h1>OK</h1>
-// 			<p>The request was successful.</p>
-// 	</body>
-// </html>"
+	stringstream ss;
+	ss << PROTOCOL << " " << code << " " << description << endl;
+	for (map<string, string>::iterator ite = header.begin(); ite != header.end(); ite++){
+		ss << ite->first << ": " << ite->second << endl;
+	}
+	ss << endl;
+	ss << error_file;
+	
+	cout << ss.str();
+
+	return ss.str();
+}

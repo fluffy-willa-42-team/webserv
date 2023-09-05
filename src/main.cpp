@@ -1,5 +1,6 @@
 #include "webserv.hpp"
 #include "Server.hpp"
+#include "Error.hpp"
 #include <csignal>
 
 bool loop = true;
