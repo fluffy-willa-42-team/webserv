@@ -40,8 +40,6 @@ string error(u_int32_t code, const string& message){
 	}
 	map<string, string> header;
 	header["Content-Type"] = "text/html";
-	cout << "teaaerae" << endl;
-
 	return get_response(code, header, error_file);
 }
 
