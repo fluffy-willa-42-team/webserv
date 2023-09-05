@@ -1,7 +1,8 @@
 #include "webserv.hpp"
 #include "Server.hpp"
-#include "Error.hpp"
 #include <csignal>
+
+void init_error_map();
 
 bool loop = true;
 map<int, Server> servers;
@@ -72,7 +73,8 @@ void webserv(){
 int main(){
 	try
 	{
-		webserv();
+		init_error_map();
+		// webserv();
 	}
 	catch(const exception& e)
 	{
