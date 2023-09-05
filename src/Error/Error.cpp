@@ -48,7 +48,5 @@ const string Error::http(){
 	ss << endl;
 	ss << error_file;
 	
-	cout << ss.str();
-
 	return ss.str();
 }

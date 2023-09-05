@@ -4,7 +4,7 @@ string readFileIntoString(const string& path) {
     ifstream input_file;
 	input_file.open(path.c_str());
     if (!input_file.is_open()) {
-        return ""
+        return "";
     }
     return string(
 		std::istreambuf_iterator<char>(input_file),
