@@ -2,7 +2,7 @@
 
 #define response_example "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 112\n\n<html>\n<head>\n	<title>200 OK</title>\n	</head>\n	<body>\n		<h1>OK</h1>\n		<p>The request was successful.</p>\n	</body>\n</html>"
 
-string error(u_int32_t code, const string& description, const string& message);
+string error(u_int32_t code, const string& message);
 
 const string parse_http(const string& req){
 	// stringstream ss(req);
@@ -12,6 +12,6 @@ const string parse_http(const string& req){
 	// 	cout << line;
 	// }
 	// const string res = Error(404, "Not Found").http();
-	// return error(404, "Not Found", "");
-	return "";
+	return error(404, "Page not Found");
+	// return "";
 }

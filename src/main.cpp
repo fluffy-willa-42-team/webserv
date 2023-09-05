@@ -74,7 +74,7 @@ int main(){
 	try
 	{
 		init_error_map();
-		// webserv();
+		webserv();
 	}
 	catch(const exception& e)
 	{

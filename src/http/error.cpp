@@ -9,6 +9,7 @@ string readFileIntoString(const string& path) {
     ifstream input_file;
 	input_file.open(path.c_str());
     if (!input_file.is_open()) {
+		cout << "Failed to open file" << endl;
         return "";
     }
     return string(
@@ -39,6 +40,7 @@ string error(u_int32_t code, const string& message){
 	}
 	map<string, string> header;
 	header["Content-Type"] = "text/html";
+	cout << "teaaerae" << endl;
 
 	return get_response(code, header, error_file);
 }
