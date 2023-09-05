@@ -10,7 +10,6 @@ const string parse_http(const string& req){
 	// while (std::getline(ss, line) && line.length() > 0 && line != "\r"){
 	// 	cout << line;
 	// }
-	const string res = Error(404, "Not Found").http();
-	cout << res;
-	return res;
+	// const string res = Error(404, "Not Found").http();
+	return "res";
 }
