@@ -62,6 +62,8 @@ void shutdown(int signal){
 }
 
 void webserv(){
+	init_error_map();
+
 	servers[8001] = Server(0, 8001);
 	servers[8002] = Server(0, 8002);
 	servers[8003] = Server(0, 8003);
@@ -73,7 +75,6 @@ void webserv(){
 int main(){
 	try
 	{
-		init_error_map();
 		webserv();
 	}
 	catch(const exception& e)
