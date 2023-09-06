@@ -18,6 +18,7 @@ typedef enum {
 e_validation_status is_method_valid(const string& method);
 bool is_path_valid(const string& path);
 e_validation_status is_protocol_valid(const string& protocol);
+e_validation_status is_header_valid(const vector<string>& header);
 
 /* ************************************************************************** */
 

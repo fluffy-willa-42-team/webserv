@@ -79,7 +79,7 @@ const string http(const string& req){
 	map<string, string> req_headers;
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && line.length() > 0) {
 		vector<string> headerline = splitFirst(line, ": ");
-		if (headerline.size() != 2){
+		if (is_header_valid(headerline) == BAD_REQUEST){
 			return error(400, "Headers are invalid");
 		}
         req_headers[headerline[0]] = headerline[1];
