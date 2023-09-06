@@ -77,8 +77,7 @@ const string http(const string& req){
 	Accept-Language: en-US,en
 	*/
 	map<string, string> req_headers;
-    while (getline(ss_line_by_line, line) && line != "\r") {
-		removeCarriageReturn(line);
+    while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && line.length() > 0) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (headerline.size() != 2){
 			return error(400, "Headers are invalid");
@@ -101,23 +100,38 @@ const string http(const string& req){
 	Ex:
 	Host: awillems.42.fr:4000
 	*/
+	{
+		if (!map_has_key(req_headers, "Host")){
+			return error(400, "Missing host header");
+		}
+	}
 
-	// string req_host;
-	// u_int32_t req_port;
-
-	// if (!getline(ss_line_by_line, line)){
-	// 	return error(400, "The host header is missing");
-	// }
-	// cout << "Host header Line: " << line << endl;
-
-
-
-
+	
 
 
 	/*===-----						Body							  -----===*/
+	string req_body;
+	{
+		stringstream remainingContentStream;
+		remainingContentStream << ss_line_by_line.rdbuf();
+		req_body = remainingContentStream.str();
+		if (req_body.length() != 0){
+			if (!map_has_key(req_headers, "Content-Length")){
+				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
+			}
+			else {
+				req_headers["Content-Length"];
+			}
+			// return error();
+		}
+
+	}
 
 
+
+
+
+	/*===-----						XXXX							  -----===*/
 
 
 	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){

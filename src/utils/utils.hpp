@@ -11,7 +11,8 @@ string readFileIntoString(const string& path);
 void replace_string(string& input, const string& pattern_in, const string& pattern_out);
 vector<string> split(const string& s, const string& delimiter);
 vector<string> splitFirst(const string& s, const string& delimiter);
-void removeCarriageReturn(string& line);
+bool removeCarriageReturn(string& line);
+bool map_has_key(const map<string, string>& i_map, string key);
 
 /* ************************************************************************** */
 

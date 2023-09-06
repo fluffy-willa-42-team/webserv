@@ -52,9 +52,10 @@ vector<string> splitFirst(const string& s, const string& delimiter){
 }
 
 // getline add \r at the end of a line :/ so this function removes it
-void removeCarriageReturn(string& line){
+bool removeCarriageReturn(string& line){
     // Check if the last character is a carriage return and remove it if present
     if (!line.empty() && line[line.length() - 1] == '\r') {
         line.erase(line.length() - 1);
     }
+    return true;
 }
