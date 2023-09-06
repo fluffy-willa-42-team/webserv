@@ -17,22 +17,26 @@ const string http(const string& req){
 	GET /test?query=true HTTP/1.1
 	*/
 
-	if (!std::getline(inputStream, line)){
+	if (!getline(inputStream, line)){
 		return error(400, "The Request is empty");
 	}
-	cout << "Init Line: " << line << endl;
 	stringstream iss(line);
     string token;
 
 	// Method
-	iss >> token;
-	cout << "Init Line: " << line << endl;
+	string req_method;
+	iss >> req_method;
+	cout << "Method: " << req_method << endl;
 
 	// Path + Param
-	iss >> token;
+	string req_path_param;
+	iss >> req_path_param;
+	cout << "Path + Param: " << req_path_param << endl;
 
 	// Protocol
-	iss >> token;
+	string protocol;
+	iss >> protocol;
+	cout << "Protocol: " << protocol << endl;
 
 
 
@@ -50,7 +54,7 @@ const string http(const string& req){
 	string req_host;
 	u_int32_t req_port;
 
-	if (!std::getline(inputStream, line)){
+	if (!getline(inputStream, line)){
 		return error(400, "The host header is missing");
 	}
 	cout << "Host header Line: " << line << endl;
@@ -66,7 +70,7 @@ const string http(const string& req){
 	Accept-Language: en-US,en
 	*/
 	map<string, string> req_headers;
-    while (std::getline(inputStream, line) && line != "\r") {
+    while (getline(inputStream, line) && line != "\r") {
         cout << "Header Line: " << line << endl;
     }
 
