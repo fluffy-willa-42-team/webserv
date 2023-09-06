@@ -36,14 +36,20 @@ const string http(const string& req){
 	string req_path_param;
 	ss_init_line >> req_path_param;
 	cout << "Path + Param: " << req_path_param << endl;
-	if (!is_method_valid(req_method)){
+	if (!is_path_valid(req_path_param)){
 		return error(400, "Path is invalid");
 	}
 
 	// Protocol
-	string protocol;
-	ss_init_line >> protocol;
-	cout << "Protocol: " << protocol << endl;
+	string req_protocol;
+	ss_init_line >> req_protocol;
+	cout << "Protocol: " << req_protocol << endl;
+	if (!is_protocol_valid(req_protocol)){
+		if (req_protocol.find("HTTP/") != (size_t) -1){
+			return error(505, "");
+		}
+		return error(400, "Protocol is invalid");
+	}
 
 
 
