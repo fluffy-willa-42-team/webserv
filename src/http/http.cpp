@@ -1,8 +1,7 @@
 #include "webserv.hpp"
+#include "request_validation.hpp"
 
 string error(u_int32_t code, const string& message);
-
-bool is_method_valid(const string& method);
 
 const string http(const string& req){
 	stringstream ss_line_by_line(req);
@@ -37,6 +36,9 @@ const string http(const string& req){
 	string req_path_param;
 	ss_init_line >> req_path_param;
 	cout << "Path + Param: " << req_path_param << endl;
+	if (!is_method_valid(req_method)){
+		return error(400, "Path is invalid");
+	}
 
 	// Protocol
 	string protocol;
