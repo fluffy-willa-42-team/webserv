@@ -7,7 +7,7 @@ void init_error_map();
 bool loop = true;
 map<int, Server> servers;
 
-void start(){
+void setup(){
 	// Setup every server and delete all that fail setup
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
@@ -20,6 +20,9 @@ void start(){
 			ite++;
 		}
 	}
+}
+
+void start(){
 	// Return if all failed to start
 	if (servers.size() < 1){
 		return ;
@@ -69,5 +72,6 @@ int main(){
 	servers[8003] = Server(0, 8003);
 
 	std::signal(SIGINT, &shutdown);
+	setup();
 	start();
 }
