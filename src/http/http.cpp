@@ -31,8 +31,8 @@ const string http(const string& req){
 
 	// Method
 	string req_method = initline[0];
-	cout << "Method: " << req_method << endl;
 	{
+		cout << "Method: " << req_method << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
 			return error(405, "");
@@ -44,15 +44,17 @@ const string http(const string& req){
 
 	// Path + Param
 	string req_path_param = initline[1];
-	cout << "Path + Param: " << req_path_param << endl;
-	if (!is_path_valid(req_path_param)){
-		return error(400, "Path is invalid");
+	{
+		cout << "Path + Param: " << req_path_param << endl;
+		if (!is_path_valid(req_path_param)){
+			return error(400, "Path is invalid");
+		}
 	}
 
 	// Protocol
-	string req_protocol = initline[2];
-	cout << "Protocol: " << req_protocol << endl;
 	{
+		string req_protocol = initline[2];
+		cout << "Protocol: " << req_protocol << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
 				return error(505, "");
