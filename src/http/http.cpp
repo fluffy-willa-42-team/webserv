@@ -3,8 +3,8 @@
 string error(u_int32_t code, const string& message);
 
 const string http(const string& req){
-	std::istringstream inputStream(req);
-    std::string line;
+	stringstream inputStream(req);
+    string line;
 
 	/*===-----						Init Line						   -----===*
 	METHOD PATH+PARAMS PROTOCOL
@@ -20,8 +20,19 @@ const string http(const string& req){
 	if (!std::getline(inputStream, line)){
 		return error(400, "The Request is empty");
 	}
-	std::cout << "Init Line: " << line << std::endl;
+	cout << "Init Line: " << line << endl;
+	stringstream iss(line);
+    string token;
 
+	// Method
+	iss >> token;
+	cout << "Init Line: " << line << endl;
+
+	// Path + Param
+	iss >> token;
+
+	// Protocol
+	iss >> token;
 
 
 
@@ -42,7 +53,7 @@ const string http(const string& req){
 	if (!std::getline(inputStream, line)){
 		return error(400, "The host header is missing");
 	}
-	std::cout << "Host header Line: " << line << std::endl;
+	cout << "Host header Line: " << line << endl;
 
 
 
@@ -56,7 +67,7 @@ const string http(const string& req){
 	*/
 	map<string, string> req_headers;
     while (std::getline(inputStream, line) && line != "\r") {
-        std::cout << "Header Line: " << line << std::endl;
+        cout << "Header Line: " << line << endl;
     }
 
 

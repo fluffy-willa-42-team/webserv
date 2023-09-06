@@ -6,7 +6,7 @@
 #    By: awillems <awillems@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/09 08:35:24 by awillems          #+#    #+#              #
-#    Updated: 2023/09/04 09:42:30 by awillems         ###   ########.fr        #
+#    Updated: 2023/09/06 10:05:29 by awillems         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ OBJ_EXT		= .o
 CODE_EXT	= .cpp
 HEAD_EXT	= .hpp
 INC			= -I include
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors -Wno-error=unused-parameter
+FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors\
+				-Wno-error=unused-parameter -Wno-error=unused-variable
 
 # **************************************************************************** #
 

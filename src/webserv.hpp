@@ -31,18 +31,20 @@
 
 /* ************************************************************************** */
 
+using std::string;
 using std::pair;
 using std::map;
 using std::vector;
-using std::string;
+
 using std::stringstream;
-using std::endl;
-using std::cout;
-using std::cerr;
-using std::runtime_error;
 using std::ifstream;
+
+using std::cout;
+using std::endl;
+using std::cerr;
+
 using std::memset;
-using std::exception;
+using std::getline;
 
 /* ************************************************************************** */
 
