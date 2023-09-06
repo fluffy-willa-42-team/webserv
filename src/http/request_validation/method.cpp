@@ -13,7 +13,7 @@ bool is_method_valid(const string& method){
 	if (method.length() < 1){
 		return false;
 	}
-	for (vector<string>::iterator it = allowed_method.begin(); it != allowed_method.end(); it++){
+	for (vector<string>::const_iterator it = allowed_method.begin(); it != allowed_method.end(); it++){
 		if (method == *it){
 			return true;
 		}
