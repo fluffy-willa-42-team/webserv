@@ -66,6 +66,22 @@ const string http(const string& req){
 
 
 
+
+	/*===-----						Headers							   -----===*
+	HEADER_KEY: HEADER_VALUE
+
+	Ex:
+	Accept-Language: en-US,en
+	*/
+	map<string, string> req_headers;
+    while (getline(ss_line_by_line, line) && line != "\r") {
+        // cout << "Header Line: " << line << endl;
+    }
+
+
+
+
+
 	/*===-----						Host Header						   -----===*
 	Host: HOSTNAME:PORT
 
@@ -86,20 +102,6 @@ const string http(const string& req){
 	// }
 	// cout << "Host header Line: " << line << endl;
 
-
-
-
-
-	/*===-----						Headers							   -----===*
-	HEADER_KEY: HEADER_VALUE
-
-	Ex:
-	Accept-Language: en-US,en
-	*/
-	map<string, string> req_headers;
-    while (getline(ss_line_by_line, line) && line != "\r") {
-        // cout << "Header Line: " << line << endl;
-    }
 
 
 
