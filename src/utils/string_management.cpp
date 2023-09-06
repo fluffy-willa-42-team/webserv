@@ -1,4 +1,4 @@
-#include "webserv.hpp"
+#include "utils.hpp"
 
 string readFileIntoString(const string& path) {
     ifstream input_file;
@@ -20,4 +20,18 @@ void replace_string(string& input, const string& pattern_in, const string& patte
         input.replace(pos, pattern_in.length(), pattern_out);
         pos += pattern_out.length();
     }
+}
+
+vector<string> split(const string& s, const string& delimiter) {
+    vector<string> tokens;
+    string::size_type start = 0;
+    string::size_type end;
+
+    while ((end = s.find(delimiter, start)) != string::npos) {
+        tokens.push_back(s.substr(start, end - start));
+        start = end + delimiter.length();
+    }
+
+    tokens.push_back(s.substr(start));
+    return tokens;
 }

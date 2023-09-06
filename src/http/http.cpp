@@ -1,4 +1,5 @@
 #include "webserv.hpp"
+#include "utils.hpp"
 #include "request_validation.hpp"
 
 string error(u_int32_t code, const string& message);
@@ -21,38 +22,45 @@ const string http(const string& req){
 	if (!getline(ss_line_by_line, line)){
 		return error(400, "The Request is empty");
 	}
-	stringstream ss_init_line(line);
-    string token;
+
+	vector<string> initline = split(line, " ");
+	if (initline.size() != 3){
+		return error(400, "Init line is invalid");
+	}
+
 
 	// Method
-	string req_method;
-	ss_init_line >> req_method;
+	string req_method = initline[0];
 	cout << "Method: " << req_method << endl;
-	e_validation_status method_validation_status = is_method_valid(req_method);
-	if (method_validation_status == NOT_ALLOWED){
-		return error(405, "");
-	}
-	else if (method_validation_status == BAD_REQUEST){
-		return error(400, "Method is invalid");
+	{
+		e_validation_status validation_status = is_method_valid(req_method);
+		if (validation_status == NOT_ALLOWED){
+			return error(405, "");
+		}
+		else if (validation_status == BAD_REQUEST){
+			return error(400, "Method is invalid");
+		}
 	}
 
 	// Path + Param
-	string req_path_param;
-	ss_init_line >> req_path_param;
+	string req_path_param = initline[1];
 	cout << "Path + Param: " << req_path_param << endl;
 	if (!is_path_valid(req_path_param)){
 		return error(400, "Path is invalid");
 	}
 
 	// Protocol
-	string req_protocol;
-	ss_init_line >> req_protocol;
+	string req_protocol = initline[2];
 	cout << "Protocol: " << req_protocol << endl;
-	if (!is_protocol_valid(req_protocol)){
-		if (req_protocol.find("HTTP/") != (size_t) -1){
-			return error(505, "");
+	{
+		e_validation_status validation_status = is_method_valid(req_method);
+		if (validation_status == NOT_ALLOWED){
+				return error(505, "");
 		}
-		return error(400, "Protocol is invalid");
+		else if (validation_status == BAD_REQUEST){
+			return error(400, "Protocol is invalid");
+
+		}
 	}
 
 
