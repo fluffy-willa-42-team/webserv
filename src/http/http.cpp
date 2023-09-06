@@ -64,16 +64,18 @@ const string http(const string& req){
 	Hostname: localhost | awillems.42.fr
 	Port (optional): 8000 | 4000 | ...
 
+	// WARNING Host header is not necassarly the first header !!!
+
 	Ex:
 	Host: awillems.42.fr:4000
 	*/
 
-	string req_host;
-	u_int32_t req_port;
+	// string req_host;
+	// u_int32_t req_port;
 
-	if (!getline(ss_line_by_line, line)){
-		return error(400, "The host header is missing");
-	}
+	// if (!getline(ss_line_by_line, line)){
+	// 	return error(400, "The host header is missing");
+	// }
 	// cout << "Host header Line: " << line << endl;
 
 
