@@ -1,7 +1,5 @@
 #include "webserv.hpp"
 
-#define response_example "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 112\n\n<html>\n<head>\n	<title>200 OK</title>\n	</head>\n	<body>\n		<h1>OK</h1>\n		<p>The request was successful.</p>\n	</body>\n</html>"
-
 string error(u_int32_t code, const string& message);
 
 const string http(const string& req){
@@ -25,6 +23,9 @@ const string http(const string& req){
 	std::cout << "Init Line: " << line << std::endl;
 
 
+
+
+
 	/*===-----						Host Header						   -----===*
 	Host: HOSTNAME:PORT
 
@@ -45,6 +46,8 @@ const string http(const string& req){
 
 
 
+
+
 	/*===-----						Headers							   -----===*
 	HEADER_KEY: HEADER_VALUE
 
@@ -56,7 +59,17 @@ const string http(const string& req){
         std::cout << "Header Line: " << line << std::endl;
     }
 
+
+
+
+
 	/*===-----						Body							  -----===*/
+
+
+
+
+
+
 
 	return error(404, "This Page has not been Found");
 }
