@@ -25,26 +25,11 @@ void init_error_map(){
 	codes[415] = "Unsupported Media Type";
 	codes[416] = "Range Not Satisfiable";
 	codes[417] = "Expectation Failed";
-	codes[418] = "I'm a teapot";
-	codes[421] = "Misdirected Request";
-	codes[422] = "Unprocessable Entity";
-	codes[423] = "Locked";
-	codes[424] = "Failed Dependency";
-	codes[425] = "Too Early";
-	codes[426] = "Upgrade Required";
-	codes[428] = "Precondition Required";
-	codes[429] = "Too Many Requests";
-	codes[431] = "Request Header Fields Too Large";
-	codes[451] = "Unavailable For Legal Reasons";
+
 	codes[500] = "Internal Server Error";
 	codes[501] = "Not Implemented";
 	codes[502] = "Bad Gateway";
 	codes[503] = "Service Unavailable";
 	codes[504] = "Gateway Timeout";
 	codes[505] = "HTTP Version Not Supported";
-	codes[506] = "Variant Also Negotiats";
-	codes[507] = "Insufficient Storage";
-	codes[508] = "Loop Detected";
-	codes[510] = "Not Extended";
-	codes[511] = "Network Authentication Required";
 }
