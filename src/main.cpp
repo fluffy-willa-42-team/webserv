@@ -61,7 +61,7 @@ void shutdown(int signal){
 	loop = false;
 }
 
-void webserv(){
+int main(){
 	init_error_map();
 
 	servers[8001] = Server(0, 8001);
@@ -70,17 +70,4 @@ void webserv(){
 
 	std::signal(SIGINT, &shutdown);
 	start();
-}
-
-int main(){
-	try
-	{
-		webserv();
-	}
-	catch(const exception& e)
-	{
-		std::cerr << e.what() << '\n';
-		return 1;
-	}
-	return 0;
 }
