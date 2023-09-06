@@ -2,6 +2,8 @@
 
 string error(u_int32_t code, const string& message);
 
+bool is_method_valid(const string& method);
+
 const string http(const string& req){
 	stringstream ss_line_by_line(req);
     string line;
@@ -27,6 +29,9 @@ const string http(const string& req){
 	string req_method;
 	ss_init_line >> req_method;
 	cout << "Method: " << req_method << endl;
+	if (!is_method_valid(req_method)){
+		return error(405, "Method Not Allowed or Unrecognized");
+	}
 
 	// Path + Param
 	string req_path_param;
@@ -57,7 +62,7 @@ const string http(const string& req){
 	if (!getline(ss_line_by_line, line)){
 		return error(400, "The host header is missing");
 	}
-	cout << "Host header Line: " << line << endl;
+	// cout << "Host header Line: " << line << endl;
 
 
 
@@ -71,7 +76,7 @@ const string http(const string& req){
 	*/
 	map<string, string> req_headers;
     while (getline(ss_line_by_line, line) && line != "\r") {
-        cout << "Header Line: " << line << endl;
+        // cout << "Header Line: " << line << endl;
     }
 
 

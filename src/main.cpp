@@ -2,7 +2,7 @@
 #include "Server.hpp"
 #include <csignal>
 
-void init_error_map();
+void init();
 
 bool loop = true;
 map<int, Server> servers;
@@ -65,7 +65,7 @@ void shutdown(int signal){
 }
 
 int main(){
-	init_error_map();
+	init();
 
 	servers[8001] = Server(0, 8001);
 	servers[8002] = Server(0, 8002);
