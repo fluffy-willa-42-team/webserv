@@ -58,7 +58,7 @@ const string http(const string& req){
 		cout << "Protocol: " << req_protocol << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-				return error(505, "");
+				return error(505, ""); // HTTP Version not allowed
 		}
 		else if (validation_status == BAD_REQUEST){
 			return error(400, "Protocol is invalid");
