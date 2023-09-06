@@ -34,5 +34,4 @@ void init_error_map(){
 	codes[503] = "Service Unavailable";				// The server is currently unable to handle the request due to temporary overloading or maintenance of the server.
 	codes[504] = "Gateway Timeout";					// The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server.
 	codes[505] = "HTTP Version Not Supported";		// The server does not support the HTTP protocol version used in the request.
-
 }
