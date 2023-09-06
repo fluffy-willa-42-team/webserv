@@ -121,8 +121,7 @@ const string http(const string& req){
 
 
 	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
-		cout << it->first << ": \"" << it->second << "\"" << endl << endl;
-		cout << "=> " << (int) it->second.c_str()[it->second.length() - 1] << endl;
+		cout << it->first << ": \"" << it->second << "\"" << endl;
 	}
 
 
