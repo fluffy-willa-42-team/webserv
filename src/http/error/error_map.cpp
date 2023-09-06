@@ -30,7 +30,7 @@ void init_error_map(){
 	codes[422] = "Unprocessable Entity";
 	codes[423] = "Locked";
 	codes[424] = "Failed Dependency";
-	codes[425] = "Too Early (RFC 8470)";
+	codes[425] = "Too Early";
 	codes[426] = "Upgrade Required";
 	codes[428] = "Precondition Required";
 	codes[429] = "Too Many Requests";
