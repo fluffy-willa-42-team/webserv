@@ -12,7 +12,7 @@ void Server::exec(){
 
 	string response = http(buffer);
 
-	cout << response << endl;
+	// cout << response << endl;
 
 	write(connection_fd , response.c_str(), response.length());
 	
