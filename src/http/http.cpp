@@ -22,6 +22,7 @@ const string http(const string& req){
 	if (!getline(ss_line_by_line, line)){
 		return error(400, "The Request is empty");
 	}
+	removeCarriageReturn(line);
 
 	vector<string> initline = split(line, " ");
 	if (initline.size() != 3){
@@ -77,7 +78,12 @@ const string http(const string& req){
 	*/
 	map<string, string> req_headers;
     while (getline(ss_line_by_line, line) && line != "\r") {
-        // cout << "Header Line: " << line << endl;
+		removeCarriageReturn(line);
+		vector<string> headerline = splitFirst(line, ": ");
+		if (headerline.size() != 2){
+			return error(400, "Headers are invalid");
+		}
+        req_headers[headerline[0]] = headerline[1];
     }
 
 
@@ -114,7 +120,10 @@ const string http(const string& req){
 
 
 
-
+	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
+		cout << it->first << ": \"" << it->second << "\"" << endl << endl;
+		cout << "=> " << (int) it->second.c_str()[it->second.length() - 1] << endl;
+	}
 
 
 	return error(404, "This Page has not been Found");
