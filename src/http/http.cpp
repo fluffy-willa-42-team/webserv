@@ -28,8 +28,12 @@ const string http(const string& req){
 	string req_method;
 	ss_init_line >> req_method;
 	cout << "Method: " << req_method << endl;
-	if (!is_method_valid(req_method)){
-		return error(405, "Method Not Allowed or Unrecognized");
+	e_validation_status method_validation_status = is_method_valid(req_method);
+	if (method_validation_status == NOT_ALLOWED){
+		return error(405, "");
+	}
+	else if (method_validation_status == BAD_REQUEST){
+		return error(400, "Method is invalid");
 	}
 
 	// Path + Param
