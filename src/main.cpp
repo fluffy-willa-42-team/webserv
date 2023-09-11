@@ -11,6 +11,7 @@ void setup(){
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
+			cout << "Failed server setup code: " << res.code << " (" << res.message << ")" << endl;
 			std::map<int, Server>::iterator temp = ite;
 			ite++;
 			servers.erase(temp);
@@ -24,6 +25,7 @@ void setup(){
 void start(){
 	// Return if all failed to start
 	if (servers.size() < 1){
+		cout << "No Server Started" << endl;
 		return ;
 	}
 	// Execute try_exec of all server at each execution.

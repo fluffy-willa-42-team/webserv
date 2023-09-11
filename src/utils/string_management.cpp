@@ -7,10 +7,12 @@ string readFileIntoString(const string& path){
 		cout << "Failed to open file" << endl;
         return "";
     }
-    return string(
+    string res = string(
 		std::istreambuf_iterator<char>(input_file),
 		std::istreambuf_iterator<char>()
 	);
+    input_file.close();
+    return res;
 }
 
 void replace_string(string& input, const string& pattern_in, const string& pattern_out){

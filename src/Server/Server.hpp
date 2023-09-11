@@ -8,7 +8,7 @@
 
 /******************************************************************************/
 
-# define BUFFER_SIZE 8000
+# define BUFFER_SIZE 800
 
 typedef struct {
 	u_int32_t code;
