@@ -121,11 +121,14 @@ const string http(const string& req, Server& server){
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
-				cout << req_body.length() << " " << stringToNumber(req_headers[HEADER_CONTENT_LENGTH]) << endl;
-				if (req_body.length() != stringToNumber(req_headers[HEADER_CONTENT_LENGTH])){
-					cout << req_body.length() << " " << stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
+				u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
+				cout << req_body.length() << " " << content_length << endl;
+				while (req_body.length() != content_length){
 					string test = server.read_buff();
+					cout << test.length() << " + " << req_body.length() << " = " << test.length() + req_body.length() << " = " << content_length << endl;
+					req_body += test;
 				}
+				cout << YELLOW << req_body << RESET << endl;
 			}
 			// return error();
 		}
