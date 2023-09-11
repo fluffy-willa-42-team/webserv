@@ -3,15 +3,15 @@
 
 void init();
 
-bool loop = true;
-map<int, Server> servers;
+static bool loop = true;
+static map<int, Server> servers;
 
 void setup(){
 	// Setup every server and delete all that fail setup
 	for (map<int, Server>::iterator ite = servers.begin(); ite != servers.end();){
 		t_setup res = ite->second.setup();
 		if (res.code != 0){
-			cout << "Failed server setup code: " << res.code << " (" << res.message << ")" << endl;
+			cout << "Failed server setup code: " << res.code << " (" << res.message << ") " << res.err << endl;
 			std::map<int, Server>::iterator temp = ite;
 			ite++;
 			servers.erase(temp);
