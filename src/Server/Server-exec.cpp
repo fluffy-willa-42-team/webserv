@@ -20,6 +20,7 @@ void Server::exec(){
 
 string Server::read_buff(){
 	memset(buffer, 0, BUFFER_SIZE);
-	read(connection_fd, buffer, BUFFER_SIZE);
+	int32_t test = read(connection_fd, buffer, BUFFER_SIZE);
+	cout << "read: " << test << endl;
 	return string(buffer);
 }

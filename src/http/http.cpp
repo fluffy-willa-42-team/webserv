@@ -124,6 +124,7 @@ const string http(const string& req, Server& server){
 				u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
 				cout << req_body.length() << " " << content_length << endl;
 				while (req_body.length() != content_length){
+					cout << "Hello" << endl;
 					string test = server.read_buff();
 					cout << test.length() << " + " << req_body.length() << " = " << test.length() + req_body.length() << " = " << content_length << endl;
 					req_body += test;

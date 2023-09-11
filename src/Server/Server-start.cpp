@@ -26,13 +26,15 @@ t_setup Server::setup(){
 		return ret(1, "failed to bind socket");
 	}
 	
-	// verify the file descriptor has the right flags
+	// retrieve the file descriptor flags
 	int flags = fcntl(server_fd, F_GETFL, 0);
     if (flags < 0){
 		return ret(2, "failed to retrieve the flags for server file descriptor");
 	}
+	
+	// verify the file descriptor has the right O_NONBLOCK flag
 	flags |= O_NONBLOCK;
-    if (fcntl(server_fd, F_SETFL, flags) < 0){
+	if (fcntl(server_fd, F_SETFL, flags) < 0){
 		return ret(3, "failed to retrieve the flags for server file descriptor");
 	}
 	
@@ -68,6 +70,18 @@ e_status Server::try_exec(){
 	// check if there is a new connection
 	if (connection_fd < 0 && errno == EWOULDBLOCK){
 		return S_CONTINUE;
+	}
+
+	// retrieve the file descriptor flags
+	int flags = fcntl(server_fd, F_GETFL, 0);
+    if (flags < 0){
+		return S_STOP;
+	}
+	
+	// verify the file descriptor has the right O_NONBLOCK flag
+	flags |= O_NONBLOCK;
+	if (fcntl(server_fd, F_SETFL, flags) < 0){
+		return S_STOP;
 	}
 
 	// check if error in accept after having recieved a connection
