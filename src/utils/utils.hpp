@@ -13,6 +13,7 @@ vector<string> split(const string& s, const string& delimiter);
 vector<string> splitFirst(const string& s, const string& delimiter);
 bool removeCarriageReturn(string& line);
 bool map_has_key(const map<string, string>& i_map, string key);
+u_int32_t stringToNumber(const string& str);
 
 /* ************************************************************************** */
 

@@ -1,10 +1,11 @@
 #include "webserv.hpp"
 #include "utils.hpp"
+#include "Server.hpp"
 #include "request_validation.hpp"
 
 string error(u_int32_t code, const string& message);
 
-const string http(const string& req){
+const string http(const string& req, Server& server){
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -116,11 +117,15 @@ const string http(const string& req){
 		remainingContentStream << ss_line_by_line.rdbuf();
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
-			if (!map_has_key(req_headers, "Content-Length")){
+			if (!map_has_key(req_headers, HEADER_CONTENT_LENGTH)){
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
-				req_headers["Content-Length"];
+				cout << req_body.length() << " " << stringToNumber(req_headers[HEADER_CONTENT_LENGTH]) << endl;
+				if (req_body.length() != stringToNumber(req_headers[HEADER_CONTENT_LENGTH])){
+					cout << req_body.length() << " " << stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
+					string test = server.read_buff();
+				}
 			}
 			// return error();
 		}

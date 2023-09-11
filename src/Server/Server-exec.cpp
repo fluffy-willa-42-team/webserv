@@ -2,21 +2,24 @@
 
 #include <unistd.h>
 
-const string http(const string& req);
+const string http(const string& req, Server& server);
 
 void Server::exec(){
-	read(connection_fd, buffer, BUFFER_SIZE);
-	cout << CYAN << buffer << RESET << endl;
+	string buf = read_buff();
+	cout << CYAN << buf << RESET << endl;
 
 	// TODO Ensure the buffer has all the request
 
-	string response = http(buffer);
+	string response = http(buf, *this);
 
 	// cout << response << endl;
 
-	write(connection_fd , response.c_str(), response.length());
-	
-	memset(buffer, 0, BUFFER_SIZE);
-
+	write(connection_fd, response.c_str(), response.length());
 	close(connection_fd);
+}
+
+string Server::read_buff(){
+	memset(buffer, 0, BUFFER_SIZE);
+	read(connection_fd, buffer, BUFFER_SIZE);
+	return string(buffer);
 }

@@ -61,3 +61,14 @@ bool removeCarriageReturn(string& line){
     }
     return true;
 }
+
+u_int32_t stringToNumber(const string& str) {
+    u_int32_t number;
+    stringstream iss(str);
+
+    if (!(iss >> number)) {
+        return 0;
+    }
+
+    return number;
+}

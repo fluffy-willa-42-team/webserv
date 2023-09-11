@@ -31,6 +31,14 @@
 
 /* ************************************************************************** */
 
+# define HEADER_CONTENT_LENGTH	"Content-Length"
+# define HEADER_ACCEPT			"Accept"
+# define HEADER_ACCEPT_ENCODING	"Accept-Encoding"
+# define HEADER_ACCEPT_LANGUAGE	"Accept-Language"
+# define HEADER_HOST			"Host"
+
+/* ************************************************************************** */
+
 using std::string;
 using std::pair;
 using std::map;

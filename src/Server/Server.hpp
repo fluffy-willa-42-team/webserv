@@ -47,6 +47,7 @@ class Server {
 		t_setup setup();
 		e_status try_exec();
 		void stop();
+		string read_buff();
 		void exec();
 
 		const string get_address();
