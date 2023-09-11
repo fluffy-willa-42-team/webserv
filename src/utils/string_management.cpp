@@ -5,7 +5,7 @@ string readFileIntoString(const string& path){
 	input_file.open(path.c_str());
     if (!input_file.is_open()) {
 		cout << "Failed to open file" << endl;
-        return "";
+        return "error";
     }
     string res = string(
 		std::istreambuf_iterator<char>(input_file),
