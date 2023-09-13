@@ -22,5 +22,5 @@ bool Server::is_it_running(){
 }
 
 void Server::print_waiting_msg(){
-	cout << GREEN << "----- Waiting for new connection (" << get_address() << ") -----" << RESET << endl << endl;
+	cout << GREEN << "----- Waiting for new connection (http://" << get_address() << ") -----" << RESET << endl << endl;
 }

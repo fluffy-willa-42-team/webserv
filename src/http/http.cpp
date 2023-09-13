@@ -126,7 +126,6 @@ const string http(const string& req, Server& server){
 			}
 			else {
 				u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
-				cout << req_body.length() << " " << content_length << endl;
 				while (req_body.length() < content_length){
 					string buf;
 					try {
