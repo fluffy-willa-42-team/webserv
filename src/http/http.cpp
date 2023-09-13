@@ -133,7 +133,7 @@ const string http(const string& req, Server& server){
 						buf = server.read_buff();
 					}
 					catch(const exception& e) {
-						cerr << e.what() << '\n';
+						return error(411, "Invalid \"Content-Length\" header");
 					}
 					req_body += buf;
 				}
