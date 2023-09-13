@@ -54,6 +54,8 @@ using std::cerr;
 using std::memset;
 using std::getline;
 
+using std::exception;
+
 /* ************************************************************************** */
 
 #endif /* WEBSERV_HPP */

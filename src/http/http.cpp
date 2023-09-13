@@ -123,15 +123,19 @@ const string http(const string& req, Server& server){
 			else {
 				u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
 				cout << req_body.length() << " " << content_length << endl;
-				while (req_body.length() != content_length){
-					cout << "Hello" << endl;
-					string test = server.read_buff();
-					cout << test.length() << " + " << req_body.length() << " = " << test.length() + req_body.length() << " = " << content_length << endl;
-					req_body += test;
+				while (req_body.length() < content_length){
+					string buf;
+					try {
+						buf = server.read_buff();
+					}
+					catch(const exception& e) {
+						cerr << e.what() << '\n';
+					}
+					cout << buf.length() << " + " << req_body.length() << " = " << buf.length() + req_body.length() << " = " << content_length << endl;
+					req_body += buf;
 				}
 				cout << YELLOW << req_body << RESET << endl;
 			}
-			// return error();
 		}
 
 	}
