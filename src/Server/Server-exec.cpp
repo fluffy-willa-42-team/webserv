@@ -33,6 +33,5 @@ string Server::read_buff(){
 	if (length_read == -1){
 		throw exception();
 	}
-	string res(buffer, length_read);
-	return res;
+	return string(buffer, length_read);
 }
