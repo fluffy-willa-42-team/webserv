@@ -5,7 +5,7 @@ void replace_string(string& input, const string& pattern_in, const string& patte
 string get_response(u_int32_t code, map<string, string> headers, string body);
 
 static map<u_int32_t, string> codes_map;
-static const string error_file_str = readFileIntoString("./error.html");
+static const string error_file_str = readFileIntoString("./src/error.html");
 
 void init_error_map(){
 	// 4xx Client Error Responses
