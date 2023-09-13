@@ -86,6 +86,10 @@ const string http(const string& req, Server& server){
         req_headers[headerline[0]] = headerline[1];
     }
 
+	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
+		cout << it->first << ": \"" << it->second << "\"" << endl;
+	}
+
 
 
 
@@ -131,7 +135,6 @@ const string http(const string& req, Server& server){
 					catch(const exception& e) {
 						cerr << e.what() << '\n';
 					}
-					cout << buf.length() << " + " << req_body.length() << " = " << buf.length() + req_body.length() << " = " << content_length << endl;
 					req_body += buf;
 				}
 				cout << YELLOW << req_body << RESET << endl;
@@ -145,11 +148,6 @@ const string http(const string& req, Server& server){
 
 
 	/*===-----						XXXX							  -----===*/
-
-
-	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
-		cout << it->first << ": \"" << it->second << "\"" << endl;
-	}
 
 
 	return error(404, "This Page has not been Found");
