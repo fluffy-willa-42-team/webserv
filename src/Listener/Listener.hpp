@@ -1,5 +1,5 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef LISTENER_HPP
+# define LISTENER_HPP
 
 /******************************************************************************/
 
@@ -56,4 +56,4 @@ class Listener {
 
 /******************************************************************************/
 
-#endif /* SERVER_HPP */
+#endif /* LISTENER_HPP */
