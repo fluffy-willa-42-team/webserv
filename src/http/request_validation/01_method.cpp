@@ -32,3 +32,7 @@ e_validation_status is_method_valid(const string& method){
 	}
 	return BAD_REQUEST;
 }
+
+vector<string>& get_allowed_method(){
+	return allowed_method;
+}
