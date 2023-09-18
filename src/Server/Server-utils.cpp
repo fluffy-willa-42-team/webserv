@@ -2,18 +2,7 @@
 
 const string Server::get_address(){
     stringstream ss;
-	if (this->address == 0){
-		ss << "localhost";
-	}
-	else {
-		for (u_int32_t i = 0; i < 4; i++){
-			ss << ((this->address >> (i * 8)) & 0xFF);
-			if (i != 3){
-				ss << ".";
-			}
-		}
-	}
-	ss << ":" << port;
+	ss << "localhost" << ":" << port;
     return ss.str();
 }
 

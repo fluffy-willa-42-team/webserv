@@ -3,20 +3,18 @@
 #include <unistd.h>
 
 Server::Server()
-: address(0), port(0), server_fd(-1), connection_fd(-1), is_running(false)
+: port(0), server_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
-	address_struct.sin_addr.s_addr = address;
 	address_struct.sin_port = htons(port);
 }
 
-Server::Server(u_int32_t address, u_int16_t port)
-: address(address), port(port), server_fd(-1), connection_fd(-1), is_running(false)
+Server::Server(u_int16_t port)
+: port(port), server_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
-	address_struct.sin_addr.s_addr = address;
 	address_struct.sin_port = htons(port);
 }
 
@@ -33,7 +31,6 @@ Server::~Server(){
 
 const Server& Server::operator=(const Server& other)
 {
-	address = other.address;
 	port = other.port;
 
 	server_fd = -1;
@@ -44,7 +41,6 @@ const Server& Server::operator=(const Server& other)
 	memset(buffer, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 
-	address_struct.sin_addr.s_addr = address;
 	address_struct.sin_port = htons(port);
 
 	return *this;

@@ -26,8 +26,9 @@
 
 /* ************************************************************************** */
 
-# define PROTOCOL 		"HTTP/1.1"
-# define SERVER_VERSION "webserv/1.0"
+# define PROTOCOL 				"HTTP/1.1"
+# define SERVER_VERSION			"webserv/1.0"
+# define DEFAULT_CONFIG_PATH	"./conf/default.conf"
 
 /* ************************************************************************** */
 

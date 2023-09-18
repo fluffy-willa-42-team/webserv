@@ -26,7 +26,6 @@ typedef enum {
 class Server {
 	private:
 
-		u_int32_t address;
 		u_int16_t port;
 
 		int32_t server_fd;
@@ -40,7 +39,7 @@ class Server {
 
 	public:
 		Server();
-		Server(u_int32_t address, u_int16_t port);
+		Server(u_int16_t port);
 		~Server();
 		const Server& operator=(const Server& other);
 
