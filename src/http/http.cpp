@@ -139,7 +139,6 @@ const string http(const string& req, Listener& server){
 				cout << YELLOW << req_body << RESET << endl;
 			}
 		}
-
 	}
 
 
