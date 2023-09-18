@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-const string http(const string& req, Listener& server);
+const string http(const string& req, Listener& listener);
 
 void Listener::exec(){
 	string buf;

@@ -5,7 +5,7 @@
 
 string error(u_int32_t code, const string& message);
 
-const string http(const string& req, Listener& server){
+const string http(const string& req, Listener& listener){
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -129,7 +129,7 @@ const string http(const string& req, Listener& server){
 				while (req_body.length() < content_length){
 					string buf;
 					try {
-						buf = server.read_buff();
+						buf = listener.read_buff();
 					}
 					catch(const exception& e) {
 						return error(411, "Invalid \"Content-Length\" header");

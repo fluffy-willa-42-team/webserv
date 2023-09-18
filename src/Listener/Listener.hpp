@@ -28,7 +28,7 @@ class Listener {
 
 		u_int16_t port;
 
-		int32_t server_fd;
+		int32_t listener_fd;
 		int32_t connection_fd;
 
 		bool is_running;

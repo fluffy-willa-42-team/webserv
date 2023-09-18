@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 Listener::Listener()
-: port(0), server_fd(-1), connection_fd(-1), is_running(false)
+: port(0), listener_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
@@ -11,7 +11,7 @@ Listener::Listener()
 }
 
 Listener::Listener(u_int16_t port)
-: port(port), server_fd(-1), connection_fd(-1), is_running(false)
+: port(port), listener_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
@@ -19,9 +19,9 @@ Listener::Listener(u_int16_t port)
 }
 
 Listener::~Listener(){
-	if (server_fd >= 0){
-		close(server_fd);
-		server_fd = -1;
+	if (listener_fd >= 0){
+		close(listener_fd);
+		listener_fd = -1;
 	}
 	if (connection_fd >= 0){
 		close(connection_fd);
@@ -33,7 +33,7 @@ const Listener& Listener::operator=(const Listener& other)
 {
 	port = other.port;
 
-	server_fd = -1;
+	listener_fd = -1;
 	connection_fd = -1;
 
 	is_running = false;
