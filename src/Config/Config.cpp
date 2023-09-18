@@ -12,6 +12,7 @@ Server::Server()
 
 e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_status& status){
 	if (!getline(file, line)){
+		// cout << YELLOW << "STOP1" << RESET << endl;
 		status = S_STOP;
 		return S_STOP;
 	}
@@ -23,6 +24,7 @@ e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_s
 	}
 
 	if (line.size() == 0){
+		// cout << RED << "PASS" << RESET << endl;
 		status = S_PASS;
 		return S_PASS;
 	}
@@ -34,11 +36,13 @@ e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_s
 	line_split = splitStringByWhitespace(line);
 
 	if (line_split.size() == 0){
+		// cout << RED << "PASS" << RESET << endl;
 		status = S_PASS;
 		return S_PASS;
 	}
 
 	if (line_split.size() == 1 && line_split[0] == "}"){
+		// cout << YELLOW << "STOP2" << RESET << endl;
 		status = S_STOP;
 		return S_STOP;
 	}
@@ -63,24 +67,31 @@ Config::Config(const string& filename)
 		if (status == S_PASS){
 			continue;
 		}
+		cout << RED << line << RESET << endl;
 
 		if (line_split.size() == 2 && line_split[0] == "server" && line_split[1] == "{"){
-			cout << "New Server" << endl;
+			// cout << "New Server" << endl;
 			while (parseline(config_file, line, line_split, status) != S_STOP){
 				if (status == S_PASS){
 					continue;
 				}
+				cout << CYAN << line << RESET << endl;
+
 				if (line_split.size() == 3
 					&& line_split[0] == string("location")
 					&& line_split[1].size() > 0 && line_split[1][0] == '/'
 					&& line_split[2] == string("{")
 				){
-					cout << "New Location" << endl;
+					// cout << "New Location" << endl;
+					while (parseline(config_file, line, line_split, status) != S_STOP){
+						if (status == S_PASS){
+							continue;
+						}
+						cout << GREEN << line << RESET << endl;
+					}
 				}
-				cout << GREEN << "\"" << line << "\"" << RESET << endl;
 			}
 		}
-		cout << GREEN << "\"" << line << "\"" << RESET << endl;
 	}
 
 	ports.push_back(8001);
