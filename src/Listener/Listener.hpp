@@ -12,14 +12,9 @@
 
 typedef struct {
 	u_int32_t code;
-	int32_t err;
+	int32_t err; // TODO Remove
 	string message;
 }	t_setup;
-
-typedef enum {
-	S_CONTINUE,
-	S_STOP,
-}	e_status;
 
 /******************************************************************************/
 

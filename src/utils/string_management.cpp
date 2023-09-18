@@ -53,6 +53,18 @@ vector<string> splitFirst(const string& s, const string& delimiter){
     return tokens;
 }
 
+vector<string> splitStringByWhitespace(const string& input) {
+	stringstream ss(input);
+	vector<string> words;
+	string word;
+
+	while (ss >> word) {
+		words.push_back(word);
+	}
+
+	return words;
+}
+
 // getline add \r at the end of a line :/ so this function removes it
 bool removeCarriageReturn(string& line){
     // Check if the last character is a carriage return and remove it if present
