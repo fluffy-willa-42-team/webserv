@@ -23,7 +23,7 @@ typedef enum {
 
 /******************************************************************************/
 
-class Server {
+class Listener {
 	private:
 
 		u_int16_t port;
@@ -38,10 +38,10 @@ class Server {
 
 
 	public:
-		Server();
-		Server(u_int16_t port);
-		~Server();
-		const Server& operator=(const Server& other);
+		Listener();
+		Listener(u_int16_t port);
+		~Listener();
+		const Listener& operator=(const Listener& other);
 
 		t_setup setup();
 		e_status try_exec();

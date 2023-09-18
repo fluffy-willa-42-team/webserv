@@ -28,8 +28,8 @@ void init_error_map(){
 	codes_map[416] = "Range Not Satisfiable";			// The server cannot satisfy the range request specified in the request's headers.
 	codes_map[417] = "Expectation Failed";				// The server cannot meet the requirements of the "Expect" header field in the request.
 
-	// 5xx Server Error Responses
-	codes_map[500] = "Internal Server Error";			// A generic error message indicating that an unexpected condition was encountered on the server.
+	// 5xx Listener Error Responses
+	codes_map[500] = "Internal Listener Error";			// A generic error message indicating that an unexpected condition was encountered on the server.
 	codes_map[501] = "Not Implemented";					// The server does not support the functionality required to fulfill the request.
 	codes_map[502] = "Bad Gateway";						// The server, while acting as a gateway or proxy, received an invalid response from the upstream server.
 	codes_map[503] = "Service Unavailable";				// The server is currently unable to handle the request due to temporary overloading or maintenance of the server.

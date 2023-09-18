@@ -1,8 +1,8 @@
-#include "Server.hpp"
+#include "Listener.hpp"
 
 #include <unistd.h>
 
-Server::Server()
+Listener::Listener()
 : port(0), server_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
@@ -10,7 +10,7 @@ Server::Server()
 	address_struct.sin_port = htons(port);
 }
 
-Server::Server(u_int16_t port)
+Listener::Listener(u_int16_t port)
 : port(port), server_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
@@ -18,7 +18,7 @@ Server::Server(u_int16_t port)
 	address_struct.sin_port = htons(port);
 }
 
-Server::~Server(){
+Listener::~Listener(){
 	if (server_fd >= 0){
 		close(server_fd);
 		server_fd = -1;
@@ -29,7 +29,7 @@ Server::~Server(){
 	}
 }
 
-const Server& Server::operator=(const Server& other)
+const Listener& Listener::operator=(const Listener& other)
 {
 	port = other.port;
 

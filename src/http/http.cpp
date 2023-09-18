@@ -1,11 +1,11 @@
 #include "webserv.hpp"
 #include "utils.hpp"
-#include "Server.hpp"
+#include "Listener.hpp"
 #include "request_validation.hpp"
 
 string error(u_int32_t code, const string& message);
 
-const string http(const string& req, Server& server){
+const string http(const string& req, Listener& server){
 	stringstream ss_line_by_line(req);
     string line;
 

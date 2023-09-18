@@ -1,10 +1,10 @@
-#include "Server.hpp"
+#include "Listener.hpp"
 
 #include <unistd.h>
 
-const string http(const string& req, Server& server);
+const string http(const string& req, Listener& server);
 
-void Server::exec(){
+void Listener::exec(){
 	string buf;
 
 	try {
@@ -27,7 +27,7 @@ void Server::exec(){
 	close(connection_fd);
 }
 
-string Server::read_buff(){
+string Listener::read_buff(){
 	memset(buffer, 0, BUFFER_SIZE);
 	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
 	if (length_read == -1){

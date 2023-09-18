@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "Listener.hpp"
 
 #include <cstdlib>
 #include <fcntl.h>
@@ -19,7 +19,7 @@ t_setup ret(u_int32_t code, const string& message){
 
 
 
-t_setup Server::setup(){
+t_setup Listener::setup(){
 	// Create Socket file descriptor for server
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd < 0){
@@ -59,7 +59,7 @@ t_setup Server::setup(){
 
 
 
-e_status Server::try_exec(){
+e_status Listener::try_exec(){
 	if (!is_running){
 		return S_STOP;
 	}
@@ -99,9 +99,9 @@ e_status Server::try_exec(){
 
 
 
-void Server::stop(){
+void Listener::stop(){
 	if (!is_running)
 		return ;
 	is_running = false;
-	cout << CYAN << "Shutting down Server : " << this->get_address() << RESET << endl;
+	cout << CYAN << "Shutting down Listener : " << this->get_address() << RESET << endl;
 }
