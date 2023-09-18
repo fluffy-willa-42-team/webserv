@@ -31,7 +31,7 @@ int main(int argc, char* argv[]){
 	// Config config(config_path);
 
 	// for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite = config.ports.end(); ite++){
-	// 	servers[port] = Listener(8001)
+	// 	servers[port] = Listener(port)
 	// }
 	servers[8001] = Listener(8001);
 	servers[8002] = Listener(8002);
