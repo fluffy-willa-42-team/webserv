@@ -41,7 +41,7 @@ class Server {
 class Config {
 	private:
 		vector<u_int32_t> ports;
-		vector<Server> ports;
+		vector<Server> servers;
 
 	public:
 		Config(const string& filename);
