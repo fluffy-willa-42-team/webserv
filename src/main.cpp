@@ -3,16 +3,16 @@
 
 void init();
 
-static map<int, Listener> servers;
+static map<int, Listener> listeners;
 static bool loop = true;
 
-void setup(map<int, Listener>& servers);
-void start(map<int, Listener>& servers, bool& loop);
+void setup(map<int, Listener>& listeners);
+void start(map<int, Listener>& listeners, bool& loop);
 void shutdown(int signal){
 	(void) signal;
 	loop = false;
 	cout << endl;
-	for (map<int, Listener>::iterator ite = servers.begin(); ite != servers.end(); ite++){
+	for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
 		ite->second.stop();
 	}
 }
@@ -31,13 +31,13 @@ int main(int argc, char* argv[]){
 	// Config config(config_path);
 
 	// for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite = config.ports.end(); ite++){
-	// 	servers[port] = Listener(port)
+	// 	listeners[port] = Listener(port)
 	// }
-	servers[8001] = Listener(8001);
-	servers[8002] = Listener(8002);
-	servers[8003] = Listener(8003);
+	listeners[8001] = Listener(8001);
+	listeners[8002] = Listener(8002);
+	listeners[8003] = Listener(8003);
 
 	std::signal(SIGINT, &shutdown);
-	setup(servers);
-	start(servers, loop);
+	setup(listeners);
+	start(listeners, loop);
 }
