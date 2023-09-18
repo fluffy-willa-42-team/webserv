@@ -148,6 +148,10 @@ const string http(const string& req, Server& server){
 
 	/*===-----						XXXX							  -----===*/
 
+	/*
+	now that the request is parsed we now have to parse to config of all server
+	to find the one that is valid and that worked an execute that.
+	*/
 
 	return error(404, "This Page has not been Found");
 }
