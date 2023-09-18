@@ -39,14 +39,12 @@ class Server {
 /******************************************************************************/
 
 class Config {
-	private:
-		vector<u_int32_t> ports;
-		vector<Server> servers;
-
 	public:
+		bool				valid;
+		vector<u_int32_t>	ports;
+		vector<Server>		servers;
+
 		Config(const string& filename);
-		~Config();
-		const Config& operator=(const Config& other);
 };
 
 /******************************************************************************/

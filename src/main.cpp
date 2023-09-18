@@ -1,4 +1,5 @@
 #include "Listener.hpp"
+#include "Config.hpp"
 #include <csignal>
 
 void init();
@@ -28,14 +29,15 @@ int main(int argc, char* argv[]){
 	}
 
 	string config_path = argc == 2 ? argv[1] : DEFAULT_CONFIG_PATH;
-	// Config config(config_path);
-
-	// for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite = config.ports.end(); ite++){
-	// 	listeners[port] = Listener(port)
-	// }
-	listeners[8001] = Listener(8001);
-	listeners[8002] = Listener(8002);
-	listeners[8003] = Listener(8003);
+	Config config(config_path);
+	if (!config.valid){
+		cerr << "Error: Config is Invalid" << endl;
+		return 1;
+	}
+	
+	for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite != config.ports.end(); ite++){
+		listeners[*ite] = Listener(*ite);
+	}
 
 	std::signal(SIGINT, &shutdown);
 	setup(listeners);
