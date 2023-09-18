@@ -19,6 +19,18 @@ Config::Config(const string& filename)
 	if (!config_file.is_open())
 		return ;
 
+    string line;
+
+	while (getline(config_file, line)){
+
+		// Remove Comments
+		u_int64_t found = line.find_first_of(';');
+		if (found != std::string::npos){
+			line = line.substr(0, found);
+		}
+
+		cout << "\"" << GREEN << line << RESET << "\"" << endl;
+	}
 
 	ports.push_back(8001);
 	ports.push_back(8002);
