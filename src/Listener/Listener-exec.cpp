@@ -17,8 +17,6 @@ void Listener::exec(){
 	
 	cout << CYAN << buf << RESET << endl;
 
-	// TODO Ensure the buffer has all the request
-
 	string response = http(buf, *this);
 
 	cout << RED << response << RESET << endl;
