@@ -41,6 +41,13 @@ e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_s
 
 /******************************************************************************/
 
+bool is_a_path(const string& input){
+	return (input.size() > 0 && input[0] == '/')
+		|| (input.size() > 1 && input[0] == '.' && input[1] == '/');
+}
+
+/******************************************************************************/
+
 bool is_server_line(vector<string>& line_split){
 	return line_split.size() == 2 && line_split[0] == "server" && line_split[1] == "{";
 }
@@ -78,7 +85,8 @@ bool is_server_option_listen(vector<string>& line_split){
 bool is_server_option_error_page(vector<string>& line_split){
 	return line_split.size() == 3
 		&& line_split[0] == "error_page"
-		&& is_valid_error_code(stringToNumber(line_split[1]));
+		&& is_valid_error_code(stringToNumber(line_split[1]))
+		&& is_a_path(line_split[2]);
 }
 
 bool is_server_option_max_client_body_size(vector<string>& line_split){
@@ -90,11 +98,15 @@ bool is_server_option_max_client_body_size(vector<string>& line_split){
 /******************************************************************************/
 
 bool is_location_index(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "index"
+		&& is_a_path(line_split[1]);
 }
 
 bool is_location_root(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "root"
+		&& is_a_path(line_split[1]);
 }
 
 bool is_location_allow_methods(vector<string>& line_split){
