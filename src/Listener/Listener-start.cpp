@@ -38,14 +38,18 @@ t_setup Listener::setup(){
 		return ret(3, "failed to retrieve the flags for server file descriptor");
 	}
 	
+	if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(int)) < 0){
+		return ret(4, "failed to set socket options");
+	}
+
 	// bind socket to a port
 	if (bind(listener_fd, ((sockaddr *)&address_struct), sizeof(sockaddr_in)) < 0){
-		return ret(4, "failed to bind socket server to port");
+		return ret(5, "failed to bind socket server to port");
 	}
 
 	// listens to port for new TCP connection
 	if (listen(listener_fd, 256) < 0){
-		return ret(5, "failed to listen to socket server");
+		return ret(6, "failed to listen to socket server");
 	}
 	
 	cout << CYAN << "Listening on         : " << get_address() << RESET << endl;
