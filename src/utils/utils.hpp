@@ -18,6 +18,10 @@ u_int32_t stringToNumber(const string& str);
 
 /* ************************************************************************** */
 
+bool isFileReadable(const string& filepath);
+
+/* ************************************************************************** */
+
 template<typename T1, typename T2>
 bool map_has_key(const map<T1, T2>& i_map, const T1& key){
 	typename map<T1, T2>::const_iterator it = i_map.find(key);

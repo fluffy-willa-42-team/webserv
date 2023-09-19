@@ -1,8 +1,11 @@
 #include "Config.hpp"
 #include "file_parsing.hpp"
 
-static e_status err(const string& line, const u_int32_t& index){
+static e_status err(const string& line, const u_int32_t& index, const string& message = ""){
 	cerr << RED << "[" << index << "] \"" << line << "\"" << RESET << endl;
+	if (!message.empty()){
+		cerr << RED << "=> " << message << RESET << endl;
+	}
 	return S_ERROR;
 }
 
@@ -66,9 +69,14 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
-
+				if (!isFileReadable(line_split[2])){
+					return err(line, index, "Can't open error file");
+				}
+				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
 			}
-			else if (is_server_option_max_client_body_size(line_split)){}
+			else if (is_server_option_max_client_body_size(line_split)){
+				
+			}
 			else {
 				return err(line, index);
 			}
