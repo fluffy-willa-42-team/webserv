@@ -1,4 +1,5 @@
 #include "webserv.hpp"
+#include "utils.hpp"
 
 string readFileIntoString(const string& path);
 void replace_string(string& input, const string& pattern_in, const string& pattern_out);
@@ -56,4 +57,8 @@ string error(u_int32_t code, const string& message){
 
 map<u_int32_t, string>& get_codes_map(){
 	return codes_map;
+}
+
+bool is_valid_error_code(u_int32_t code){
+	return map_has_key(codes_map, code);
 }

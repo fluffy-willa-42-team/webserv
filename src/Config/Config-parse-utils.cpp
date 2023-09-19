@@ -1,5 +1,7 @@
 #include "Config.hpp"
 
+bool is_valid_error_code(u_int32_t code);
+
 e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_status& status){
 	if (!getline(file, line)){
 		status = S_END;
@@ -74,7 +76,9 @@ bool is_server_option_listen(vector<string>& line_split){
 }
 
 bool is_server_option_error_page(vector<string>& line_split){
-	return false;
+	return line_split.size() == 3
+		&& line_split[0] == "error_page"
+		&& is_valid_error_code(stringToNumber(line_split[1]));
 }
 
 bool is_server_option_max_client_body_size(vector<string>& line_split){

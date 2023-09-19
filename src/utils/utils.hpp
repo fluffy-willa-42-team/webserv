@@ -13,8 +13,15 @@ vector<string> split(const string& s, const string& delimiter);
 vector<string> splitFirst(const string& s, const string& delimiter);
 vector<string> splitStringByWhitespace(const string& input);
 bool removeCarriageReturn(string& line);
-bool map_has_key(const map<string, string>& i_map, string key);
 u_int32_t stringToNumber(const string& str);
+
+/* ************************************************************************** */
+
+template<typename T1, typename T2>
+bool map_has_key(const map<T1, T2>& i_map, const T1& key){
+	typename map<T1, T2>::const_iterator it = i_map.find(key);
+	return (it != i_map.end());
+}
 
 /* ************************************************************************** */
 

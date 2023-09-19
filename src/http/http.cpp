@@ -106,7 +106,7 @@ const string http(const string& req, Listener& listener){
 	Host: awillems.42.fr:4000
 	*/
 	{
-		if (!map_has_key(req_headers, "Host")){
+		if (!map_has_key(req_headers, string("Host"))){
 			return error(400, "Missing host header");
 		}
 	}
@@ -121,7 +121,7 @@ const string http(const string& req, Listener& listener){
 		remainingContentStream << ss_line_by_line.rdbuf();
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
-			if (!map_has_key(req_headers, HEADER_CONTENT_LENGTH)){
+			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
