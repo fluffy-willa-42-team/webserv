@@ -116,9 +116,17 @@ bool is_location_root(vector<string>& line_split){
 }
 
 bool is_location_allow_methods(vector<string>& line_split){
-	return line_split.size() == 2
-		&& line_split[0] == "allow_methods"
-		&& is_method_valid(line_split[1]) == SUCCESS;
+	if (line_split.size() <= 1
+		|| line_split[0] != "allow_methods"
+	){
+		return false;
+	}
+	for (u_int32_t i = 1; i < line_split.size(); i++){
+		if (is_method_valid(line_split[1]) != SUCCESS){
+			return false;
+		}
+	}
+	return true;
 }
 
 bool is_location_return(vector<string>& line_split){
