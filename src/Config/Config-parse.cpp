@@ -46,7 +46,8 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return err(line, index);
 					}
 					newServer.port = stringToNumber(splited[1]);
-					if (!(newServer.port == 80 || newServer.port == 443 || newServer.port >= 1024)){
+					if (!(newServer.port == 80 || newServer.port == 443
+						|| (1024 <= newServer.port && newServer.port <= 65535))){
 						return err(line, index);
 					}
 				}
