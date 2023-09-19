@@ -1,4 +1,5 @@
 #include "Config.hpp"
+#include "request_validation.hpp"
 
 bool is_valid_error_code(u_int32_t code);
 
@@ -110,7 +111,9 @@ bool is_location_root(vector<string>& line_split){
 }
 
 bool is_location_allow_methods(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "allow_methods"
+		&& is_method_valid(line_split[1]) == SUCCESS;
 }
 
 bool is_location_cgi_pass(vector<string>& line_split){
