@@ -53,11 +53,24 @@ bool is_location_line(vector<string>& line_split){
 /******************************************************************************/
 
 bool is_server_option_server_name(vector<string>& line_split){
-	return false;
+	return line_split.size() > 1
+		&& line_split[0] == "server_name";
 }
 
 bool is_server_option_listen(vector<string>& line_split){
-	return false;
+	if (!(line_split.size() == 2 && line_split[0] == "listen")){
+		return false;
+	}
+	if (stringToNumber(line_split[1]) == 0){
+		vector<string> splited = split(line_split[1], ":");
+		if (splited.size() != 2
+			// TODO ? verify if host is valid
+			|| stringToNumber(splited[1]) == 0
+		){
+			return false;
+		}
+	}
+	return true;
 }
 
 bool is_server_option_error_page(vector<string>& line_split){
