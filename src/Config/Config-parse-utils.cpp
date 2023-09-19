@@ -53,43 +53,43 @@ bool is_location_line(vector<string>& line_split){
 /******************************************************************************/
 
 bool is_server_option_server_name(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_server_option_listen(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_server_option_error_page(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_server_option_max_client_body_size(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 /******************************************************************************/
 
 bool is_location_index(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_location_root(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_location_allow_methods(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_location_cgi_pass(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_location_download_file(vector<string>& line_split){
-	return true;
+	return false;
 }
 
 bool is_location_autoindex(vector<string>& line_split){
-	return true;
+	return false;
 }
