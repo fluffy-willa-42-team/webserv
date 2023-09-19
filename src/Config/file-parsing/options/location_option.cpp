@@ -36,6 +36,7 @@ bool is_location_allow_methods(vector<string>& line_split){
 bool is_location_return(vector<string>& line_split){
 	return line_split.size() == 3
 		&& line_split[0] == "return"
+		&& isPositiveInteger(line_split[1])
 		&& is_valid_redirect_code(stringToNumber(line_split[1]))
 		&& is_a_http_path(line_split[2]);
 }

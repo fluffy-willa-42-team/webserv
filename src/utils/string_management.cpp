@@ -84,3 +84,18 @@ u_int32_t stringToNumber(const string& str) {
 
     return number;
 }
+
+bool isPositiveInteger(const string& str) {
+    if (str.empty()) {
+        return false;
+    }
+    
+    for (string::const_iterator it = str.begin(); it != str.end(); ++it) {
+        if (!std::isdigit(*it)) {
+            // cout << "X " << str << endl;
+            return false;
+        }
+    }
+    // cout << "V " << str << endl;
+    return true;
+}

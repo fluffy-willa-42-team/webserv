@@ -17,6 +17,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			return err(line, index);
 		}
 
+		Server newServer;
 		while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 			if (status & S_PASS) continue;
 			if (status & (S_ERROR | S_END)){
@@ -24,6 +25,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			}
 
 			if (is_location_line(line_split)){
+				Location newLocation;
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 					if (status & S_PASS) continue;
 					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == "{"){
@@ -42,13 +44,31 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					}
 				}
 			}
-			else if (is_server_option_server_name(line_split)){}
-			else if (is_server_option_listen(line_split)){}
+			else if (is_server_option_server_name(line_split)){
+				if (newServer.host.size() > 0){
+					return err(line, index);
+				}
+				newServer.host = line_split[1];
+			}
+			else if (is_server_option_listen(line_split)){
+				if (isPositiveInteger(line_split[1])){
+					newServer.port = stringToNumber(line_split[1]);
+				}
+				else {
+					vector<string> splited = split(line_split[1], ":");
+					if (!isPositiveInteger(splited[1])){
+						return err(line, index);
+					}
+					newServer.port = stringToNumber(splited[1]);
+				}
+				cout << line << " | " << newServer.port << endl;
+			}
 			else if (is_server_option_error_page(line_split)){}
 			else if (is_server_option_max_client_body_size(line_split)){}
 			else {
 				return err(line, index);
 			}
+			
 		}
 	}
 	return S_CONTINUE;

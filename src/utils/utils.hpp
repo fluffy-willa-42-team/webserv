@@ -13,6 +13,7 @@ vector<string> split(const string& s, const string& delimiter);
 vector<string> splitFirst(const string& s, const string& delimiter);
 vector<string> splitStringByWhitespace(const string& input);
 bool removeCarriageReturn(string& line);
+bool isPositiveInteger(const string& str);
 u_int32_t stringToNumber(const string& str);
 
 /* ************************************************************************** */

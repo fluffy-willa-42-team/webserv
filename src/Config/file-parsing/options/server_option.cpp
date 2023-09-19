@@ -17,11 +17,10 @@ bool is_server_option_listen(vector<string>& line_split){
 	if (!(line_split.size() == 2 && line_split[0] == "listen")){
 		return false;
 	}
-	if (stringToNumber(line_split[1]) == 0){
+	if (!isPositiveInteger(line_split[1])){
 		vector<string> splited = split(line_split[1], ":");
-		if (splited.size() != 2
-			// TODO ? verify if host is valid
-			|| stringToNumber(splited[1]) == 0
+		// TODO ? verify if host is valid
+		if (!(splited.size() == 2 && isPositiveInteger(splited[1]))
 		){
 			return false;
 		}
@@ -32,6 +31,7 @@ bool is_server_option_listen(vector<string>& line_split){
 bool is_server_option_error_page(vector<string>& line_split){
 	return line_split.size() == 3
 		&& line_split[0] == "error_page"
+		&& isPositiveInteger(line_split[1])
 		&& is_valid_error_code(stringToNumber(line_split[1]))
 		&& is_a_file_path(line_split[2]);
 }
@@ -39,5 +39,6 @@ bool is_server_option_error_page(vector<string>& line_split){
 bool is_server_option_max_client_body_size(vector<string>& line_split){
 	return line_split.size() == 2
 		&& line_split[0] == "max_client_body_size"
+		&& isPositiveInteger(line_split[1])
 		&& stringToNumber(line_split[1]) > 0;
 }
