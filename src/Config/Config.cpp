@@ -49,10 +49,5 @@ valid(false)
 		return ;
 	}
 
-	ports.push_back(8001);
-	ports.push_back(8002);
-	ports.push_back(8003);
-
-
 	valid = true;
 }
