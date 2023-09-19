@@ -27,27 +27,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				return err(line, index);
 			}
 
-			if (is_location_line(line_split)){
-				Location newLocation;
-				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
-					if (status & S_PASS) continue;
-					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == "{"){
-						return err(line, index);
-					}
-
-					if (is_location_index(line_split)){}
-					else if (is_location_root(line_split)){}
-					else if (is_location_allow_methods(line_split)){}
-					else if (is_location_return(line_split)){}
-					else if (is_location_cgi_pass(line_split)){}
-					else if (is_location_download_file(line_split)){}
-					else if (is_location_autoindex(line_split)){}
-					else {
-						return err(line, index);
-					}
-				}
-			}
-			else if (is_server_option_server_name(line_split)){
+			if (is_server_option_server_name(line_split)){
 				if (newServer.host.size() > 0){
 					return err(line, index, "Duplicate Parameter");
 				}
@@ -83,6 +63,26 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 				newServer.max_body_size = stringToNumber(line_split[1]);
 				newServer.has_max_body_size_been_set = true;
+			}
+			else if (is_location_line(line_split)){
+				Location newLocation;
+				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
+					if (status & S_PASS) continue;
+					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == "{"){
+						return err(line, index);
+					}
+
+					if (is_location_index(line_split)){}
+					else if (is_location_root(line_split)){}
+					else if (is_location_allow_methods(line_split)){}
+					else if (is_location_return(line_split)){}
+					else if (is_location_cgi_pass(line_split)){}
+					else if (is_location_download_file(line_split)){}
+					else if (is_location_autoindex(line_split)){}
+					else {
+						return err(line, index);
+					}
+				}
 			}
 			else {
 				return err(line, index);
