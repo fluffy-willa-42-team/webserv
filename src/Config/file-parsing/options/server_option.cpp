@@ -3,11 +3,13 @@
 bool is_valid_error_code(u_int32_t code);
 
 bool is_server_line(vector<string>& line_split){
-	return line_split.size() == 2 && line_split[0] == "server" && line_split[1] == "{";
+	return line_split.size() == 2
+		&& line_split[0] == "server"
+		&& line_split[1] == "{";
 }
 
 bool is_server_option_server_name(vector<string>& line_split){
-	return line_split.size() > 1
+	return line_split.size() == 2
 		&& line_split[0] == "server_name";
 }
 
