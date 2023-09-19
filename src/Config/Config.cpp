@@ -9,7 +9,8 @@ index(),
 root(),
 cgi_pass(),
 allowed_methods(get_allowed_method()),
-download(false)
+download(false),
+type(E_NOT_SET)
 {
 	// cout << "Location: Hello" << endl;
 }

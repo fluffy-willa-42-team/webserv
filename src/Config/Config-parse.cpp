@@ -9,6 +9,16 @@ static e_status err(const string& line, const u_int32_t& index, const string& me
 	return S_ERROR;
 }
 
+bool is_type_valid(e_location_type& type, e_location_type newType){
+	if (type == E_NOT_SET){
+		type = newType;
+	}
+	else if (type != newType){
+		return false;
+	}
+	return true;
+}
+
 e_status Config::parse_conf_file(ifstream& config_file){
 	string line;
 	vector<string> line_split;
@@ -72,31 +82,49 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				Location newLocation;
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 					if (status & S_PASS) continue;
-					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == "{"){
+					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == PARSING_GROUP_OPENING){
 						return err(line, index);
 					}
 
 					if (is_location_index(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						newLocation.index = line_split[1];
 					}
 					else if (is_location_root(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						newLocation.root = line_split[1];
 					}
 					else if (is_location_allow_methods(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						for (u_int32_t i = 1; i < line_split.size(); i++){
 							newLocation.allowed_methods.push_back(line_split[i]);
 						}
 					}
-					else if (is_location_return(line_split)){
+					else if (is_location_redirect(line_split)){
+						if (!is_type_valid(newLocation.type, E_REDIRECT)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						// newLocation.
 					}
 					else if (is_location_cgi_pass(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						if (!isFileExecutable(line_split[1])){
 							return err(line, index, "File is not executable");
 						}
 						newLocation.cgi_pass = line_split[1];
 					}
 					else if (is_location_download_file(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						if (line_split[1] == "ON"){
 							newLocation.download = true;
 						}
@@ -105,6 +133,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						}
 					}
 					else if (is_location_autoindex(line_split)){
+						if (!is_type_valid(newLocation.type, E_NORMAL)){
+							return err(line, index, "Incompatible location arguments");
+						}
 						if (line_split[1] == "ON"){
 							newLocation.autoindex = true;
 						}

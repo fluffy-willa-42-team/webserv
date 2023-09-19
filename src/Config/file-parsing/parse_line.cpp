@@ -30,7 +30,7 @@ e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_s
 		return S_PASS;
 	}
 
-	if (line_split.size() == 1 && line_split[0] == "}"){
+	if (line_split.size() == 1 && line_split[0] == PARSING_GROUP_CLOSING){
 		status = S_STOP;
 		return S_STOP;
 	}
