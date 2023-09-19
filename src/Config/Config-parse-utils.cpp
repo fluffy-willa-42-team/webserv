@@ -82,7 +82,9 @@ bool is_server_option_error_page(vector<string>& line_split){
 }
 
 bool is_server_option_max_client_body_size(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "max_client_body_size"
+		&& stringToNumber(line_split[1]) > 0;
 }
 
 /******************************************************************************/
