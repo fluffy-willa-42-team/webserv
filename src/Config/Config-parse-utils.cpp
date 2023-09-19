@@ -52,6 +52,10 @@ bool is_a_http_path(const string& input){
 	return (input.size() > 0 && input[0] == '/');
 }
 
+bool is_bool(const string& input){
+	return (input == "ON" || input == "OFF");
+}
+
 /******************************************************************************/
 
 bool is_server_line(vector<string>& line_split){
@@ -135,13 +139,19 @@ bool is_location_return(vector<string>& line_split){
 }
 
 bool is_location_cgi_pass(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "cgi_pass"
+		&& is_a_file_path(line_split[1]);
 }
 
 bool is_location_download_file(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "download_file"
+		&& is_bool(line_split[1]);
 }
 
 bool is_location_autoindex(vector<string>& line_split){
-	return false;
+	return line_split.size() == 2
+		&& line_split[0] == "autoindex"
+		&& is_bool(line_split[1]);
 }
