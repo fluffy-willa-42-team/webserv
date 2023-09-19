@@ -20,6 +20,7 @@ class Location {
 		string			cgi_pass;
 		vector<string>	allowed_methods;
 		bool			download;
+		bool			autoindex;
 
 		Location();
 		~Location();

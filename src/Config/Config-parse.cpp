@@ -76,13 +76,42 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return err(line, index);
 					}
 
-					if (is_location_index(line_split)){}
-					else if (is_location_root(line_split)){}
-					else if (is_location_allow_methods(line_split)){}
-					else if (is_location_return(line_split)){}
-					else if (is_location_cgi_pass(line_split)){}
-					else if (is_location_download_file(line_split)){}
-					else if (is_location_autoindex(line_split)){}
+					if (is_location_index(line_split)){
+						newLocation.index = line_split[1];
+					}
+					else if (is_location_root(line_split)){
+						newLocation.root = line_split[1];
+					}
+					else if (is_location_allow_methods(line_split)){
+						for (u_int32_t i = 1; i < line_split.size(); i++){
+							newLocation.allowed_methods.push_back(line_split[i]);
+						}
+					}
+					else if (is_location_return(line_split)){
+						// newLocation.
+					}
+					else if (is_location_cgi_pass(line_split)){
+						if (!isFileExecutable(line_split[1])){
+							return err(line, index, "File is not executable");
+						}
+						newLocation.cgi_pass = line_split[1];
+					}
+					else if (is_location_download_file(line_split)){
+						if (line_split[1] == "ON"){
+							newLocation.download = true;
+						}
+						else if (line_split[1] == "OFF"){
+							newLocation.download = false;
+						}
+					}
+					else if (is_location_autoindex(line_split)){
+						if (line_split[1] == "ON"){
+							newLocation.autoindex = true;
+						}
+						else if (line_split[1] == "OFF"){
+							newLocation.autoindex = false;
+						}
+					}
 					else {
 						return err(line, index);
 					}

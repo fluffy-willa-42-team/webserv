@@ -19,6 +19,7 @@ u_int32_t stringToNumber(const string& str);
 /* ************************************************************************** */
 
 bool isFileReadable(const string& filepath);
+bool isFileExecutable(const std::string& filepath);
 
 /* ************************************************************************** */
 
