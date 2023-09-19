@@ -46,6 +46,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return err(line, index);
 					}
 					newServer.port = stringToNumber(splited[1]);
+					if (!(newServer.port == 80 || newServer.port == 443 || newServer.port >= 1024)){
+						return err(line, index);
+					}
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
@@ -83,13 +86,14 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return err(line, index);
 					}
 				}
+				newServer.locations.push_back(newLocation);
 			}
 			else {
 				return err(line, index);
 			}
 		}
-
 		servers.push_back(newServer);
+		ports.push_back(newServer.port);
 	}
 	return S_CONTINUE;
 }
