@@ -19,27 +19,26 @@ e_status Config::parse_conf_file(ifstream& config_file){
 	string line;
 	vector<string> line_split;
 	e_status status;
-	while (!(parseline(config_file, line, line_split, status) & (S_STOP | S_END | S_ERROR))){
+	while (!(parseline(config_file, line, line_split, status) & S_END)){
+		cout << "[" << status << "]"<< YELLOW << "X " << line << RESET << endl;
 		if (status & S_PASS) continue;
-		if (status & S_ERROR) return S_ERROR;
-		cout << YELLOW << line << RESET << endl;
+		if (status & (S_ERROR | S_STOP)) return S_ERROR;
 
 		if (!is_server_line(line_split)){
 			return S_ERROR;
 		}
 
-		while (!(parseline(config_file, line, line_split, status) & (S_STOP | S_END | S_ERROR))){
+		while (!(parseline(config_file, line, line_split, status) & S_STOP)){
+			cout << "[" << status << "]"<< CYAN << "X " << line << RESET << endl;
 			if (status & S_PASS) continue;
 			if (status & (S_ERROR | S_END)) return S_ERROR;
-			cout << CYAN << line << RESET << endl;
 
 			if (is_location_line(line_split)){
-				while (!(parseline(config_file, line, line_split, status) & (S_STOP | S_END | S_ERROR))){
+				while (!(parseline(config_file, line, line_split, status) & S_STOP)){
+					cout << "[" << status << "]" << GREEN << "X " << line << RESET << endl;
 					if (status & S_PASS) continue;
 					if (status & (S_ERROR | S_END)) return S_ERROR;
 					if (line_split[line_split.size() - 1] == "{") return S_ERROR;
-
-					cout << GREEN << line << RESET << endl;
 
 					if (is_location_index(line_split)){}
 					else if (is_location_root(line_split)){}
@@ -52,6 +51,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return S_ERROR;
 					}
 				}
+				cout << "[" << status << "]" << GREEN << "X " << line << RESET << endl;
 			}
 			else if (is_server_option_server_name(line_split)){}
 			else if (is_server_option_listen(line_split)){}
@@ -61,6 +61,8 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				return S_ERROR;
 			}
 		}
+		cout << "[" << status << "]"<< CYAN << "X " << line << RESET << endl;
 	}
+	cout << "[" << status << "]"<< YELLOW << "X " << line << RESET << endl;
 	return S_CONTINUE;
 }
