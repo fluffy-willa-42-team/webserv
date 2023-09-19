@@ -37,6 +37,8 @@ e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_s
 	return S_CONTINUE;
 }
 
+/******************************************************************************/
+
 bool is_server_line(vector<string>& line_split){
 	return line_split.size() == 2 && line_split[0] == "server" && line_split[1] == "{";
 }
@@ -46,4 +48,48 @@ bool is_location_line(vector<string>& line_split){
 		&& line_split[0] == string("location")
 		&& line_split[1].size() > 0 && line_split[1][0] == '/'
 		&& line_split[2] == string("{");
+}
+
+/******************************************************************************/
+
+bool is_server_option_server_name(vector<string>& line_split){
+	return true;
+}
+
+bool is_server_option_listen(vector<string>& line_split){
+	return true;
+}
+
+bool is_server_option_error_page(vector<string>& line_split){
+	return true;
+}
+
+bool is_server_option_max_client_body_size(vector<string>& line_split){
+	return true;
+}
+
+/******************************************************************************/
+
+bool is_location_index(vector<string>& line_split){
+	return true;
+}
+
+bool is_location_root(vector<string>& line_split){
+	return true;
+}
+
+bool is_location_allow_methods(vector<string>& line_split){
+	return true;
+}
+
+bool is_location_cgi_pass(vector<string>& line_split){
+	return true;
+}
+
+bool is_location_download_file(vector<string>& line_split){
+	return true;
+}
+
+bool is_location_autoindex(vector<string>& line_split){
+	return true;
 }
