@@ -49,13 +49,13 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			}
 			else if (is_server_option_server_name(line_split)){
 				if (newServer.host.size() > 0){
-					return err(line, index);
+					return err(line, index, "Duplicate Parameter");
 				}
 				newServer.host = line_split[1];
 			}
 			else if (is_server_option_listen(line_split)){
 				if (newServer.port != 0){
-					return err(line, index);
+					return err(line, index, "Duplicate Parameter");
 				}
 				if (isPositiveInteger(line_split[1])){
 					newServer.port = stringToNumber(line_split[1]);
@@ -75,7 +75,14 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
 			}
 			else if (is_server_option_max_client_body_size(line_split)){
-				
+				if (newServer.has_max_body_size_been_set){
+					return err(line, index, "Duplicate Parameter");
+				}
+				if (!isPositiveInteger(line_split[1])){
+					return err(line, index);
+				}
+				newServer.max_body_size = stringToNumber(line_split[1]);
+				newServer.has_max_body_size_been_set = true;
 			}
 			else {
 				return err(line, index);

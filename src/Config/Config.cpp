@@ -3,16 +3,26 @@
 vector<string>& get_allowed_method();
 
 
-Location::Location()
-: path(), index(), root(), cgi_pass(), allowed_methods(get_allowed_method()), download(false)
+Location::Location():
+path(),
+index(),
+root(),
+cgi_pass(),
+allowed_methods(get_allowed_method()),
+download(false)
 {}
 
-Server::Server()
-: host(), port(0), max_body_size(DEFAULT_MAX_BODY_SIZE), locations(), custom_error_page()
+Server::Server():
+host(),
+port(0),
+max_body_size(DEFAULT_MAX_BODY_SIZE),
+has_max_body_size_been_set(false),
+locations(),
+custom_error_page()
 {}
 
-Config::Config(const string& filename)
-: valid(false)
+Config::Config(const string& filename):
+valid(false)
 {
 	cout << filename << endl;
 

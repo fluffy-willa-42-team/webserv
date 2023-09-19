@@ -33,6 +33,7 @@ class Server {
 		string					host;
 		u_int32_t				port;
 		int32_t					max_body_size;
+		bool					has_max_body_size_been_set;
 		vector<Location>		locations;
 		map<u_int32_t, string>	custom_error_page;
 };
