@@ -4,11 +4,13 @@
 bool is_valid_error_code(u_int32_t code);
 bool is_valid_redirect_code(u_int32_t code);
 
-e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_status& status){
+e_status parseline(ifstream& file, string& line, vector<string>& line_split, e_status& status, u_int32_t& index){
 	if (!getline(file, line)){
 		status = S_END;
 		return S_END;
 	}
+	
+	index++;
 
 	// Remove Comments
 	u_int64_t found = line.find_first_of(';');
