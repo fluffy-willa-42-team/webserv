@@ -46,6 +46,9 @@ class Config {
 		vector<Server>		servers;
 
 		Config(const string& filename);
+
+	private:
+		e_status parse_conf_file(ifstream& config_file);
 };
 
 /******************************************************************************/
