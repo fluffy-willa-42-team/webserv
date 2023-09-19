@@ -23,15 +23,15 @@ int main(int argc, char* argv[]){
 
 	// Parse config
 	if (argc > 2){
-		cerr << "Error: Invalid Number of arguments" << endl;
-		cerr << "./webserv [?filepath_to_config]" << endl;
+		cerr << RED << "Error: Invalid Number of arguments" << RESET << endl;
+		cerr << RED << "./webserv [?filepath_to_config]" << RESET << endl;
 		return 1;
 	}
 
 	string config_path = argc == 2 ? argv[1] : DEFAULT_CONFIG_PATH;
 	Config config(config_path);
 	if (!config.valid){
-		cerr << "Error: Config is Invalid" << endl;
+		cerr << RED << "Error: Config is Invalid" << RESET << endl;
 		return 1;
 	}
 	
