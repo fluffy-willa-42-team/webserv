@@ -14,28 +14,30 @@
 
 class Location {
 	public:
-		Location();
-
 		string			path;
 		string			index;
 		string			root;
 		string			cgi_pass;
 		vector<string>	allowed_methods;
 		bool			download;
+
+		Location();
+		~Location();
 };
 
 /******************************************************************************/
 
 class Server {
 	public:
-		Server();
-
 		string					host;
 		u_int32_t				port;
 		int32_t					max_body_size;
 		bool					has_max_body_size_been_set;
 		vector<Location>		locations;
 		map<u_int32_t, string>	custom_error_page;
+
+		Server();
+		~Server();
 };
 
 /******************************************************************************/

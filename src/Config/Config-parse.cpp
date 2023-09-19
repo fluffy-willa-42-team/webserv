@@ -87,8 +87,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			else {
 				return err(line, index);
 			}
-			
 		}
+
+		servers.push_back(newServer);
 	}
 	return S_CONTINUE;
 }
