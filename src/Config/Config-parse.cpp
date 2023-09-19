@@ -10,6 +10,7 @@ bool is_server_option_max_client_body_size	(vector<string>& line_split);
 bool is_location_index						(vector<string>& line_split);
 bool is_location_root						(vector<string>& line_split);
 bool is_location_allow_methods				(vector<string>& line_split);
+bool is_location_return						(vector<string>& line_split);
 bool is_location_cgi_pass					(vector<string>& line_split);
 bool is_location_download_file				(vector<string>& line_split);
 bool is_location_autoindex					(vector<string>& line_split);
@@ -43,6 +44,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					if (is_location_index(line_split)){}
 					else if (is_location_root(line_split)){}
 					else if (is_location_allow_methods(line_split)){}
+					else if (is_location_return(line_split)){}
 					else if (is_location_cgi_pass(line_split)){}
 					else if (is_location_download_file(line_split)){}
 					else if (is_location_autoindex(line_split)){}
