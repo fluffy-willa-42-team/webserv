@@ -51,6 +51,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				newServer.host = line_split[1];
 			}
 			else if (is_server_option_listen(line_split)){
+				if (newServer.port != 0){
+					return err(line, index);
+				}
 				if (isPositiveInteger(line_split[1])){
 					newServer.port = stringToNumber(line_split[1]);
 				}
@@ -61,9 +64,10 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					}
 					newServer.port = stringToNumber(splited[1]);
 				}
-				cout << line << " | " << newServer.port << endl;
 			}
-			else if (is_server_option_error_page(line_split)){}
+			else if (is_server_option_error_page(line_split)){
+
+			}
 			else if (is_server_option_max_client_body_size(line_split)){}
 			else {
 				return err(line, index);
