@@ -20,6 +20,8 @@ u_int32_t stringToNumber(const string& str);
 
 bool isFileReadable(const string& filepath);
 bool isFileExecutable(const std::string& filepath);
+bool doesFolderExists(const string& folderPath);
+string mergeFilePaths(const string& base, const string& path);
 
 /* ************************************************************************** */
 

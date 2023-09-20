@@ -9,7 +9,7 @@ static e_status err(const string& line, const u_int32_t& index, const string& me
 	return S_ERROR;
 }
 
-bool is_type_valid(e_location_type& type, e_location_type newType){
+static bool is_type_valid(e_location_type& type, e_location_type newType){
 	if (type == E_NOT_SET){
 		type = newType;
 	}
@@ -63,9 +63,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
-				if (!isFileReadable(line_split[2])){
-					return err(line, index, "Can't open error file");
-				}
+				// if (!isFileReadable(line_split[2])){
+				// 	return err(line, index, "Can't open error file");
+				// }
 				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
 			}
 			else if (is_server_option_max_client_body_size(line_split)){
@@ -80,6 +80,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			}
 			else if (is_location_line(line_split)){
 				Location newLocation;
+				newLocation.path = line_split[1];
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 					if (status & S_PASS) continue;
 					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == PARSING_GROUP_OPENING){
@@ -116,9 +117,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){
 							return err(line, index, "Incompatible location arguments");
 						}
-						if (!isFileExecutable(line_split[1])){
-							return err(line, index, "File is not executable");
-						}
+						// if (!isFileExecutable(line_split[1])){
+						// 	return err(line, index, "File is not executable");
+						// }
 						newLocation.cgi_pass = line_split[1];
 					}
 					else if (is_location_download_file(line_split)){

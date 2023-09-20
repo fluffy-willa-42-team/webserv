@@ -40,13 +40,23 @@ Config::Config(const string& filename):
 valid(false)
 {
 	ifstream config_file(filename.c_str(), std::ios_base::in);
-	if (!config_file.is_open())
+	if (!config_file.is_open()){
 		return ;
+	}
 
-	e_status status = this->parse_conf_file(config_file);
-	config_file.close();
-    if (status & S_ERROR){
-		return ;
+	{
+		e_status status = this->parse_conf_file(config_file);
+		config_file.close();
+		if (status & S_ERROR){
+			return ;
+		}
+	}
+
+	{
+		e_status status = this->test_if_file_or_folder_exist();
+		if (status & S_ERROR){
+			return ;
+		}
 	}
 
 	valid = true;

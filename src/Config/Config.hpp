@@ -76,6 +76,7 @@ class Config {
 
 	private:
 		e_status parse_conf_file(ifstream& config_file);
+		e_status test_if_file_or_folder_exist();
 };
 
 /******************************************************************************/
