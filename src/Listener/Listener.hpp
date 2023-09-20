@@ -4,6 +4,7 @@
 /******************************************************************************/
 
 #include "webserv.hpp"
+#include "Config.hpp"
 #include <netinet/in.h>
 
 /******************************************************************************/
@@ -28,13 +29,16 @@ class Listener {
 
 		bool is_running;
 
+		Config* config;
+
 		sockaddr_in address_struct;
 		char	buffer[BUFFER_SIZE];
 
 
+
 	public:
 		Listener();
-		Listener(u_int16_t port);
+		Listener(u_int16_t port, Config* config);
 		~Listener();
 		const Listener& operator=(const Listener& other);
 

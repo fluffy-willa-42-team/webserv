@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite != config.ports.end(); ite++){
-		listeners[*ite] = Listener(*ite);
+		listeners[*ite] = Listener(*ite, &config);
 	}
 
 	std::signal(SIGINT, &shutdown);
