@@ -1,6 +1,7 @@
 #include "Listener.hpp"
 #include "Config.hpp"
 #include <csignal>
+#include "debug.hpp"
 
 void init();
 
@@ -10,6 +11,7 @@ static bool loop = true;
 void setup(map<int, Listener>& listeners);
 void start(map<int, Listener>& listeners, bool& loop, const Config& config);
 void shutdown(int signal){
+	DEBUG_() << "SIGINT caught";
 	(void) signal;
 	loop = false;
 	cout << endl;
