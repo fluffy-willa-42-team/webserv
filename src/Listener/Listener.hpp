@@ -51,6 +51,8 @@ class Listener {
 		const string get_address();
 		bool is_it_running();
 		void print_waiting_msg();
+
+		const Config* get_config();
 };
 
 /******************************************************************************/

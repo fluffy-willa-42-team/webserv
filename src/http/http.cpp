@@ -3,9 +3,9 @@
 #include "Listener.hpp"
 #include "request_validation.hpp"
 
-string error(u_int32_t code, const string& message);
+string error(u_int32_t code, const string& message = "");
 
-const string http(const string& req, Listener& listener){
+const string http(const string& req, Listener& listener, const Config* config){
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -37,7 +37,7 @@ const string http(const string& req, Listener& listener){
 		cout << "Method: " << req_method << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-			return error(405, "");
+			return error(405);
 		}
 		else if (validation_status == BAD_REQUEST){
 			return error(400, "Method is invalid");
@@ -59,7 +59,7 @@ const string http(const string& req, Listener& listener){
 		cout << "Protocol: " << req_protocol << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-				return error(505, ""); // HTTP Version not allowed
+				return error(505); // HTTP Version not allowed
 		}
 		else if (validation_status == BAD_REQUEST){
 			return error(400, "Protocol is invalid");
@@ -151,6 +151,9 @@ const string http(const string& req, Listener& listener){
 	now that the request is parsed we now have to parse to config of all server
 	to find the one that is valid and that worked an execute that.
 	*/
+	if (!config){
+		return error(500);
+	}
 
 	return error(404, "This Page has not been Found");
 }

@@ -39,7 +39,7 @@ void init_error_map(){
 }
 
 
-string error(u_int32_t code, const string& message){
+string error(u_int32_t code, const string& message = ""){
 	string error_file(error_file_str);
 	stringstream code_str; code_str << code;
 	replace_string(error_file, "{{code}}", code_str.str());

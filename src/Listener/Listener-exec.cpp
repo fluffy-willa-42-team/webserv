@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-const string http(const string& req, Listener& listener);
+const string http(const string& req, Listener& listener, const Config* config);
 
 void Listener::exec(){
 	string buf;
@@ -17,7 +17,7 @@ void Listener::exec(){
 	
 	cout << CYAN << buf << RESET << endl;
 
-	string response = http(buf, *this);
+	string response = http(buf, *this, this->get_config());
 
 	cout << RED << response << RESET << endl;
 
