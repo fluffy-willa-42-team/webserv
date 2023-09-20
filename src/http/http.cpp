@@ -154,6 +154,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	catch(const exception& e) {
 		return error(404, "This host has not been found");
 	}
+
+	Location loc;
+	try {
+		loc = find_location(serv, req_path_param);
+	}
+	catch(const exception& e) {
+		return error(404, "This Page has not been Found");
+	}
 	
 
 

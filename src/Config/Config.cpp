@@ -61,3 +61,7 @@ valid(false)
 
 Config::~Config()
 {}
+
+bool Location::operator<(const Location& other) const{
+	return this->path.size() > other.path.size();
+}

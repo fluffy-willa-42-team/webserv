@@ -47,6 +47,8 @@ class Location {
 
 		Location();
 		~Location();
+
+		bool operator<(const Location& other) const;
 };
 
 /******************************************************************************/

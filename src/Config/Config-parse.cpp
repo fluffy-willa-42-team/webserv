@@ -1,5 +1,6 @@
 #include "Config.hpp"
 #include "file_parsing.hpp"
+#include <algorithm>
 
 static e_status err(const string& line, const u_int32_t& index, const string& message = ""){
 	cerr << RED << "[" << index << "] \"" << line << "\"" << RESET << endl;
@@ -154,6 +155,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				return err(line, index);
 			}
 		}
+		std::sort(newServer.locations.begin(), newServer.locations.end());
 		servers.push_back(newServer);
 		ports.push_back(newServer.port);
 	}
