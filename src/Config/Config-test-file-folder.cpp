@@ -7,6 +7,13 @@ static e_status err(const string& message){
 
 e_status Config::test_if_file_or_folder_exist(){
 	for (vector<Server>::const_iterator serv = servers.begin(); serv != servers.end(); serv++){
+		const map<u_int32_t, string>& e_pages = serv->custom_error_page;
+		for (map<u_int32_t, string>::const_iterator e_page = e_pages.begin(); e_page != e_pages.end(); e_page++){
+			if (!isFileReadable(e_page->second)){
+				return err("Invalid custom error page: \"" + e_page->second + "\"");
+			}
+		}
+		
 		for (vector<Location>::const_iterator loc = serv->locations.begin(); loc != serv->locations.end(); loc++){
 			if (loc->type == E_REDIRECT){
 				continue;
