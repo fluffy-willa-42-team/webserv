@@ -51,5 +51,10 @@ valid(false)
 		}
 	}
 
+	if (servers.size() < 1){
+		cerr << RED << "No Server found" << RESET << endl;
+		return ;
+	}
+
 	valid = true;
 }
