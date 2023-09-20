@@ -1,22 +1,85 @@
 <html>
-	<head>
-		<title>An Error Occured</title>
-	</head>
-	<body>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<title>/test</title>
+</head>
+
+<body>
+	<div style="display: flex; width: max-content; margin-left: auto; margin-right: auto;">
 		<div>
-			{{fragment}}
+			<div class="box color1">
+				<h1>{{path}}</h1>
+			</div>
+			<div class="box color1">
+				<div class="grid">
+					<div class="gridelem border_right" style="text-align: center;">Type</div>
+					<div class="gridelem">Name</div>
+
+					<div class="gridelem border_top border_right align_right">
+						<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" style="fill: white;">
+							<path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
+						</svg>
+					</div>
+					<div class="gridelem border_top"><a href="{{gobacklink}}">...</a></div>
+					{{fragment}}
+				</div>
+			</div>
 		</div>
-	</body>
+	</div>
+</body>
+
 </html>
 
 <style>
-	html, body {
-		background-color: hotpink;
-	}
+html,
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: large;
+	background-color: #081633;
+	color: white;
+}
 
-	div {
-		color: white;
-		text-align: center;
-		padding: 5em;
-	}
+.box {
+	display: flex;
+	padding: 0.5em;
+	margin: 1em;
+	border-radius: 7px;
+	width: 90vw;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 50px auto;
+	width: -webkit-fill-available;
+	overflow: hidden;
+}
+
+.gridelem {
+	padding: 0.35em;
+}
+
+.border_right {
+	border-right: solid #273e69 0.01em;
+}
+
+.border_top {
+	border-top: solid #273e69 0.01em;
+}
+
+.align_right {
+	text-align: right;
+}
+
+.color1 {
+	background-color: #13274E
+}
+
+a {
+	text-decoration: none;
+	color: white;
+}
+
+a:hover {
+	color: #2E6ADC;
+}
 </style>
