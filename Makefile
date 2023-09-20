@@ -21,6 +21,17 @@ HEAD_EXT	= .hpp
 INC			= -I include
 FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors\
 				-Wno-error=unused-parameter -Wno-error=unused-variable
+DLEVEL = 0
+
+ifeq ($(DLEVEL), 1)
+	FLAGS += -D WDEBUG=DEBUG
+else ifeq ($(DLEVEL), 2)
+	FLAGS += -D WDEBUG=INFO
+else ifeq ($(DLEVEL), 3)
+	FLAGS += -D WDEBUG=WARN
+else ifeq ($(DLEVEL), 3)
+	FLAGS += -D WDEBUG=ERROR
+endif
 
 # **************************************************************************** #
 
