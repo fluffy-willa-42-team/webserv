@@ -1,11 +1,6 @@
-#include "webserv.hpp"
-#include "utils.hpp"
-#include "Listener.hpp"
-#include "request_validation.hpp"
+#include "http.hpp"
 
-string error(u_int32_t code, const string& message = "");
-
-const string http(const string& req, Listener& listener, const Config* config){
+const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -77,7 +72,7 @@ const string http(const string& req, Listener& listener, const Config* config){
 	Ex:
 	Accept-Language: en-US,en
 	*/
-	map<string, string> req_headers;
+	Headers req_headers;
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && line.length() > 0) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
@@ -86,7 +81,7 @@ const string http(const string& req, Listener& listener, const Config* config){
         req_headers[headerline[0]] = headerline[1];
     }
 
-	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
+	for (Headers::iterator it = req_headers.begin(); it != req_headers.end(); it++){
 		cout << it->first << ": \"" << it->second << "\"" << endl;
 	}
 
@@ -106,7 +101,7 @@ const string http(const string& req, Listener& listener, const Config* config){
 	Host: awillems.42.fr:4000
 	*/
 	{
-		if (!map_has_key(req_headers, string("Host"))){
+		if (!map_has_key(req_headers, string(HEADER_HOST))){
 			return error(400, "Missing host header");
 		}
 	}
@@ -151,11 +146,25 @@ const string http(const string& req, Listener& listener, const Config* config){
 	now that the request is parsed we now have to parse to config of all server
 	to find the one that is valid and that worked an execute that.
 	*/
-	if (!config){
-		cerr << RED << "[ERROR] Missing config in http ?!?" << RESET << endl;
-		return error(500);
+
+	Server serv;
+	try {
+		serv = find_server(config, req_headers);
+	}
+	catch(const exception& e) {
+		return error(404, "This host has not been found");
 	}
 
+	Location loc;
+	try {
+		loc = find_location(serv, req_path_param);
+	}
+	catch(const exception& e) {
+		return error(404, "This Page has not been Found");
+	}
+
+	cout << "Location: " << loc.path << endl;
+	
 
 
 	return error(404, "This Page has not been Found");

@@ -4,15 +4,15 @@
 #include "debug.hpp"
 
 Listener::Listener()
-: port(0), listener_fd(-1), connection_fd(-1), is_running(false), config(NULL)
+: port(0), listener_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 	address_struct.sin_port = htons(port);
 }
 
-Listener::Listener(u_int16_t port, Config* config)
-: port(port), listener_fd(-1), connection_fd(-1), is_running(false), config(config)
+Listener::Listener(u_int16_t port)
+: port(port), listener_fd(-1), connection_fd(-1), is_running(false)
 {
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);

@@ -85,6 +85,12 @@ u_int32_t stringToNumber(const string& str) {
     return number;
 }
 
+string numberToString(u_int32_t number) {
+    stringstream oss;
+    oss << number;
+    return oss.str();
+}
+
 bool isPositiveInteger(const string& str) {
     if (str.empty()) {
         return false;
@@ -97,5 +103,21 @@ bool isPositiveInteger(const string& str) {
         }
     }
     // cout << "V " << str << endl;
+    return true;
+}
+
+bool startsWith(const string& input, const string& prefix) {
+    // Check if the input string is shorter than the prefix
+    if (input.length() < prefix.length()) {
+        return false;
+    }
+
+    // Compare the first characters of input and prefix
+    for (size_t i = 0; i < prefix.length(); ++i) {
+        if (input[i] != prefix[i]) {
+            return false;
+        }
+    }
+
     return true;
 }

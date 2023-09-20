@@ -63,7 +63,7 @@ t_setup Listener::setup(){
 
 
 
-e_status Listener::try_exec(){
+e_status Listener::try_exec(const Config& config){
 	if (!is_running){
 		return S_STOP;
 	}
@@ -94,7 +94,7 @@ e_status Listener::try_exec(){
 		cout << "STOP" << endl;
 		return S_STOP;
 	}
-	exec();
+	exec(config);
 	print_waiting_msg();
 	return S_CONTINUE;
 }

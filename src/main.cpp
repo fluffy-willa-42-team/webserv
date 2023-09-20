@@ -8,7 +8,7 @@ static map<int, Listener> listeners;
 static bool loop = true;
 
 void setup(map<int, Listener>& listeners);
-void start(map<int, Listener>& listeners, bool& loop);
+void start(map<int, Listener>& listeners, bool& loop, const Config& config);
 void shutdown(int signal){
 	(void) signal;
 	loop = false;
@@ -36,10 +36,10 @@ int main(int argc, char* argv[]){
 	}
 	
 	for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite != config.ports.end(); ite++){
-		listeners[*ite] = Listener(*ite, &config);
+		listeners[*ite] = Listener(*ite);
 	}
 
 	std::signal(SIGINT, &shutdown);
 	setup(listeners);
-	start(listeners, loop);
+	start(listeners, loop, config);
 }
