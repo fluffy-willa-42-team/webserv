@@ -1,7 +1,8 @@
 #include "webserv.hpp"
 #include "utils.hpp"
 
-static const string autoindex_fragment_file = readFileIntoString("./src/html/autoindex_autoindex.html");
-static const string autoindex_file = readFileIntoString("./src/html/autoindex.html");
+static const string raw_autoindex_fragment_file		= readFileIntoString("./src/html/autoindex_fragment_file.html");
+static const string raw_autoindex_fragment_folder	= readFileIntoString("./src/html/autoindex_fragment_folder.html");
+static const string raw_autoindex					= readFileIntoString("./src/html/autoindex.html");
 
 
