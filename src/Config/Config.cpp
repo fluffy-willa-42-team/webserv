@@ -58,3 +58,6 @@ valid(false)
 
 	valid = true;
 }
+
+Config::~Config()
+{}

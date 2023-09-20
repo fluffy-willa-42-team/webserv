@@ -73,6 +73,7 @@ class Config {
 		vector<Server>		servers;
 
 		Config(const string& filename);
+		~Config();
 
 	private:
 		e_status parse_conf_file(ifstream& config_file);
