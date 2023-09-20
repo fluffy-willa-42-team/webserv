@@ -17,7 +17,7 @@ typedef map<string, string> Headers;
 
 string error(u_int32_t code, const string& message = "");
 
-const Server& find_Server(const Config& config, Headers headers);
+const Server& find_server(const Config& config, Headers headers);
 
 const string http(const string& req, Listener& listener, const Config& config);
 

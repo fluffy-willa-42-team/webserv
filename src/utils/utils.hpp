@@ -15,6 +15,7 @@ vector<string> splitStringByWhitespace(const string& input);
 bool removeCarriageReturn(string& line);
 bool isPositiveInteger(const string& str);
 u_int32_t stringToNumber(const string& str);
+string numberToString(u_int32_t number);
 
 /* ************************************************************************** */
 

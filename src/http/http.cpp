@@ -101,7 +101,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	Host: awillems.42.fr:4000
 	*/
 	{
-		if (!map_has_key(req_headers, string("Host"))){
+		if (!map_has_key(req_headers, string(HEADER_HOST))){
 			return error(400, "Missing host header");
 		}
 	}
@@ -147,14 +147,13 @@ const string http(const string& req, Listener& listener, const Config& config){
 	to find the one that is valid and that worked an execute that.
 	*/
 
-	cout << config.valid << endl;
-	for (vector<Server>::const_iterator serv = config.servers.begin(); serv != config.servers.end(); serv++){
-		if (req_headers[HEADER_HOST] != serv->host){
-			continue;
-		}
-		cout << serv->host << endl;
+	try {
+		find_server(config, req_headers);
 	}
-
+	catch(const exception& e) {
+		return error(404, "This host has not been found");
+	}
+	
 
 
 	return error(404, "This Page has not been Found");

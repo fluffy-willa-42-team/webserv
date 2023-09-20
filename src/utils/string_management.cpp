@@ -85,6 +85,12 @@ u_int32_t stringToNumber(const string& str) {
     return number;
 }
 
+string numberToString(u_int32_t number) {
+    stringstream oss;
+    oss << number;
+    return oss.str();
+}
+
 bool isPositiveInteger(const string& str) {
     if (str.empty()) {
         return false;
