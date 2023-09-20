@@ -147,8 +147,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	to find the one that is valid and that worked an execute that.
 	*/
 
+	Server serv;
 	try {
-		find_server(config, req_headers);
+		serv = find_server(config, req_headers);
 	}
 	catch(const exception& e) {
 		return error(404, "This host has not been found");
