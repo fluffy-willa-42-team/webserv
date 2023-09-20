@@ -1,8 +1,6 @@
 #include "Listener.hpp"
-
+#include "http.hpp"
 #include <unistd.h>
-
-const string http(const string& req, Listener& listener, const Config& config);
 
 void Listener::exec(const Config& config){
 	string buf;

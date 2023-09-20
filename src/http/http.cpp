@@ -1,9 +1,4 @@
-#include "webserv.hpp"
-#include "utils.hpp"
-#include "Listener.hpp"
-#include "request_validation.hpp"
-
-string error(u_int32_t code, const string& message = "");
+#include "http.hpp"
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -77,7 +72,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	Ex:
 	Accept-Language: en-US,en
 	*/
-	map<string, string> req_headers;
+	Headers req_headers;
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && line.length() > 0) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
@@ -86,7 +81,7 @@ const string http(const string& req, Listener& listener, const Config& config){
         req_headers[headerline[0]] = headerline[1];
     }
 
-	for (map<string, string>::iterator it = req_headers.begin(); it != req_headers.end(); it++){
+	for (Headers::iterator it = req_headers.begin(); it != req_headers.end(); it++){
 		cout << it->first << ": \"" << it->second << "\"" << endl;
 	}
 
@@ -151,12 +146,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	now that the request is parsed we now have to parse to config of all server
 	to find the one that is valid and that worked an execute that.
 	*/
-	// if (!config){
-	// 	cerr << RED << "[ERROR] Missing config in http ?!?" << RESET << endl;
-	// 	return error(500);
-	// }
 
 	cout << config.valid << endl;
+	for (vector<Server>::const_iterator serv = config.servers.begin(); serv != config.servers.end(); serv++){
+		if (req_headers[HEADER_HOST] != serv->host){
+			continue;
+		}
+		cout << serv->host << endl;
+	}
 
 
 
