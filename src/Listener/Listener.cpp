@@ -21,7 +21,6 @@ Listener::Listener(u_int16_t port)
 Listener::~Listener(){
 	{
 		if (listener_fd >= 0){
-			std::cout << "Closing listener_fd: " << listener_fd << std::endl;
 			const int check_close = close(listener_fd);
 			if (check_close < 0){
 				std::cerr << "Error: Failed to close listener_fd: " << listener_fd << std::endl;
@@ -32,7 +31,6 @@ Listener::~Listener(){
 	}
 	{
 		if (connection_fd >= 0){
-			std::cout << "Closing connection_fd: " << connection_fd << std::endl;
 			const int check_close = close(connection_fd);
 			if (check_close < 0){
 				std::cerr << "Error: Failed to close connection_fd: " << connection_fd << std::endl;
