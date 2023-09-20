@@ -1,5 +1,7 @@
 #include "http.hpp"
 
+#include "debug.hpp"
+
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
     string line;
@@ -16,12 +18,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 
 	if (!getline(ss_line_by_line, line)){
+		DEBUG_() << "The Request is empty";
 		return error(400, "The Request is empty");
 	}
 	removeCarriageReturn(line);
 
 	vector<string> initline = split(line, " ");
 	if (initline.size() != 3){
+		DEBUG_() << "Init line is invalid";
 		return error(400, "Init line is invalid");
 	}
 
@@ -29,12 +33,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Method
 	string req_method = initline[0];
 	{
-		cout << "Method: " << req_method << endl;
+		DEBUG_INFO_() << "Method: " << req_method;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
+			DEBUG_() << "Method is not allowed";
 			return error(405);
 		}
 		else if (validation_status == BAD_REQUEST){
+			DEBUG_() << "Method is invalid";
 			return error(400, "Method is invalid");
 		}
 	}
@@ -42,8 +48,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Path + Param
 	string req_path_param = initline[1];
 	{
-		cout << "Path + Param: " << req_path_param << endl;
+		DEBUG_INFO_() << "Path + Param: " << req_path_param;
 		if (!is_path_valid(req_path_param)){
+			DEBUG_() << "Path is invalid";
 			return error(400, "Path is invalid");
 		}
 	}
@@ -51,12 +58,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Protocol
 	{
 		string req_protocol = initline[2];
-		cout << "Protocol: " << req_protocol << endl;
+		DEBUG_INFO_() << "Protocol: " << req_protocol;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
+			DEBUG_() << "Protocol is not allowed";
 				return error(505); // HTTP Version not allowed
 		}
 		else if (validation_status == BAD_REQUEST){
+			DEBUG_() << "Protocol is invalid";
 			return error(400, "Protocol is invalid");
 
 		}
@@ -73,18 +82,20 @@ const string http(const string& req, Listener& listener, const Config& config){
 	Accept-Language: en-US,en
 	*/
 	Headers req_headers;
-    while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && line.length() > 0) {
+    while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
+			DEBUG_() << "Headers are invalid";
 			return error(400, "Headers are invalid");
 		}
         req_headers[headerline[0]] = headerline[1];
     }
 
+#ifdef WDEBUG
 	for (Headers::iterator it = req_headers.begin(); it != req_headers.end(); it++){
-		cout << it->first << ": \"" << it->second << "\"" << endl;
+		DEBUG_INFO_() << it->first << ": \"" << it->second << "\"";
 	}
-
+#endif
 
 
 
@@ -102,6 +113,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 	{
 		if (!map_has_key(req_headers, string(HEADER_HOST))){
+			DEBUG_() << "Missing host header";
 			return error(400, "Missing host header");
 		}
 	}
@@ -117,6 +129,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
 			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
+				DEBUG_() << "Missing \"Content-Length\" header";
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
@@ -127,11 +140,12 @@ const string http(const string& req, Listener& listener, const Config& config){
 						buf = listener.read_buff();
 					}
 					catch(const exception& e) {
+						DEBUG_() << "Invalid \"Content-Length\" header";
 						return error(411, "Invalid \"Content-Length\" header");
 					}
 					req_body += buf;
 				}
-				cout << YELLOW << req_body << RESET << endl;
+				DEBUG_INFO_() << "Req body: " << req_body;
 			}
 		}
 	}

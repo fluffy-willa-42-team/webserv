@@ -39,7 +39,6 @@ public:
 			"ERROR"
 		};
 		const string level_color[] = {"\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;31m"};
-
 		std::cout << level_color[this->level] << v;
 	#endif
 	#ifndef WDEBUG

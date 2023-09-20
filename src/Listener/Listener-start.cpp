@@ -7,6 +7,8 @@
 
 #include <netinet/in.h>
 
+#include "debug.hpp"
+
 t_setup ret(u_int32_t code, const string& message){
 	t_setup res;
 	res.code = code;
@@ -68,6 +70,7 @@ e_status Listener::try_exec(const Config& config){
 		return S_STOP;
 	}
 
+	//TODO use poll() to check if there is a new connection instead of accept() blocking
 	// get new connection (non-blocking due to setup)
 	connection_fd = accept(listener_fd, NULL, NULL);
 
@@ -76,24 +79,27 @@ e_status Listener::try_exec(const Config& config){
 		return S_CONTINUE;
 	}
 
+	// check if error in accept after having recieved a connection
+	if (connection_fd < 0)
+	{
+		DEBUG_WARN_() << "Failed to accept connection, ignoring";
+		return S_CONTINUE;
+	}
+
 	// retrieve the file descriptor flags
 	int flags = fcntl(listener_fd, F_GETFL, 0);
-    if (flags < 0){
-		return S_STOP;
+	if (flags < 0){
+		DEBUG_WARN_() << "Failed to retrieve the flags for server file descriptor, ignoring";
+		return S_CONTINUE;
 	}
 	
 	// verify the file descriptor has the right O_NONBLOCK flag
 	flags |= O_NONBLOCK;
 	if (fcntl(listener_fd, F_SETFL, flags) < 0){
-		return S_STOP;
+		DEBUG_WARN_() << "Failed to retrieve the flags for server file descriptor, ignoring";
+		return S_CONTINUE;
 	}
 
-	// check if error in accept after having recieved a connection
-	if (connection_fd < 0)
-	{
-		cout << "STOP" << endl;
-		return S_STOP;
-	}
 	exec(config);
 	print_waiting_msg();
 	return S_CONTINUE;

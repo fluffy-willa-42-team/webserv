@@ -3,10 +3,10 @@
 webDebugTrace::webDebugTrace(const level_t level, const std::string file, const int line)
 {
 #ifdef WDEBUG
+	this->level = level;
+
 	if (level < WDEBUG)
 		return;
-
-	this->level = level;
 
 	const string level_str[] = {
 		"DEBUG",
@@ -27,6 +27,8 @@ webDebugTrace::webDebugTrace(const level_t level, const std::string file, const 
 
 webDebugTrace::~webDebugTrace() {
 #ifdef WDEBUG
+	if (level < WDEBUG)
+		return;
 	std::cout << std::endl;
 #endif
 }

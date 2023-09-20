@@ -1,10 +1,12 @@
 #include "utils.hpp"
 
+#include "debug.hpp"
+
 string readFileIntoString(const string& path){
     ifstream input_file;
 	input_file.open(path.c_str());
     if (!input_file.is_open()) {
-		cout << "Failed to open file" << endl;
+		DEBUG_ERROR_() << "Failed to open file: " << path;
         return "error";
     }
     string res = string(
