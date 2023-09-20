@@ -13,9 +13,23 @@
 
 typedef map<string, string> Headers;
 
+
+typedef enum {
+	AINDEX_FILE,
+	AINDEX_FOLDER,
+} AutoindexValue;
+
+typedef struct {
+	AutoindexValue type;
+	string path;
+	string name;
+} AutoindexInput;
+
+
 /******************************************************************************/
 
 string error(u_int32_t code, const string& message = "");
+string test();
 
 const Server& find_server(const Config& config, Headers headers);
 const Location& find_location(const Server& serv, const string& req_path_param);

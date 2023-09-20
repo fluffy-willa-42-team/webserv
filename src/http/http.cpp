@@ -165,7 +165,6 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	cout << "Location: " << loc.path << endl;
 	
-
-
-	return error(404, "This Page has not been Found");
+	return test();
+	// return error(404, "This Page has not been Found");
 }
