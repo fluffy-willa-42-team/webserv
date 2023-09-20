@@ -29,8 +29,6 @@ class Listener {
 
 		bool is_running;
 
-		Config* config;
-
 		sockaddr_in address_struct;
 		char	buffer[BUFFER_SIZE];
 
@@ -38,21 +36,19 @@ class Listener {
 
 	public:
 		Listener();
-		Listener(u_int16_t port, Config* config);
+		Listener(u_int16_t port);
 		~Listener();
 		const Listener& operator=(const Listener& other);
 
 		t_setup setup();
-		e_status try_exec();
+		e_status try_exec(const Config& config);
+		void exec(const Config& config);
 		void stop();
 		string read_buff();
-		void exec();
 
 		const string get_address();
 		bool is_it_running();
 		void print_waiting_msg();
-
-		const Config* get_config();
 };
 
 /******************************************************************************/

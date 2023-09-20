@@ -5,7 +5,7 @@
 
 string error(u_int32_t code, const string& message = "");
 
-const string http(const string& req, Listener& listener, const Config* config){
+const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -151,10 +151,12 @@ const string http(const string& req, Listener& listener, const Config* config){
 	now that the request is parsed we now have to parse to config of all server
 	to find the one that is valid and that worked an execute that.
 	*/
-	if (!config){
-		cerr << RED << "[ERROR] Missing config in http ?!?" << RESET << endl;
-		return error(500);
-	}
+	// if (!config){
+	// 	cerr << RED << "[ERROR] Missing config in http ?!?" << RESET << endl;
+	// 	return error(500);
+	// }
+
+	cout << config.valid << endl;
 
 
 
