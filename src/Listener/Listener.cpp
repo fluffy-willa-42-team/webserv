@@ -1,6 +1,7 @@
 #include "Listener.hpp"
 
 #include <unistd.h>
+#include "debug.hpp"
 
 Listener::Listener()
 : port(0), listener_fd(-1), connection_fd(-1), is_running(false)
@@ -19,25 +20,30 @@ Listener::Listener(u_int16_t port)
 }
 
 Listener::~Listener(){
+	DEBUG_INFO_() << "Try to close listener_fd: " << listener_fd;
 	{
 		if (listener_fd >= 0){
 			const int check_close = close(listener_fd);
 			if (check_close < 0){
-				std::cerr << "Error: Failed to close listener_fd: " << listener_fd << std::endl;
+				DEBUG_ERROR_() << "Failed to close listener_fd: " << listener_fd;
 			}
 			listener_fd = -1;
 		}
 
 	}
+	DEBUG_() << "Listener closed";
+
+	DEBUG_INFO_() << "Try to close connection_fd: " << connection_fd;
 	{
 		if (connection_fd >= 0){
 			const int check_close = close(connection_fd);
 			if (check_close < 0){
-				std::cerr << "Error: Failed to close connection_fd: " << connection_fd << std::endl;
+				DEBUG_ERROR_() << "Failed to close connection_fd: " << connection_fd;
 			}
 			connection_fd = -1;
 		}
 	}
+	DEBUG_() << "connection_fd closed";
 
 }
 
