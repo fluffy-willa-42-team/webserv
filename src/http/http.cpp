@@ -152,8 +152,11 @@ const string http(const string& req, Listener& listener, const Config* config){
 	to find the one that is valid and that worked an execute that.
 	*/
 	if (!config){
+		cerr << RED << "[ERROR] Missing config in http ?!?" << RESET << endl;
 		return error(500);
 	}
+
+
 
 	return error(404, "This Page has not been Found");
 }
