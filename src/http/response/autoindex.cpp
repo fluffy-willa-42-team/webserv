@@ -15,15 +15,21 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 	stringstream fragment;
 	for (vector<AutoindexInput>::const_iterator it = values.begin(); it != values.end(); it++){
 		string autoindex_fragment_file;
+		if (it->type == AINDEX_FOLDER){
+			autoindex_fragment_file = raw_autoindex_fragment_folder;
+			replace_string(autoindex_fragment_file, "{{link}}", it->path);
+			replace_string(autoindex_fragment_file, "{{name}}", it->name);
+			fragment << autoindex_fragment_file;
+		}
+	}
+	for (vector<AutoindexInput>::const_iterator it = values.begin(); it != values.end(); it++){
+		string autoindex_fragment_file;
 		if (it->type == AINDEX_FILE){
 			autoindex_fragment_file = raw_autoindex_fragment_file;
+			replace_string(autoindex_fragment_file, "{{link}}", it->path);
+			replace_string(autoindex_fragment_file, "{{name}}", it->name);
+			fragment << autoindex_fragment_file;
 		}
-		else if (it->type == AINDEX_FOLDER){
-			autoindex_fragment_file = raw_autoindex_fragment_folder;
-		}
-		replace_string(autoindex_fragment_file, "{{link}}", it->path);
-		replace_string(autoindex_fragment_file, "{{name}}", it->name);
-		fragment << autoindex_fragment_file;
 	}
 
 	replace_string(autoindex_file, "{{fragment}}", fragment.str());
