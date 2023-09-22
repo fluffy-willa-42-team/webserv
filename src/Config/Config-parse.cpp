@@ -112,15 +112,15 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (!is_type_valid(newLocation.type, E_REDIRECT)){
 							return err(line, index, "Incompatible location arguments");
 						}
-						// newLocation.
+						if (!newLocation.redirect_path.empty() || newLocation.redirect_code != 0){
+							return (err(line, index, "Duplicate Parameter"));
+						}
+						newLocation.redirect_path = line_split[2];
 					}
 					else if (is_location_cgi_pass(line_split)){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){
 							return err(line, index, "Incompatible location arguments");
 						}
-						// if (!isFileExecutable(line_split[1])){
-						// 	return err(line, index, "File is not executable");
-						// }
 						newLocation.cgi_pass = line_split[1];
 					}
 					else if (is_location_download_file(line_split)){

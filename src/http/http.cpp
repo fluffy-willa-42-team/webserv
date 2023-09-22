@@ -178,6 +178,13 @@ const string http(const string& req, Listener& listener, const Config& config){
 	}
 
 	cout << "Location: " << loc.path << endl;
+
+	if (loc.type & E_NORMAL){
+
+	}
+	else if (loc.type & E_REDIRECT){
+
+	}
 	
 	return test();
 	// return error(404, "This Page has not been Found");
