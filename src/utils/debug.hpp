@@ -34,10 +34,9 @@ typedef enum level_e {
 #define DEBUG_WARN_		debug_utils(WARN,	__FILE__, __LINE__)
 #define DEBUG_ERROR_	debug_utils(ERROR,	__FILE__, __LINE__)
 
+// stream to print nothing in console
 class NullStream : public std::ostream {
 	public:
-		NullStream() {}
-		
 		template <typename T>
 		NullStream& operator<<(const T&) {
 			return *this;
