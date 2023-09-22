@@ -236,14 +236,16 @@ const string http(const string& req, Listener& listener, const Config& config){
 				if (entry->d_type == DT_REG)		{ newInput.type = AINDEX_FILE; }
 				else if (entry->d_type == DT_DIR)	{ newInput.type = AINDEX_FOLDER; }
 				else if (entry->d_type == DT_LNK)	{}
+				
+				autoindex_inputs.push_back(newInput);
 			}
-			return get_autoindex_html(req_path, "/", autoindex_inputs);
+			return get_autoindex(req_path, "/", autoindex_inputs);
 		}	
 	}
 	else if (loc.type & E_REDIRECT){
 		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	
-	return test();
-	// return error(404, "This Page has not been Found");
+	// return test();
+	return error(404, "This Page has not been Found");
 }

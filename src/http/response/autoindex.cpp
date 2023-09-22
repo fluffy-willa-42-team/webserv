@@ -34,22 +34,8 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 	return autoindex_file;
 }
 
-string test(){
-	vector<AutoindexInput> test;
-	for (int i = 0; i < 10; i++){
-		AutoindexInput tmp;
-		tmp.name = "/test" + numberToString(i);
-		tmp.path = "/test" + numberToString(i);
-		if (i % 2){
-			tmp.type = AINDEX_FILE;
-		}
-		else {
-			tmp.type = AINDEX_FOLDER;
-		}
-		test.push_back(tmp);
-	}
-
-	string res = get_autoindex_html("/php/test", "/test", test);
+string get_autoindex(const string& path, const string& gobacklink, const vector<AutoindexInput>& values){
+	string res = get_autoindex_html(path, gobacklink, values);
 
 	map<string, string> header;
 	header["Content-Type"] = "text/html";
