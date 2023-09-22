@@ -4,8 +4,11 @@
 #include "debug.hpp"
 
 #include <sys/types.h>
-#include <dirent.h>
 #include <sys/stat.h>
+#include <dirent.h>
+#include <fcntl.h>
+
+string clean_path(string req_path_param);
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -180,39 +183,62 @@ const string http(const string& req, Listener& listener, const Config& config){
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
 	if (loc.type & E_NORMAL){
-		string path = "./static/php";
-		DIR* dir = opendir(path.c_str());
-		if (!dir){
-			if (errno == EACCES){
-				return error(403);
-			}
-			else if (errno == ENOENT){
-				return error(404);
+		string req_path = clean_path(req_path_param);
+		string file_path = loc.root + req_path.substr(loc.path.size());
+
+		DEBUG_INFO_ << file_path << endl;
+
+		struct stat path_info;
+		if (stat(file_path.c_str(), &path_info) == -1) {
+			if 		(errno == EACCES)	{ return error(403, "stat fail"); }
+			else if (errno == ENOENT)	{ return error(404, "stat fail"); }
+			else 						{ return error(500, "stat fail"); }
+		}
+
+		if (S_ISREG(path_info.st_mode)){ // Check if is file
+			int c_read = open(file_path.c_str(), O_RDONLY);
+			cout << c_read << endl;
+			if (c_read == -1){
+				if 		(errno == EACCES)	{ return error(403, "file fail"); }
+				else if (errno == ENOENT)	{ return error(404, "file fail"); }
+				else 						{ return error(500, "file fail"); }
 			}
 		}
-		struct dirent* entry;
-		entry = readdir(dir);
-		while ((entry = readdir(dir)) != NULL) {
-			struct stat file_info;
-
-			string newPath = path + "/" + entry->d_name;
-			if (stat(newPath.c_str(), &file_info) == -1) {
-				perror("Error getting file information");
-				continue;
+		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
+			if (!loc.autoindex){
+				return error(404, "autoindex not activated");
+			}
+			DIR* dir = opendir(file_path.c_str());
+			if (!dir){
+				if 		(errno == EACCES)	{ return error(403, "folder fail"); }
+				else if (errno == ENOENT)	{ return error(404, "folder fail"); }
+				else 						{ return error(500, "folder fail"); }
 			}
 
-			off_t fileSize = file_info.st_size;
-			if (entry->d_type == DT_REG){
-				cout << "File: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
+			vector<AutoindexInput> autoindex_inputs;
+			struct dirent* entry;
+			while ((entry = readdir(dir)) != NULL) {
+				AutoindexInput newInput;
+				struct stat file_info;
+			
+				string newPath = file_path + (file_path[file_path.size() -1] != '/' ? "/" : "") + entry->d_name;
+				if (stat(newPath.c_str(), &file_info) == -1) {
+					DEBUG_ << newPath << " could not be opened" << endl;
+					continue ;
+				}
+				newInput.fileSize = file_info.st_size;
+				newInput.name = entry->d_name;
+				if (newInput.name == "." || newInput.name == ".."){
+					continue ;
+				}
+				newInput.path = req_path + newInput.name;
+
+				if (entry->d_type == DT_REG)		{ newInput.type = AINDEX_FILE; }
+				else if (entry->d_type == DT_DIR)	{ newInput.type = AINDEX_FOLDER; }
+				else if (entry->d_type == DT_LNK)	{}
 			}
-			else if (entry->d_type == DT_DIR){
-				cout << "Folder: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
-			}
-			else if (entry->d_type == DT_LNK){
-				cout << "Link: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
-			}
-		}
-		
+			return get_autoindex_html(req_path, "/", autoindex_inputs);
+		}	
 	}
 	else if (loc.type & E_REDIRECT){
 		return redirect(loc.redirect_code, loc.redirect_path);

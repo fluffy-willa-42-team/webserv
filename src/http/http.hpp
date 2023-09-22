@@ -23,6 +23,7 @@ typedef struct {
 	AutoindexValue type;
 	string path;
 	string name;
+	off_t fileSize;
 } AutoindexInput;
 
 
