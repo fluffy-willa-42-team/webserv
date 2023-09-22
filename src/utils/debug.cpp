@@ -1,29 +1,9 @@
 #include "debug.hpp"
 
-webDebugTrace::webDebugTrace(const level_t level, const string file, const int line)
-{
-	#ifdef WDEBUG
-		this->level = level;
+static const string level_str[]	= {"DEBUG", "INFO ", "WARN ", "ERROR"};
+static const string level_color[] = {GREEN, CYAN, BLUE, RED};
 
-		if (level < WDEBUG)
-			return;
-
-		const string level_str[]	= {"DEBUG", "INFO", "WARN", "ERROR"};
-		const string level_color[]	= {GREEN, CYAN, BLUE, RED};
-
-		cout << level_color[level] << "[" << level_str[level] << "] " << file << ":" << line << " : " << RESET;
-	#endif
-	#ifndef WDEBUG
-		(void) level;
-		(void) file;
-		(void) line;
-	#endif
-}
-
-webDebugTrace::~webDebugTrace() {
-	#ifdef WDEBUG
-		if (level < WDEBUG)
-			return;
-		cout << endl;
-	#endif
+std::ostream& debug_utils(const level_t level, const string file, const int line){
+	cout << level_color[level] << "[" << level_str[level] << "] " << file << ":" << line << " : " << RESET;
+	return cout;
 }

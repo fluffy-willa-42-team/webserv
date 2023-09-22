@@ -34,36 +34,11 @@ typedef enum level_e {
 
 /******************************************************************************/
 
-#define DEBUG_() webDebugTrace(DEBUG, __FILE__, __LINE__)
-#define DEBUG_INFO_() webDebugTrace(INFO, __FILE__, __LINE__)
-#define DEBUG_WARN_() webDebugTrace(WARN, __FILE__, __LINE__)
-#define DEBUG_ERROR_() webDebugTrace(ERROR, __FILE__, __LINE__)
+#define DEBUG_()		debug_utils(DEBUG, __FILE__, __LINE__)
+#define DEBUG_INFO_()	debug_utils(INFO, __FILE__, __LINE__)
+#define DEBUG_WARN_()	debug_utils(WARN, __FILE__, __LINE__)
+#define DEBUG_ERROR_()	debug_utils(ERROR, __FILE__, __LINE__)
 
-class webDebugTrace
-{
-public:
-	level_t level;
-	webDebugTrace(const level_t level, const string file, const int line);
-
-	template <class T>
-	webDebugTrace& operator<<(const T &v)
-	{
-		#ifdef WDEBUG
-			if (level < WDEBUG)
-				return *this;
-
-			// const string level_str[]	= {"DEBUG", "INFO", "WARN", "ERROR"};
-			// const string level_color[]	= {GREEN, YELLOW, BLUE, RED};
-			cout << v;
-		#endif
-		#ifndef WDEBUG
-			(void) v;
-		#endif
-
-		return *this;
-	}
-
-	~webDebugTrace();
-};
+std::ostream& debug_utils(const level_t level, const string file, const int line);
 
 #endif /* DEBUG_H */
