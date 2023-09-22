@@ -8,13 +8,8 @@ webDebugTrace::webDebugTrace(const level_t level, const string file, const int l
 		if (level < WDEBUG)
 			return;
 
-		const string level_str[] = {
-			"DEBUG",
-			"INFO",
-			"WARN",
-			"ERROR"
-		};
-		const string level_color[] = {GREEN, YELLOW, BLUE, RED};
+		const string level_str[]	= {"DEBUG", "INFO", "WARN", "ERROR"};
+		const string level_color[]	= {GREEN, YELLOW, BLUE, RED};
 
 		cout << level_color[level] << "[" << level_str[level] << "] " << file << ":" << line << RESET << " : ";
 	#endif
@@ -29,6 +24,6 @@ webDebugTrace::~webDebugTrace() {
 #ifdef WDEBUG
 	if (level < WDEBUG)
 		return;
-	std::cout << std::endl;
+	cout << endl;
 #endif
 }
