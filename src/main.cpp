@@ -11,10 +11,10 @@ static bool loop = true;
 void setup(map<int, Listener>& listeners);
 void start(map<int, Listener>& listeners, bool& loop, const Config& config);
 void shutdown(int signal){
-	DEBUG_ << "SIGINT caught";
+	cout << endl;
+	DEBUG_ << "SIGINT caught" << endl;
 	(void) signal;
 	loop = false;
-	cout << endl;
 	for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
 		ite->second.stop();
 	}
