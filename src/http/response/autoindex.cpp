@@ -63,7 +63,7 @@ string get_autoindex(const string& req_path, const string& file_path){
 		if (newInput.name == "." || newInput.name == ".."){
 			continue ;
 		}
-		newInput.path = req_path + newInput.name;
+		newInput.path = req_path + "/" + newInput.name;
 
 		if (entry->d_type == DT_REG)		{ newInput.type = AINDEX_FILE; }
 		else if (entry->d_type == DT_DIR)	{ newInput.type = AINDEX_FOLDER; }
