@@ -185,7 +185,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	if (loc.type & E_NORMAL){
 		string req_path = clean_path(req_path_param);
 		string file_path = loc.root + req_path.substr(loc.path.size());
-		if (loc.path == req_path){
+		
+		DEBUG_INFO_ << file_path << endl;
+		if (!loc.index.empty() && loc.path == req_path){
 			file_path = mergeFilePaths(loc.root, loc.index);
 		}
 
