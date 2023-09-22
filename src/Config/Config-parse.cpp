@@ -113,6 +113,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return (err(line, index, "Duplicate Parameter"));
 						}
 						newLocation.redirect_path = line_split[2];
+						newLocation.redirect_code = stringToNumber(line_split[1]);
 					}
 					else if (is_location_cgi_pass(line_split)){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){

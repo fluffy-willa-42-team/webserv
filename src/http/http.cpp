@@ -179,6 +179,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	}
 	else if (loc.type & E_REDIRECT){
+		cout << loc.redirect_code << " | " << loc.redirect_path << endl;
 		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	

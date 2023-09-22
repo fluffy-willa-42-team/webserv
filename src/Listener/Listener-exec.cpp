@@ -19,7 +19,7 @@ void Listener::exec(const Config& config){
 
 	string response = http(buf, *this, config);
 
-	cout << RED << "Response: " << response << RESET;
+	cout << RED << "Response: " << endl << response << endl << RESET;
 
 	write(connection_fd, response.c_str(), response.length());
 	close(connection_fd);

@@ -52,9 +52,9 @@ public:
 			if (level < WDEBUG)
 				return *this;
 
-			const string level_str[]	= {"DEBUG", "INFO", "WARN", "ERROR"};
-			const string level_color[]	= {GREEN, YELLOW, BLUE, RED};
-			cout << level_color[this->level] << RESET << v;
+			// const string level_str[]	= {"DEBUG", "INFO", "WARN", "ERROR"};
+			// const string level_color[]	= {GREEN, YELLOW, BLUE, RED};
+			cout << v;
 		#endif
 		#ifndef WDEBUG
 			(void) v;
