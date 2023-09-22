@@ -54,6 +54,18 @@ t_setup Listener::setup(){
 		return ret(6, "failed to listen to socket server");
 	}
 	
+	// Setup pollfd
+	wpoll[0].fd = listener_fd;
+	wpoll[0].events = POLLIN;
+
+	int poll_check = poll(wpoll, 1, 0);
+
+	if (poll_check < 0){
+		return ret(7, "failed to poll");
+	}
+
+	DEBUG_() << "poll() returned " << poll_check << " events";
+
 	cout << CYAN << "Listening on         : " << get_address() << RESET << endl;
 	is_running = true;
 	print_waiting_msg();
@@ -72,11 +84,21 @@ e_status Listener::try_exec(const Config& config){
 
 	//TODO use poll() to check if there is a new connection instead of accept() blocking
 	// get new connection (non-blocking due to setup)
-	connection_fd = accept(listener_fd, NULL, NULL);
 
-	// check if there is a new connection
-	if (connection_fd < 0 && errno == EWOULDBLOCK){
+	int ret = poll(wpoll, 1, 0);
+
+	// check if poll failed
+	if (ret < 0){
+		DEBUG_WARN_() << "Failed to poll, ignoring";
 		return S_CONTINUE;
+	}
+
+	if (ret == 0){
+		return S_CONTINUE;
+	}
+
+	if (wpoll[0].revents & POLLIN){
+		connection_fd = accept(listener_fd, NULL, NULL);
 	}
 
 	// check if error in accept after having recieved a connection

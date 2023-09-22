@@ -6,6 +6,7 @@
 #include "webserv.hpp"
 #include "Config.hpp"
 #include <netinet/in.h>
+#include <poll.h>
 
 /******************************************************************************/
 
@@ -26,6 +27,7 @@ class Listener {
 
 		int32_t listener_fd;
 		int32_t connection_fd;
+		pollfd wpoll[1];
 
 		bool is_running;
 
