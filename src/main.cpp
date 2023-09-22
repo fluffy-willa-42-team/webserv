@@ -37,8 +37,8 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 	
-	for (vector<u_int32_t>::iterator ite = config.ports.begin(); ite != config.ports.end(); ite++){
-		listeners[*ite] = Listener(*ite);
+	for (vector<Server>::iterator ite = config.servers.begin(); ite != config.servers.end(); ite++){
+		listeners[ite->port] = Listener(ite->host, ite->port);
 	}
 
 	std::signal(SIGINT, &shutdown);

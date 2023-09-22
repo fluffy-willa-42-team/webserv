@@ -1,6 +1,9 @@
 #include "Listener.hpp"
 
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include "debug.hpp"
 
 Listener::Listener()
@@ -17,6 +20,20 @@ Listener::Listener(u_int16_t port)
 	memset(&address_struct, 0, sizeof(address_struct));
 	memset(buffer, 0, BUFFER_SIZE);
 	address_struct.sin_port = htons(port);
+}
+
+Listener::Listener(std::string address, u_int16_t port)
+: port(port), listener_fd(-1), connection_fd(-1), is_running(false)
+{
+	memset(&address_struct, 0, sizeof(address_struct));
+	memset(buffer, 0, BUFFER_SIZE);
+	address_struct.sin_addr.s_addr = inet_addr(address.c_str());
+	address_struct.sin_port = htons(port);
+	DEBUG_() << "address_struct.sin_port: " << address_struct.sin_port;
+	DEBUG_() << "port: " << port;
+	DEBUG_() << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr;
+	DEBUG_() << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr);
+
 }
 
 Listener::~Listener(){
