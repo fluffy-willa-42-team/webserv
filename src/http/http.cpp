@@ -185,6 +185,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	if (loc.type & E_NORMAL){
 		string req_path = clean_path(req_path_param);
 		string file_path = loc.root + req_path.substr(loc.path.size());
+		if (loc.path == req_path){
+			file_path = mergeFilePaths(loc.root, loc.index);
+		}
 
 		DEBUG_INFO_ << file_path << endl;
 
@@ -196,9 +199,8 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
-			int c_read = open(file_path.c_str(), O_RDONLY);
-			cout << c_read << endl;
-			if (c_read == -1){
+			int file_fd = open(file_path.c_str(), O_RDONLY);
+			if (file_fd == -1){
 				if 		(errno == EACCES)	{ return error(403, "file fail"); }
 				else if (errno == ENOENT)	{ return error(404, "file fail"); }
 				else 						{ return error(500, "file fail"); }
