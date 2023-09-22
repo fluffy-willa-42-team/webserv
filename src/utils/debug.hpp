@@ -3,9 +3,9 @@
 
 /******************************************************************************/
 
-# include <iostream>
-# include <string>
-# include <sstream>
+# include "using.hpp"
+
+/******************************************************************************/
 
 # define RESET	"\e[0m"
 
@@ -17,11 +17,6 @@
 # define PURPLE	"\e[0;35m"
 # define CYAN	"\e[0;36m"
 # define WHITE	"\e[0;37m"
-
-using std::string;
-using std::cout;
-using std::endl;
-using std::cerr;
 
 /******************************************************************************/
 
