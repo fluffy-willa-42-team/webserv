@@ -1,5 +1,12 @@
 #include "http.hpp"
 
+string clean_path(string req_path_param){
+	if (req_path_param.find_first_of("?") != string::npos){
+		req_path_param = req_path_param.substr(0, req_path_param.find_first_of("?"));
+	}
+	return req_path_param;
+}
+
 const Server& find_server(const Config& config, Headers req_headers){
 	const string host = req_headers[HEADER_HOST];
 	
@@ -13,12 +20,7 @@ const Server& find_server(const Config& config, Headers req_headers){
 }
 
 const Location& find_location(const Server& serv, const string& req_path_param){
-	string req_path = req_path_param;
-
-	// Removing params
-	if (req_path.find_first_of("?") != string::npos){
-		req_path = req_path.substr(0, req_path.find_first_of("?"));
-	}
+	string req_path = clean_path(req_path_param);
 
 	for (vector<Location>::const_iterator loc = serv.locations.begin(); loc != serv.locations.end(); loc++){
 		if (req_path == loc->path || startsWith(req_path, loc->path + "/")){

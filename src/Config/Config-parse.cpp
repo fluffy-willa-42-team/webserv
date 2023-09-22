@@ -96,6 +96,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return err(line, index, "Incompatible location arguments");
 						}
 						newLocation.root = line_split[1];
+						if (!newLocation.root.empty() && newLocation.root[newLocation.root.size() - 1] == '/'){
+							newLocation.root = newLocation.root.substr(0, newLocation.root.size() - 1);
+						}
 					}
 					else if (is_location_allow_methods(line_split)){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){
