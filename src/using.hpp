@@ -22,6 +22,10 @@ using std::vector;
 using std::stringstream;
 using std::ifstream;
 
+using std::cout;
+using std::cerr;
+using std::endl;
+
 using std::memset;
 using std::getline;
 
