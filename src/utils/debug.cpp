@@ -21,9 +21,9 @@ webDebugTrace::webDebugTrace(const level_t level, const string file, const int l
 }
 
 webDebugTrace::~webDebugTrace() {
-#ifdef WDEBUG
-	if (level < WDEBUG)
-		return;
-	cout << endl;
-#endif
+	#ifdef WDEBUG
+		if (level < WDEBUG)
+			return;
+		cout << endl;
+	#endif
 }
