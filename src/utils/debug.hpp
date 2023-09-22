@@ -1,11 +1,29 @@
 #ifndef DEBUG_H
-#define DEBUG_H
+# define DEBUG_H
 
-#include <iostream>
-#include <string>
-#include <sstream>
+/******************************************************************************/
 
-using namespace std;
+# include <iostream>
+# include <string>
+# include <sstream>
+
+# define RESET	"\e[0m"
+
+# define BLACK	"\e[0;30m"
+# define RED	"\e[0;31m"
+# define GREEN	"\e[0;32m"
+# define YELLOW	"\e[0;33m"
+# define BLUE	"\e[0;34m"
+# define PURPLE	"\e[0;35m"
+# define CYAN	"\e[0;36m"
+# define WHITE	"\e[0;37m"
+
+using std::string;
+using std::cout;
+using std::endl;
+using std::cerr;
+
+/******************************************************************************/
 
 typedef enum level_e {
 	DEBUG,
@@ -13,6 +31,8 @@ typedef enum level_e {
 	WARN,
 	ERROR
 } level_t;
+
+/******************************************************************************/
 
 #define DEBUG_() webDebugTrace(DEBUG, __FILE__, __LINE__)
 #define DEBUG_INFO_() webDebugTrace(INFO, __FILE__, __LINE__)
@@ -23,27 +43,22 @@ class webDebugTrace
 {
 public:
 	level_t level;
-	webDebugTrace(const level_t level, const std::string file, const int line);
+	webDebugTrace(const level_t level, const string file, const int line);
 
 	template <class T>
 	webDebugTrace& operator<<(const T &v)
 	{
-	#ifdef WDEBUG
-		if (level < WDEBUG)
-			return *this;
+		#ifdef WDEBUG
+			if (level < WDEBUG)
+				return *this;
 
-		const string level_str[] = {
-			"DEBUG",
-			"INFO",
-			"WARN",
-			"ERROR"
-		};
-		const string level_color[] = {"\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;31m"};
-		std::cout << level_color[this->level] << v;
-	#endif
-	#ifndef WDEBUG
-		(void)v;
-	#endif
+			const string level_str[]	= {"DEBUG",			"INFO",			"WARN",			"ERROR"		};
+			const string level_color[]	= {"\033[1;32m",	"\033[1;33m",	"\033[1;34m",	"\033[1;31m"};
+			cout << level_color[this->level] << RESET << v;
+		#endif
+		#ifndef WDEBUG
+			(void) v;
+		#endif
 
 		return *this;
 	}

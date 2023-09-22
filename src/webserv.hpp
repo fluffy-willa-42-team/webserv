@@ -3,6 +3,7 @@
 
 /* ************************************************************************** */
 
+#include "debug.hpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -38,6 +39,7 @@
 # define HEADER_ACCEPT_ENCODING	"Accept-Encoding"
 # define HEADER_ACCEPT_LANGUAGE	"Accept-Language"
 # define HEADER_HOST			"Host"
+# define HEADER_REDIRECT		"Location"
 
 /* ************************************************************************** */
 
@@ -48,10 +50,6 @@ using std::vector;
 
 using std::stringstream;
 using std::ifstream;
-
-using std::cout;
-using std::endl;
-using std::cerr;
 
 using std::memset;
 using std::getline;

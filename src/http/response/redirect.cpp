@@ -23,5 +23,6 @@ bool is_valid_redirect_code(u_int32_t code){
 
 string redirect(u_int32_t code, const string& path){
 	map<string, string> header;
+	header[HEADER_REDIRECT] = path;
 	return get_response(code, header);
 }

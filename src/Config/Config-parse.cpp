@@ -64,9 +64,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
-				// if (!isFileReadable(line_split[2])){
-				// 	return err(line, index, "Can't open error file");
-				// }
 				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
 			}
 			else if (is_server_option_max_client_body_size(line_split)){

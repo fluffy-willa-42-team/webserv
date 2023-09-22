@@ -1,4 +1,5 @@
 #include "http.hpp"
+#include "response.hpp"
 
 #include "debug.hpp"
 
@@ -91,11 +92,6 @@ const string http(const string& req, Listener& listener, const Config& config){
         req_headers[headerline[0]] = headerline[1];
     }
 
-#ifdef WDEBUG
-	for (Headers::iterator it = req_headers.begin(); it != req_headers.end(); it++){
-		DEBUG_INFO_() << it->first << ": \"" << it->second << "\"";
-	}
-#endif
 
 
 
@@ -183,7 +179,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	}
 	else if (loc.type & E_REDIRECT){
-
+		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	
 	return test();
