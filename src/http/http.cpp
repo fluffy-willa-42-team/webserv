@@ -199,58 +199,13 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
-			ifstream input_file;
-			input_file.open(file_path.c_str());
-			if (!input_file.is_open()) {
-				if 		(input_file.fail() && input_file.bad())		{ return error(403, "file fail"); }
-				else if (input_file.fail() && !input_file.bad())	{ return error(404, "file fail"); }
-				else 												{ return error(500, "file fail"); }
-			}
-			string res_file_body = string(
-				std::istreambuf_iterator<char>(input_file),
-				std::istreambuf_iterator<char>()
-			);
-			input_file.close();
-			map<string, string> header;
-			header["Content-Type"] = "text/html";
-			return get_response(200, header, res_file_body);
+			return get_file_res(file_path);
 		}
 		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 			if (!loc.autoindex){
 				return error(404, "autoindex not activated");
 			}
-			DIR* dir = opendir(file_path.c_str());
-			if (!dir){
-				if 		(errno == EACCES)	{ return error(403, "folder fail"); }
-				else if (errno == ENOENT)	{ return error(404, "folder fail"); }
-				else 						{ return error(500, "folder fail"); }
-			}
-
-			vector<AutoindexInput> autoindex_inputs;
-			struct dirent* entry;
-			while ((entry = readdir(dir)) != NULL) {
-				AutoindexInput newInput;
-				struct stat file_info;
-			
-				string newPath = file_path + (file_path[file_path.size() -1] != '/' ? "/" : "") + entry->d_name;
-				if (stat(newPath.c_str(), &file_info) == -1) {
-					DEBUG_ << newPath << " could not be opened" << endl;
-					continue ;
-				}
-				newInput.fileSize = file_info.st_size;
-				newInput.name = entry->d_name;
-				if (newInput.name == "." || newInput.name == ".."){
-					continue ;
-				}
-				newInput.path = req_path + newInput.name;
-
-				if (entry->d_type == DT_REG)		{ newInput.type = AINDEX_FILE; }
-				else if (entry->d_type == DT_DIR)	{ newInput.type = AINDEX_FOLDER; }
-				else if (entry->d_type == DT_LNK)	{}
-				
-				autoindex_inputs.push_back(newInput);
-			}
-			return get_autoindex(req_path, "/", autoindex_inputs);
+			return get_autoindex(req_path, file_path);
 		}	
 	}
 	else if (loc.type & E_REDIRECT){

@@ -9,7 +9,8 @@
 
 string get_response(u_int32_t code, map<string, string> headers, string body = "");
 
-string get_autoindex(const string& path, const string& gobacklink, const vector<AutoindexInput>& values);
+string get_file_res(const string& file_path);
+string get_autoindex(const string& req_path, const string& file_path);
 string redirect(u_int32_t code, const string& path);
 string error(u_int32_t code, const string& message);
 
