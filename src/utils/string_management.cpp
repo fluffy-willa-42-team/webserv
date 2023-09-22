@@ -2,21 +2,6 @@
 
 #include "debug.hpp"
 
-string readFileIntoString(const string& path){
-    ifstream input_file;
-	input_file.open(path.c_str());
-    if (!input_file.is_open()) {
-		DEBUG_ERROR_ << "Failed to open file: " << path;
-        return "error";
-    }
-    string res = string(
-		std::istreambuf_iterator<char>(input_file),
-		std::istreambuf_iterator<char>()
-	);
-    input_file.close();
-    return res;
-}
-
 void replace_string(string& input, const string& pattern_in, const string& pattern_out){
     size_t pos = 0;
 
