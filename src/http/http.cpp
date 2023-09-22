@@ -19,14 +19,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 
 	if (!getline(ss_line_by_line, line)){
-		DEBUG_() << "The Request is empty" << endl;
+		DEBUG_ << "The Request is empty" << endl;
 		return error(400, "The Request is empty");
 	}
 	removeCarriageReturn(line);
 
 	vector<string> initline = split(line, " ");
 	if (initline.size() != 3){
-		DEBUG_() << "Init line is invalid" << endl;
+		DEBUG_ << "Init line is invalid" << endl;
 		return error(400, "Init line is invalid");
 	}
 
@@ -34,14 +34,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Method
 	string req_method = initline[0];
 	{
-		DEBUG_INFO_() << "Method: " << req_method << endl;
+		DEBUG_INFO_ << "Method: " << req_method << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-			DEBUG_() << "Method is not allowed" << endl;
+			DEBUG_ << "Method is not allowed" << endl;
 			return error(405);
 		}
 		else if (validation_status == BAD_REQUEST){
-			DEBUG_() << "Method is invalid" << endl;
+			DEBUG_ << "Method is invalid" << endl;
 			return error(400, "Method is invalid");
 		}
 	}
@@ -49,9 +49,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Path + Param
 	string req_path_param = initline[1];
 	{
-		DEBUG_INFO_() << "Path + Param: " << req_path_param << endl;
+		DEBUG_INFO_ << "Path + Param: " << req_path_param << endl;
 		if (!is_path_valid(req_path_param)){
-			DEBUG_() << "Path is invalid" << endl;
+			DEBUG_ << "Path is invalid" << endl;
 			return error(400, "Path is invalid");
 		}
 	}
@@ -59,14 +59,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Protocol
 	{
 		string req_protocol = initline[2];
-		DEBUG_INFO_() << "Protocol: " << req_protocol;
+		DEBUG_INFO_ << "Protocol: " << req_protocol << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-			DEBUG_() << "Protocol is not allowed" << endl;
+			DEBUG_ << "Protocol is not allowed" << endl;
 				return error(505); // HTTP Version not allowed
 		}
 		else if (validation_status == BAD_REQUEST){
-			DEBUG_() << "Protocol is invalid" << endl;
+			DEBUG_ << "Protocol is invalid" << endl;
 			return error(400, "Protocol is invalid");
 
 		}
@@ -86,7 +86,7 @@ const string http(const string& req, Listener& listener, const Config& config){
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
-			DEBUG_() << "Headers are invalid" << endl;
+			DEBUG_ << "Headers are invalid" << endl;
 			return error(400, "Headers are invalid");
 		}
         req_headers[headerline[0]] = headerline[1];
@@ -109,7 +109,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 	{
 		if (!map_has_key(req_headers, string(HEADER_HOST))){
-			DEBUG_() << "Missing host header" << endl;
+			DEBUG_ << "Missing host header" << endl;
 			return error(400, "Missing host header");
 		}
 	}
@@ -125,7 +125,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
 			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
-				DEBUG_() << "Missing \"Content-Length\" header" << endl;
+				DEBUG_ << "Missing \"Content-Length\" header" << endl;
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
@@ -136,12 +136,12 @@ const string http(const string& req, Listener& listener, const Config& config){
 						buf = listener.read_buff();
 					}
 					catch(const exception& e) {
-						DEBUG_() << "Invalid \"Content-Length\" header" << endl;
+						DEBUG_ << "Invalid \"Content-Length\" header" << endl;
 						return error(411, "Invalid \"Content-Length\" header");
 					}
 					req_body += buf;
 				}
-				DEBUG_INFO_() << "Req body: " << req_body;
+				DEBUG_INFO_ << "Req body: " << req_body;
 			}
 		}
 	}
@@ -173,7 +173,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		return error(404, "This Page has not been Found");
 	}
 
-	cout << "Location: " << loc.path << endl;
+	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
 	if (loc.type & E_NORMAL){
 

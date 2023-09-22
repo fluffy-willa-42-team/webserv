@@ -82,21 +82,21 @@ e_status Listener::try_exec(const Config& config){
 	// check if error in accept after having recieved a connection
 	if (connection_fd < 0)
 	{
-		DEBUG_WARN_() << "Failed to accept connection, ignoring";
+		DEBUG_WARN_ << "Failed to accept connection, ignoring";
 		return S_CONTINUE;
 	}
 
 	// retrieve the file descriptor flags
 	int flags = fcntl(listener_fd, F_GETFL, 0);
 	if (flags < 0){
-		DEBUG_WARN_() << "Failed to retrieve the flags for server file descriptor, ignoring";
+		DEBUG_WARN_ << "Failed to retrieve the flags for server file descriptor, ignoring";
 		return S_CONTINUE;
 	}
 	
 	// verify the file descriptor has the right O_NONBLOCK flag
 	flags |= O_NONBLOCK;
 	if (fcntl(listener_fd, F_SETFL, flags) < 0){
-		DEBUG_WARN_() << "Failed to retrieve the flags for server file descriptor, ignoring";
+		DEBUG_WARN_ << "Failed to retrieve the flags for server file descriptor, ignoring";
 		return S_CONTINUE;
 	}
 

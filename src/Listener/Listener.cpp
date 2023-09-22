@@ -20,30 +20,30 @@ Listener::Listener(u_int16_t port)
 }
 
 Listener::~Listener(){
-	DEBUG_INFO_() << "Try to close listener_fd: " << listener_fd << endl;
+	DEBUG_INFO_ << "Try to close listener_fd: " << listener_fd << endl;
 	{
 		if (listener_fd >= 0){
 			const int check_close = close(listener_fd);
 			if (check_close < 0){
-				DEBUG_ERROR_() << "Failed to close listener_fd: " << listener_fd << endl;
+				DEBUG_ERROR_ << "Failed to close listener_fd: " << listener_fd << endl;
 			}
 			listener_fd = -1;
 		}
 
 	}
-	DEBUG_() << "Listener closed" << endl;
+	DEBUG_ << "Listener closed" << endl;
 
-	DEBUG_INFO_() << "Try to close connection_fd: " << connection_fd << endl;
+	DEBUG_INFO_ << "Try to close connection_fd: " << connection_fd << endl;
 	{
 		if (connection_fd >= 0){
 			const int check_close = close(connection_fd);
 			if (check_close < 0){
-				DEBUG_ERROR_() << "Failed to close connection_fd: " << connection_fd << endl;
+				DEBUG_ERROR_ << "Failed to close connection_fd: " << connection_fd << endl;
 			}
 			connection_fd = -1;
 		}
 	}
-	DEBUG_() << "connection_fd closed" << endl;
+	DEBUG_ << "connection_fd closed" << endl;
 
 }
 

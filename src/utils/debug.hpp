@@ -29,10 +29,10 @@ typedef enum level_e {
 
 /******************************************************************************/
 
-#define DEBUG_()		debug_utils(DEBUG,	__FILE__, __LINE__)
-#define DEBUG_INFO_()	debug_utils(INFO,	__FILE__, __LINE__)
-#define DEBUG_WARN_()	debug_utils(WARN,	__FILE__, __LINE__)
-#define DEBUG_ERROR_()	debug_utils(ERROR,	__FILE__, __LINE__)
+#define DEBUG_			debug_utils(DEBUG,	__FILE__, __LINE__)
+#define DEBUG_INFO_		debug_utils(INFO,	__FILE__, __LINE__)
+#define DEBUG_WARN_		debug_utils(WARN,	__FILE__, __LINE__)
+#define DEBUG_ERROR_	debug_utils(ERROR,	__FILE__, __LINE__)
 
 std::ostream& debug_utils(const level_t level, const string file, const int line);
 

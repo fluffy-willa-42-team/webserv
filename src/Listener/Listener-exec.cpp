@@ -15,7 +15,7 @@ void Listener::exec(const Config& config){
 		return ;
 	}
 	
-	DEBUG_INFO_() << "Request: " << buf;
+	DEBUG_INFO_ << "Request: " << buf;
 
 	string response = http(buf, *this, config);
 
@@ -29,7 +29,7 @@ string Listener::read_buff(){
 	memset(buffer, 0, BUFFER_SIZE);
 	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
 	if (length_read == -1){
-		DEBUG_WARN_() << "Failed to read from socket";
+		DEBUG_WARN_ << "Failed to read from socket";
 		throw exception();
 	}
 	return string(buffer, length_read);
