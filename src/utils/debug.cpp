@@ -5,7 +5,7 @@ ostream& debug_utils(const level_t level, const string file, const int line) {
 	#ifdef WDEBUG
 		if (level < WDEBUG)
 			return nullStream;
-		cout << level_color[level] << "[" << level_str[level] << "] " << file << ":" << line << " : " << "\033[0m";
+		cout << level_color[level] << "[" << level_str[level] << "] " << file << ":" << line << " : " << RESET;
 		return cout;
 	#else
 		(void) level;
