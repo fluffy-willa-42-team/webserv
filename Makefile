@@ -23,9 +23,14 @@ FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors\
 				-Wno-error=unused-parameter -Wno-error=unused-variable
 DLEVEL		= -1
 SANI		= 0
+DEBUG		= 0
+
+ifeq ($(DEBUG), 1)
+	FLAGS += -g3
+endif
 
 ifeq ($(SANI), 1)
-	FLAGS += -g3 -fsanitize=address -g3
+	FLAGS += -g3 -fsanitize=address
 endif
 
 ifeq ($(DLEVEL), 0)
