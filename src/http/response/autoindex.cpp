@@ -1,10 +1,8 @@
-#include "http.hpp"
+#include "response.hpp"
 
 static const string raw_autoindex_fragment_file		= readFileIntoString("./src/html/autoindex_fragment_file.html");
 static const string raw_autoindex_fragment_folder	= readFileIntoString("./src/html/autoindex_fragment_folder.html");
 static const string raw_autoindex					= readFileIntoString("./src/html/autoindex.html");
-
-string get_response(u_int32_t code, map<string, string> headers, string body);
 
 string get_autoindex_html(const string& path, const string& gobacklink, const vector<AutoindexInput>& values){
 	string autoindex_file = raw_autoindex;

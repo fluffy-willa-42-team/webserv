@@ -16,6 +16,8 @@ string get_response(u_int32_t code, map<string, string> headers, string body){
 		ss << ite->first << ": " << ite->second << endl;
 	}
 	ss << endl;
-	ss << body;
+	if (!body.empty()){
+		ss << body;
+	}
 	return ss.str();
 }
