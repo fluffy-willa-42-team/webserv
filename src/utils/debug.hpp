@@ -34,6 +34,19 @@ typedef enum level_e {
 #define DEBUG_WARN_		debug_utils(WARN,	__FILE__, __LINE__)
 #define DEBUG_ERROR_	debug_utils(ERROR,	__FILE__, __LINE__)
 
+class NullStream : public std::ostream {
+	public:
+		NullStream() {}
+		
+		template <typename T>
+		NullStream& operator<<(const T&) {
+			return *this;
+		}
+};
+
+static const string level_str[]	= {"DEBUG", "INFO ", "WARN ", "ERROR"};
+static const string level_color[] = {GREEN, CYAN, BLUE, RED};
+
 std::ostream& debug_utils(const level_t level, const string file, const int line);
 
 #endif /* DEBUG_H */
