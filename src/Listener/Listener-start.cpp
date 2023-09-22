@@ -97,10 +97,12 @@ e_status Listener::try_exec(const Config& config){
 		return S_CONTINUE;
 	}
 
-	if (wpoll[0].revents & POLLIN){
-		connection_fd = accept(listener_fd, NULL, NULL);
+	if (!(wpoll[0].revents & POLLIN)){
+		DEBUG_WARN_() << "No new connection (revents: " << wpoll[0].revents << "), ignoring";
+		return S_CONTINUE;
 	}
 
+	connection_fd = accept(listener_fd, NULL, NULL);
 	// check if error in accept after having recieved a connection
 	if (connection_fd < 0)
 	{
