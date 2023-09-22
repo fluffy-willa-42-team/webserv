@@ -3,6 +3,10 @@
 
 #include "debug.hpp"
 
+#include <sys/types.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
     string line;
@@ -176,7 +180,39 @@ const string http(const string& req, Listener& listener, const Config& config){
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
 	if (loc.type & E_NORMAL){
+		string path = "./static/php";
+		DIR* dir = opendir(path.c_str());
+		if (!dir){
+			if (errno == EACCES){
+				return error(403);
+			}
+			else if (errno == ENOENT){
+				return error(404);
+			}
+		}
+		struct dirent* entry;
+		entry = readdir(dir);
+		while ((entry = readdir(dir)) != NULL) {
+			struct stat file_info;
 
+			string newPath = path + "/" + entry->d_name;
+			if (stat(newPath.c_str(), &file_info) == -1) {
+				perror("Error getting file information");
+				continue;
+			}
+
+			off_t fileSize = file_info.st_size;
+			if (entry->d_type == DT_REG){
+				cout << "File: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
+			}
+			else if (entry->d_type == DT_DIR){
+				cout << "Folder: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
+			}
+			else if (entry->d_type == DT_LNK){
+				cout << "Link: " << entry->d_name << " (" << fileSize << ") " << newPath << endl;
+			}
+		}
+		
 	}
 	else if (loc.type & E_REDIRECT){
 		return redirect(loc.redirect_code, loc.redirect_path);
