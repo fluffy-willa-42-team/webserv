@@ -201,7 +201,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
-			return get_file_res(file_path);
+			return get_file_res(file_path, loc.download);
 		}
 		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 			if (!loc.autoindex){

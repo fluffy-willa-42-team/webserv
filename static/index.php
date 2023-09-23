@@ -9,11 +9,11 @@
 
 <style>
 	body {
-		background-color: yellowgreen;
+		background-color: goldenrod;
 	}
 
 	h1 {
-		color: white;
+		color: black;
 		text-align: center;
 		padding: 5em;
 	}

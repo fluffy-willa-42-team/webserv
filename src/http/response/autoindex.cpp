@@ -75,6 +75,6 @@ string get_autoindex(const string& req_path, const string& file_path){
 	string res = get_autoindex_html(req_path, "/", autoindex_inputs);
 
 	map<string, string> header;
-	header["Content-Type"] = "text/html";
+	header[HEADER_CONTENT_TYPE] = "text/html";
 	return get_response(200, header, res);
 }

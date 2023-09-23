@@ -9,7 +9,7 @@
 
 <style>
 	body {
-		background-color: yellowgreen;
+		background-color: midnightblue;
 	}
 
 	h1 {

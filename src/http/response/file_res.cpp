@@ -1,6 +1,6 @@
 #include "response.hpp"
 
-string get_file_res(const string& file_path){
+string get_file_res(const string& file_path, bool download){
 	ifstream input_file;
 	input_file.open(file_path.c_str());
 	if (!input_file.is_open()) {
@@ -14,6 +14,11 @@ string get_file_res(const string& file_path){
 	);
 	input_file.close();
 	map<string, string> header;
-	header["Content-Type"] = "text/html";
+	header[HEADER_CONTENT_TYPE] = "text/html";
+	if (download){
+		cout << file_path << endl;
+		const string filename = file_path.substr(file_path.find_last_of('/') + 1);
+		header[HEADER_DOWNLOAD] = "attachment; filename=\"" + filename + "\"";
+	}
 	return get_response(200, header, res_file_body);
 }

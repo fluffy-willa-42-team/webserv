@@ -15,6 +15,8 @@
 /* ************************************************************************** */
 
 # define HEADER_CONTENT_LENGTH	"Content-Length"
+# define HEADER_CONTENT_TYPE	"Content-Type"
+# define HEADER_DOWNLOAD		"Content-Disposition"
 # define HEADER_ACCEPT			"Accept"
 # define HEADER_ACCEPT_ENCODING	"Accept-Encoding"
 # define HEADER_ACCEPT_LANGUAGE	"Accept-Language"
