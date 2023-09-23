@@ -14,11 +14,19 @@ string get_file_res(const string& file_path, bool download){
 	);
 	input_file.close();
 	map<string, string> header;
-	header[HEADER_CONTENT_TYPE] = "text/html";
+
 	if (download){
 		cout << file_path << endl;
 		const string filename = file_path.substr(file_path.find_last_of('/') + 1);
 		header[HEADER_DOWNLOAD] = "attachment; filename=\"" + filename + "\"";
+	}
+	
+	// TODO automate
+	if (endsWith(file_path, ".html")){
+		header[HEADER_CONTENT_TYPE] = "text/html";
+	}
+	else if (endsWith(file_path, ".gif")) {
+		header[HEADER_CONTENT_TYPE] = "image/gif";
 	}
 	return get_response(200, header, res_file_body);
 }

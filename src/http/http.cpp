@@ -208,7 +208,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 				return error(404, "autoindex not activated");
 			}
 			return get_autoindex(req_path, file_path);
-		}	
+		}
 	}
 	else if (loc.type & E_REDIRECT){
 		return redirect(loc.redirect_code, loc.redirect_path);

@@ -47,6 +47,8 @@ string get_autoindex(const string& req_path, const string& file_path){
 		else 						{ return error(500, "folder fail"); }
 	}
 
+	const string gobacklink = req_path.substr(0, req_path.find_last_of('/'));
+
 	vector<AutoindexInput> autoindex_inputs;
 	struct dirent* entry;
 	while ((entry = readdir(dir)) != NULL) {
@@ -72,7 +74,7 @@ string get_autoindex(const string& req_path, const string& file_path){
 		autoindex_inputs.push_back(newInput);
 	}
 
-	string res = get_autoindex_html(req_path, "/", autoindex_inputs);
+	string res = get_autoindex_html(req_path, gobacklink, autoindex_inputs);
 
 	map<string, string> header;
 	header[HEADER_CONTENT_TYPE] = "text/html";

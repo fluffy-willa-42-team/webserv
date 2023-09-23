@@ -106,3 +106,24 @@ bool startsWith(const string& input, const string& prefix) {
 
     return true;
 }
+
+bool endsWith(const string& input, const string& suffix) {
+    // Check if the input string is shorter than the suffix
+    if (input.length() < suffix.length()) {
+        return false;
+    }
+
+    // Compare the characters of input and suffix from the end
+    size_t inputIndex = input.length() - 1;
+    size_t suffixIndex = suffix.length() - 1;
+
+    while (suffixIndex < inputIndex) {
+        if (input[inputIndex] != suffix[suffixIndex]) {
+            return false;
+        }
+        inputIndex--;
+        suffixIndex--;
+    }
+
+    return true;
+}
