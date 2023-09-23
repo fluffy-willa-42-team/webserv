@@ -4,7 +4,7 @@ string clean_path(string req_path_param){
 	if (req_path_param.find_first_of("?") != string::npos){
 		req_path_param = req_path_param.substr(0, req_path_param.find_first_of("?"));
 	}
-	if (!req_path_param.empty() && req_path_param[req_path_param.size() - 1] == '/'){
+	if (req_path_param.size() > 1 && req_path_param[req_path_param.size() - 1] == '/'){
 		req_path_param = req_path_param.substr(0, req_path_param.size() - 1);
 	}
 	return req_path_param;
