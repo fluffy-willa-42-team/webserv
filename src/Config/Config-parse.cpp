@@ -181,6 +181,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 
 		// Check all thing that require the Server to have finished parsing
 
+		// Charge all custom error page
 		map<u_int32_t, ErrorPage>& e_pages = newServer.custom_error_page;
 		for (map<u_int32_t, ErrorPage>::iterator e_page = e_pages.begin(); e_page != e_pages.end(); e_page++){
 			if (readFileIntoString(e_page->second.filepath, e_page->second.body) == S_ERROR){
