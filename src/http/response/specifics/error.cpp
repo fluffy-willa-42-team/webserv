@@ -34,8 +34,6 @@ string create_custom_error(const ErrorPage& page){
 string error_serv(const Server& serv, u_int32_t code, const string& message){
 	map<u_int32_t, ErrorPage>::const_iterator look = serv.custom_error_page.find(code);
 	if (look != serv.custom_error_page.end()){
-		cout << RED << "Found custom Error" << endl;
-		cout << YELLOW << look->second.response << RESET << endl;
 		return look->second.response;
 	}
 	return error(code, message);

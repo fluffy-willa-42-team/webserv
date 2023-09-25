@@ -12,6 +12,18 @@ static e_status err(const string& line, const u_int32_t& index, const string& me
 	return S_ERROR;
 }
 
+e_status stringToBool(const string& input, bool& dest){
+	if (input == "ON"){
+		dest = true;
+		return S_CONTINUE;
+	}
+	else if (input == "OFF"){
+		dest = false;
+		return S_CONTINUE;
+	}
+	return S_ERROR;
+}
+
 e_status Config::parse_conf_file(ifstream& config_file){
 	string line;
 	vector<string> line_split;
@@ -59,7 +71,8 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			else if (is_server_option_error_page(line_split)){
 				ErrorPage e_page;
 				e_page.filepath = line_split[2];
-				newServer.custom_error_page[stringToNumber(line_split[1])] = e_page;
+				e_page.code = stringToNumber(line_split[1]);
+				newServer.custom_error_page[e_page.code] = e_page;
 			}
 			else if (is_server_option_max_client_body_size(line_split)){
 				if (newServer.has_max_body_size_been_set){
@@ -126,11 +139,8 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						if (line_split[1] == "ON"){
-							loc.download = true;
-						}
-						else if (line_split[1] == "OFF"){
-							loc.download = false;
+						if (stringToBool(line_split[1], loc.download) == S_ERROR){
+							return err(line, index, "wtf?");
 						}
 					}
 					else if (is_location_autoindex(line_split)){
@@ -138,11 +148,8 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return err(line, index, "Incompatible location arguments");
 						}
 						has_root_param = true;
-						if (line_split[1] == "ON"){
-							loc.autoindex = true;
-						}
-						else if (line_split[1] == "OFF"){
-							loc.autoindex = false;
+						if (stringToBool(line_split[1], loc.autoindex) == S_ERROR){
+							return err(line, index, "wtf?");
 						}
 					}
 					else {
