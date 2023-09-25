@@ -22,10 +22,7 @@ cgi_pass(),
 redirect_code(0),
 redirect_path(),
 allowed_methods(get_allowed_method()),
-download(false),
-has_redirect(false),
-has_index(false),
-has_root(false)
+download(false)
 {}
 
 Location::~Location()

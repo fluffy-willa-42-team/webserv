@@ -42,9 +42,10 @@ bool is_location_redirect(vector<string>& line_split){
 }
 
 bool is_location_cgi_pass(vector<string>& line_split){
-	return line_split.size() == 2
+	return line_split.size() == 3
 		&& line_split[0] == LOCATION_OPT_CGI
-		&& is_a_file_path(line_split[1]);
+		&& !line_split[1].empty() && line_split[1][0] == '.'
+		&& is_a_file_path(line_split[2]);
 }
 
 bool is_location_download_file(vector<string>& line_split){

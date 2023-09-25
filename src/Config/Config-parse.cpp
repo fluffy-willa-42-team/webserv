@@ -86,7 +86,11 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			}
 			else if (is_location_line(line_split)){
 				Location loc;
-				bool has_root_param = false;
+				bool has_root_param	= false;
+				bool has_redirect	= false;
+				bool has_index		= false;
+				bool has_root		= false;
+
 				loc.path = line_split[1];
 				// Parse all line with {} for Location
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
@@ -96,32 +100,32 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					}
 
 					if (is_location_index(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_index = true;
+						has_index = true;
 						loc.index = line_split[1];
 					}
 					else if (is_location_root(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_root = true;
+						has_root = true;
 						loc.root = line_split[1];
 						if (!loc.root.empty() && loc.root[loc.root.size() - 1] == '/'){
 							loc.root = loc.root.substr(0, loc.root.size() - 1);
 						}
 					}
 					else if (is_location_redirect(line_split)){
-						if (loc.has_index || loc.has_root){
+						if (has_index || has_root){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_redirect = true;
+						has_redirect = true;
 						loc.redirect_path = line_split[2];
 						loc.redirect_code = stringToNumber(line_split[1]);
 					}
 					else if (is_location_allow_methods(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						for (u_int32_t i = 1; i < line_split.size(); i++){
@@ -129,14 +133,14 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						}
 					}
 					else if (is_location_cgi_pass(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						has_root_param = true;
-						loc.cgi_pass = line_split[1];
+						loc.cgi_pass = line_split[2];
 					}
 					else if (is_location_download_file(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						if (stringToBool(line_split[1], loc.download) == S_ERROR){
@@ -144,7 +148,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						}
 					}
 					else if (is_location_autoindex(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						has_root_param = true;
@@ -158,17 +162,17 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 
 				// Check all thing that require the Location to have finished parsing
-				if (!loc.has_root && has_root_param){
+				if (!has_root && has_root_param){
 					return err(line, index, "Root Param given whith no root parameter");
 				}
-				if (!loc.has_root && !loc.has_index && !loc.has_redirect){
+				if (!has_root && !has_index && !has_redirect){
 					return err(line, index, "Missing parameter: Location has no purpuse");
 				}
-				if (loc.has_root && !doesFolderExists(loc.root)){
+				if (has_root && !doesFolderExists(loc.root)){
 					return err(line, index, "Root folder inaccessible: \"" + loc.root + "\"");
 				}
-				if (loc.has_index){
-					string loc_index = (loc.has_root ? mergeFilePaths(loc.root, loc.index): loc.index);
+				if (has_index){
+					string loc_index = (has_root ? mergeFilePaths(loc.root, loc.index): loc.index);
 					if (!isFileReadable(loc_index)){
 						return err(line, index, "Invalid index file: \"" + loc_index + "\"");
 					}

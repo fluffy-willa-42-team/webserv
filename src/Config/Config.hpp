@@ -53,9 +53,6 @@ class Location {
 		vector<string>	allowed_methods;
 		bool			download;
 		bool			autoindex;
-		bool 			has_redirect;
-		bool 			has_index;
-		bool 			has_root;
 
 		Location();
 		~Location();
