@@ -8,8 +8,8 @@
 #include <dirent.h>
 #include <fcntl.h>
 
-string clean_path(string req_path_param);
-string clean_path_file(string req_path_param);
+string remove_end_backslash(string req_path_param);
+string remove_param(string req_path_param);
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -184,7 +184,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
 	if (!loc.root.empty()){
-		string req_path = clean_path(req_path_param);
+		string req_path = remove_end_backslash(remove_param(req_path_param));
 		string file_path = loc.root + req_path.substr(loc.path.size());
 		
 		DEBUG_INFO_ << file_path << endl;
@@ -213,10 +213,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 	}
 	else if (!loc.index.empty()){
-		string req_path = string(req_path_param);
-		if (req_path.find_first_of("?") != string::npos){
-			req_path = req_path.substr(0, req_path.find_first_of("?"));
-		}
+		string req_path = remove_param(req_path_param);
 		if (req_path != loc.path){
 			return error_serv(serv, 404, "This Page has not been Found");
 		}

@@ -35,8 +35,8 @@ string get_file_res(const string& file_path, bool download){
 	ifstream input_file;
 	input_file.open(file_path.c_str());
 	if (!input_file.is_open()) {
-		if 		(input_file.fail() && input_file.bad())		{ return error(403, "file fail"); }
-		else if (input_file.fail() && !input_file.bad())	{ return error(404, "file fail"); }
+		if 		(input_file.fail() && !input_file.bad())	{ return error(403, "file fail"); }
+		else if (input_file.fail() && input_file.bad())		{ return error(404, "file fail"); }
 		else 												{ return error(500, "file fail"); }
 	}
 	string res_file_body = string(
