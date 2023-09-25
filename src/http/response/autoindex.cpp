@@ -5,12 +5,12 @@
 #include <dirent.h>
 #include <fcntl.h>
 
-static const string raw_autoindex_fragment_file		= readFileIntoString("./src/html/autoindex_fragment_file.html");
-static const string raw_autoindex_fragment_folder	= readFileIntoString("./src/html/autoindex_fragment_folder.html");
-static const string raw_autoindex					= readFileIntoString("./src/html/autoindex.html");
+string raw_autoindex_fragment_file;
+string raw_autoindex_fragment_folder;
+string raw_autoindex;
 
 string get_autoindex_html(const string& path, const string& gobacklink, const vector<AutoindexInput>& values){
-	string autoindex_file = raw_autoindex;
+	string autoindex_file(raw_autoindex);
 
 	replace_string(autoindex_file, "{{path}}", path);
 	replace_string(autoindex_file, "{{gobacklink}}", gobacklink);
@@ -36,6 +36,9 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 	}
 
 	replace_string(autoindex_file, "{{fragment}}", fragment.str());
+
+	cout << RED << "=>" << raw_autoindex << RESET << endl;
+
 	return autoindex_file;
 }
 

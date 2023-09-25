@@ -1,7 +1,6 @@
 #include "response.hpp"
 
-static map<string, string> content_type;
-static const string error_file_str = readFileIntoString("./src/html/error.html");
+map<string, string> content_type;
 
 void init_content_type(){
 	content_type[".html"]	= "text/html";

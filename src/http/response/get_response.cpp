@@ -1,7 +1,8 @@
 #include "http.hpp"
 
 map<u_int32_t, string>& get_codes_map();
-static map<u_int32_t, string>& codes_map = get_codes_map();
+
+map<u_int32_t, string>& codes_map = get_codes_map();
 
 string get_response(u_int32_t code, Headers headers, string body){
 	stringstream length_str;

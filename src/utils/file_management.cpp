@@ -2,19 +2,21 @@
 #include "unistd.h"
 #include <sys/stat.h>
 
-string readFileIntoString(const string& path){
+e_status readFileIntoString(string path, string& destination){
+    DEBUG_INFO_ << "Opening File: " << path << endl;
+    
     ifstream input_file;
 	input_file.open(path.c_str());
     if (!input_file.is_open()) {
 		DEBUG_ERROR_ << "Failed to open file: " << path;
-        return "error";
+        return S_ERROR;
     }
-    string res = string(
+    destination = string(
 		std::istreambuf_iterator<char>(input_file),
 		std::istreambuf_iterator<char>()
 	);
     input_file.close();
-    return res;
+    return S_CONTINUE;
 }
 
 bool doesFileExist(const ifstream& input_file){

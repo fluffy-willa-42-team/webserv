@@ -7,6 +7,23 @@
 
 /******************************************************************************/
 
+#define AUTOINDEX_FILE				"./src/html/autoindex.html"
+#define AUTOINDEX_FILE_FRAG_FILE	"./src/html/autoindex_fragment_file.html"
+#define AUTOINDEX_FILE_FRAG_FOLDER	"./src/html/autoindex_fragment_folder.html"
+#define ERROR_FILE					"./src/html/error.html"
+
+/******************************************************************************/
+
+extern string raw_autoindex_fragment_file;
+extern string raw_autoindex_fragment_folder;
+extern string raw_autoindex;
+extern string raw_error_file;
+
+extern map<u_int32_t, string> error_codes_map;
+extern map<u_int32_t, string> redirect_codes_map;
+
+/******************************************************************************/
+
 string get_response(u_int32_t code, Headers headers, string body = "");
 
 string get_file_res(const string& file_path, bool download = false);
