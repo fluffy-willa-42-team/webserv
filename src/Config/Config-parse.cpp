@@ -1,6 +1,9 @@
 #include "Config.hpp"
 #include "file_parsing.hpp"
 #include <algorithm>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 static e_status err(const string& line, const u_int32_t& index, const string& message = ""){
 	cerr << RED << "[" << index << "] \"" << line << "\"" << RESET << endl;
@@ -35,6 +38,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				newServer.host = line_split[1];
 			}
 			else if (is_server_option_listen(line_split)){
+				//TODO ask @willaCS about this check.
 				if (newServer.port != 0){
 					return err(line, index, "Duplicate Parameter");
 				}
@@ -43,6 +47,20 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 				else {
 					vector<string> splited = split(line_split[1], ":");
+					// Check if we have a host:port
+					if (splited.size() != 2){
+						return err(line, index);
+					}
+					// Check if host is not empty
+					if (splited[0].empty()){
+						return err(line, index);
+					}
+					// Check and store host ip
+					// https://www.gta.ufrj.br/ensino/eel878/sockets/inet_ntoaman.html
+					if (!inet_aton(splited[0].c_str(), &newServer.host_ip)) {
+						DEBUG_ERROR_ << "Failed to convert address: " << splited[0] << endl;
+						return err(line, index);
+					}
 					if (!isPositiveInteger(splited[1])){
 						return err(line, index);
 					}

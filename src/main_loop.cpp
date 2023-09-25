@@ -1,21 +1,5 @@
 #include "Listener.hpp"
 
-void setup(map<int, Listener>& listeners){
-	// Setup every server and delete all that fail setup
-	// for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end();){
-	// 	t_setup res = ite->second.setup();
-	// 	if (res.code != 0){
-	// 		cout << "Failed server setup code: " << res.code << " (" << res.message << ") " << res.err << endl;
-	// 		std::map<int, Listener>::iterator temp = ite;
-	// 		ite++;
-	// 		listeners.erase(temp);
-	// 	}
-	// 	else {
-	// 		ite++;
-	// 	}
-	// }
-}
-
 void start(map<int, Listener>& listeners, bool& loop, const Config& config){
 	// Return if all failed to start
 	if (listeners.size() < 1){

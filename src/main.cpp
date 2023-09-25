@@ -38,12 +38,21 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 	
+	// Setup every server and delete all that fail setup
 	for (vector<Server>::iterator ite = config.servers.begin(); ite != config.servers.end(); ite++){
-		DEBUG_INFO_ << "Server: " << ite->host << ":" << ite->port << endl;
-		listeners[ite->port] = Listener(ite->host, ite->port);
+		DEBUG_ << "Try to start server: " << ite->host << ":" << ite->port << endl;
+		try
+		{
+			listeners[ite->port] = Listener(ite->host_ip, ite->port);
+		}
+		catch(const std::exception& e)
+		{
+			DEBUG_WARN_ << "Server: " << ite->host << ":" << ite->port << ": " << e.what() << ", ignoring"<< endl;
+		}
+		
 	}
 
 	std::signal(SIGINT, &shutdown);
-	setup(listeners);
+	// setup(listeners);
 	start(listeners, loop, config);
 }

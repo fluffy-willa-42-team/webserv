@@ -5,6 +5,7 @@
 
 #include "webserv.hpp"
 #include "utils.hpp"
+#include <netinet/in.h>
 
 /******************************************************************************/
 
@@ -55,7 +56,7 @@ class Location {
 class Server {
 	public:
 		string					host;
-		u_int32_t				host_ip;//TODO
+		in_addr					host_ip;
 		u_int32_t				port;
 		int32_t					max_body_size;
 		bool					has_max_body_size_been_set;

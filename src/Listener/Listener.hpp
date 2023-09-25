@@ -32,7 +32,7 @@ class Listener {
 
 	public:
 		Listener();
-		Listener(std::string address, u_int16_t port);
+		Listener(in_addr address, u_int16_t port);
 		~Listener();
 
 		const Listener& operator=(const Listener& other);
