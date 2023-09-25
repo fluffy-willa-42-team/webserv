@@ -12,7 +12,10 @@ redirect_code(0),
 redirect_path(),
 allowed_methods(get_allowed_method()),
 download(false),
-type(E_NOT_SET)
+has_redirect(false),
+has_index(false),
+has_root(false),
+has_root_param(false)
 {}
 
 Location::~Location()

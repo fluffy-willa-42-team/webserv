@@ -28,12 +28,6 @@
 
 /******************************************************************************/
 
-typedef enum {
-	E_NOT_SET	= 0b00,
-	E_NORMAL	= 0b01,
-	E_REDIRECT	= 0b10,
-}	e_location_type;
-
 class Location {
 	public:
 		string			path;
@@ -45,7 +39,10 @@ class Location {
 		vector<string>	allowed_methods;
 		bool			download;
 		bool			autoindex;
-		e_location_type	type;
+		bool 			has_redirect;
+		bool 			has_index;
+		bool 			has_root;
+		bool 			has_root_param;
 
 		Location();
 		~Location();
