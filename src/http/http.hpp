@@ -13,6 +13,20 @@
 
 typedef map<string, string> Headers;
 
+
+typedef enum {
+	AINDEX_FILE,
+	AINDEX_FOLDER,
+} AutoindexValue;
+
+typedef struct {
+	AutoindexValue type;
+	string path;
+	string name;
+	off_t fileSize;
+} AutoindexInput;
+
+
 /******************************************************************************/
 
 string error(u_int32_t code, const string& message = "");

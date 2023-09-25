@@ -64,9 +64,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
-				// if (!isFileReadable(line_split[2])){
-				// 	return err(line, index, "Can't open error file");
-				// }
 				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
 			}
 			else if (is_server_option_max_client_body_size(line_split)){
@@ -99,6 +96,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return err(line, index, "Incompatible location arguments");
 						}
 						newLocation.root = line_split[1];
+						if (!newLocation.root.empty() && newLocation.root[newLocation.root.size() - 1] == '/'){
+							newLocation.root = newLocation.root.substr(0, newLocation.root.size() - 1);
+						}
 					}
 					else if (is_location_allow_methods(line_split)){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){
@@ -112,15 +112,16 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (!is_type_valid(newLocation.type, E_REDIRECT)){
 							return err(line, index, "Incompatible location arguments");
 						}
-						// newLocation.
+						if (!newLocation.redirect_path.empty() || newLocation.redirect_code != 0){
+							return (err(line, index, "Duplicate Parameter"));
+						}
+						newLocation.redirect_path = line_split[2];
+						newLocation.redirect_code = stringToNumber(line_split[1]);
 					}
 					else if (is_location_cgi_pass(line_split)){
 						if (!is_type_valid(newLocation.type, E_NORMAL)){
 							return err(line, index, "Incompatible location arguments");
 						}
-						// if (!isFileExecutable(line_split[1])){
-						// 	return err(line, index, "File is not executable");
-						// }
 						newLocation.cgi_pass = line_split[1];
 					}
 					else if (is_location_download_file(line_split)){

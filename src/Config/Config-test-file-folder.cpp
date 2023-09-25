@@ -19,10 +19,11 @@ e_status Config::test_if_file_or_folder_exist(){
 				continue;
 			}
 
-			if (!loc->root.empty()){
-				if (!doesFolderExists(loc->root)){
-					return err("Root folder inaccessible: \"" + loc->root + "\"");
-				}
+			if (loc->root.empty()){
+				return err("Root option is mandatory");
+			}
+			if (!doesFolderExists(loc->root)){
+				return err("Root folder inaccessible: \"" + loc->root + "\"");
 			}
 			
 			if (loc->cgi_pass.size() > 0){

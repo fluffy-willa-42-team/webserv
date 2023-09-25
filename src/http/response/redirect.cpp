@@ -1,5 +1,4 @@
-#include "webserv.hpp"
-#include "utils.hpp"
+#include "response.hpp"
 
 static map<u_int32_t, string> codes_map;
 
@@ -20,4 +19,10 @@ map<u_int32_t, string>& get_redirect_codes_map(){
 
 bool is_valid_redirect_code(u_int32_t code){
 	return map_has_key(codes_map, code);
+}
+
+string redirect(u_int32_t code, const string& path){
+	Headers header;
+	header[HEADER_REDIRECT] = path;
+	return get_response(code, header);
 }

@@ -2,21 +2,6 @@
 
 #include "debug.hpp"
 
-string readFileIntoString(const string& path){
-    ifstream input_file;
-	input_file.open(path.c_str());
-    if (!input_file.is_open()) {
-		DEBUG_ERROR_() << "Failed to open file: " << path;
-        return "error";
-    }
-    string res = string(
-		std::istreambuf_iterator<char>(input_file),
-		std::istreambuf_iterator<char>()
-	);
-    input_file.close();
-    return res;
-}
-
 void replace_string(string& input, const string& pattern_in, const string& pattern_out){
     size_t pos = 0;
 
@@ -100,11 +85,9 @@ bool isPositiveInteger(const string& str) {
     
     for (string::const_iterator it = str.begin(); it != str.end(); ++it) {
         if (!std::isdigit(*it)) {
-            // cout << "X " << str << endl;
             return false;
         }
     }
-    // cout << "V " << str << endl;
     return true;
 }
 
@@ -119,6 +102,27 @@ bool startsWith(const string& input, const string& prefix) {
         if (input[i] != prefix[i]) {
             return false;
         }
+    }
+
+    return true;
+}
+
+bool endsWith(const string& input, const string& suffix) {
+    // Check if the input string is shorter than the suffix
+    if (input.length() < suffix.length()) {
+        return false;
+    }
+
+    // Compare the characters of input and suffix from the end
+    size_t inputIndex = input.length() - 1;
+    size_t suffixIndex = suffix.length() - 1;
+
+    while (suffixIndex < inputIndex) {
+        if (input[inputIndex] != suffix[suffixIndex]) {
+            return false;
+        }
+        inputIndex--;
+        suffixIndex--;
     }
 
     return true;

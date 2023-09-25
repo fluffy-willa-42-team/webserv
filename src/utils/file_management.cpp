@@ -2,6 +2,29 @@
 #include "unistd.h"
 #include <sys/stat.h>
 
+string readFileIntoString(const string& path){
+    ifstream input_file;
+	input_file.open(path.c_str());
+    if (!input_file.is_open()) {
+		DEBUG_ERROR_ << "Failed to open file: " << path;
+        return "error";
+    }
+    string res = string(
+		std::istreambuf_iterator<char>(input_file),
+		std::istreambuf_iterator<char>()
+	);
+    input_file.close();
+    return res;
+}
+
+bool doesFileExist(const ifstream& input_file){
+    return (input_file.fail() && !input_file.bad());
+}
+
+bool doesFileAccessible(const ifstream& input_file){
+    return (input_file.fail() && input_file.bad());
+}
+
 bool isFileReadable(const string& filepath) {
     ifstream file(filepath.c_str());
 

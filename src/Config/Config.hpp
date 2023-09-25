@@ -40,6 +40,8 @@ class Location {
 		string			index;
 		string			root;
 		string			cgi_pass;
+		u_int32_t		redirect_code;
+		string			redirect_path;
 		vector<string>	allowed_methods;
 		bool			download;
 		bool			autoindex;

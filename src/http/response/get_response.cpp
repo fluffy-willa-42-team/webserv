@@ -1,9 +1,9 @@
-#include "webserv.hpp"
+#include "http.hpp"
 
 map<u_int32_t, string>& get_codes_map();
 static map<u_int32_t, string>& codes_map = get_codes_map();
 
-string get_response(u_int32_t code, map<string, string> headers, string body){
+string get_response(u_int32_t code, Headers headers, string body){
 	stringstream length_str;
 	length_str << body.length();
 	headers["Content-Length"] = length_str.str();
@@ -12,10 +12,12 @@ string get_response(u_int32_t code, map<string, string> headers, string body){
 
 	stringstream ss;
 	ss << PROTOCOL << " " << code << " " << description << endl;
-	for (map<string, string>::iterator ite = headers.begin(); ite != headers.end(); ite++){
+	for (Headers::iterator ite = headers.begin(); ite != headers.end(); ite++){
 		ss << ite->first << ": " << ite->second << endl;
 	}
 	ss << endl;
-	ss << body;
+	if (!body.empty()){
+		ss << body;
+	}
 	return ss.str();
 }

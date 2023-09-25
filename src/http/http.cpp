@@ -1,6 +1,14 @@
 #include "http.hpp"
+#include "response.hpp"
 
 #include "debug.hpp"
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fcntl.h>
+
+string clean_path(string req_path_param);
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -18,14 +26,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 
 	if (!getline(ss_line_by_line, line)){
-		DEBUG_() << "The Request is empty";
+		DEBUG_ << "The Request is empty" << endl;
 		return error(400, "The Request is empty");
 	}
 	removeCarriageReturn(line);
 
 	vector<string> initline = split(line, " ");
 	if (initline.size() != 3){
-		DEBUG_() << "Init line is invalid";
+		DEBUG_ << "Init line is invalid" << endl;
 		return error(400, "Init line is invalid");
 	}
 
@@ -33,14 +41,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Method
 	string req_method = initline[0];
 	{
-		DEBUG_INFO_() << "Method: " << req_method;
+		DEBUG_INFO_ << "Method: " << req_method << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-			DEBUG_() << "Method is not allowed";
+			DEBUG_ << "Method is not allowed" << endl;
 			return error(405);
 		}
 		else if (validation_status == BAD_REQUEST){
-			DEBUG_() << "Method is invalid";
+			DEBUG_ << "Method is invalid" << endl;
 			return error(400, "Method is invalid");
 		}
 	}
@@ -48,9 +56,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Path + Param
 	string req_path_param = initline[1];
 	{
-		DEBUG_INFO_() << "Path + Param: " << req_path_param;
+		DEBUG_INFO_ << "Path + Param: " << req_path_param << endl;
 		if (!is_path_valid(req_path_param)){
-			DEBUG_() << "Path is invalid";
+			DEBUG_ << "Path is invalid" << endl;
 			return error(400, "Path is invalid");
 		}
 	}
@@ -58,14 +66,14 @@ const string http(const string& req, Listener& listener, const Config& config){
 	// Protocol
 	{
 		string req_protocol = initline[2];
-		DEBUG_INFO_() << "Protocol: " << req_protocol;
+		DEBUG_INFO_ << "Protocol: " << req_protocol << endl;
 		e_validation_status validation_status = is_method_valid(req_method);
 		if (validation_status == NOT_ALLOWED){
-			DEBUG_() << "Protocol is not allowed";
+			DEBUG_ << "Protocol is not allowed" << endl;
 				return error(505); // HTTP Version not allowed
 		}
 		else if (validation_status == BAD_REQUEST){
-			DEBUG_() << "Protocol is invalid";
+			DEBUG_ << "Protocol is invalid" << endl;
 			return error(400, "Protocol is invalid");
 
 		}
@@ -85,17 +93,12 @@ const string http(const string& req, Listener& listener, const Config& config){
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
-			DEBUG_() << "Headers are invalid";
+			DEBUG_ << "Headers are invalid" << endl;
 			return error(400, "Headers are invalid");
 		}
         req_headers[headerline[0]] = headerline[1];
     }
 
-#ifdef WDEBUG
-	for (Headers::iterator it = req_headers.begin(); it != req_headers.end(); it++){
-		DEBUG_INFO_() << it->first << ": \"" << it->second << "\"";
-	}
-#endif
 
 
 
@@ -113,7 +116,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 	{
 		if (!map_has_key(req_headers, string(HEADER_HOST))){
-			DEBUG_() << "Missing host header";
+			DEBUG_ << "Missing host header" << endl;
 			return error(400, "Missing host header");
 		}
 	}
@@ -129,7 +132,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
 			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
-				DEBUG_() << "Missing \"Content-Length\" header";
+				DEBUG_ << "Missing \"Content-Length\" header" << endl;
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
 			}
 			else {
@@ -140,12 +143,12 @@ const string http(const string& req, Listener& listener, const Config& config){
 						buf = listener.read_buff();
 					}
 					catch(const exception& e) {
-						DEBUG_() << "Invalid \"Content-Length\" header";
+						DEBUG_ << "Invalid \"Content-Length\" header" << endl;
 						return error(411, "Invalid \"Content-Length\" header");
 					}
 					req_body += buf;
 				}
-				DEBUG_INFO_() << "Req body: " << req_body;
+				DEBUG_INFO_ << "Req body: " << req_body;
 			}
 		}
 	}
@@ -177,9 +180,40 @@ const string http(const string& req, Listener& listener, const Config& config){
 		return error(404, "This Page has not been Found");
 	}
 
-	cout << "Location: " << loc.path << endl;
+	DEBUG_INFO_ << "Location: " << loc.path << endl;
+
+	if (loc.type & E_NORMAL){
+		string req_path = clean_path(req_path_param);
+		string file_path = loc.root + req_path.substr(loc.path.size());
+		
+		DEBUG_INFO_ << file_path << endl;
+		if (!loc.index.empty() && loc.path == req_path){
+			file_path = mergeFilePaths(loc.root, loc.index);
+		}
+
+		DEBUG_INFO_ << file_path << endl;
+
+		struct stat path_info;
+		if (stat(file_path.c_str(), &path_info) == -1) {
+			if 		(errno == EACCES)	{ return error(403, "stat fail"); }
+			else if (errno == ENOENT)	{ return error(404, "stat fail"); }
+			else 						{ return error(500, "stat fail"); }
+		}
+
+		if (S_ISREG(path_info.st_mode)){ // Check if is file
+			return get_file_res(file_path, loc.download);
+		}
+		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
+			if (!loc.autoindex){
+				return error(404, "autoindex not activated");
+			}
+			return get_autoindex(req_path, file_path);
+		}
+	}
+	else if (loc.type & E_REDIRECT){
+		return redirect(loc.redirect_code, loc.redirect_path);
+	}
 	
-
-
+	// return test();
 	return error(404, "This Page has not been Found");
 }

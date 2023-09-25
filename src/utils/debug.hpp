@@ -1,11 +1,24 @@
 #ifndef DEBUG_H
-#define DEBUG_H
+# define DEBUG_H
 
-#include <iostream>
-#include <string>
-#include <sstream>
+/******************************************************************************/
 
-using namespace std;
+# include "using.hpp"
+
+/******************************************************************************/
+
+# define RESET	"\e[0m"
+
+# define BLACK	"\e[0;30m"
+# define RED	"\e[0;31m"
+# define GREEN	"\e[0;32m"
+# define YELLOW	"\e[0;33m"
+# define BLUE	"\e[0;34m"
+# define PURPLE	"\e[0;35m"
+# define CYAN	"\e[0;36m"
+# define WHITE	"\e[0;37m"
+
+/******************************************************************************/
 
 typedef enum level_e {
 	DEBUG,
@@ -14,41 +27,25 @@ typedef enum level_e {
 	ERROR
 } level_t;
 
-#define DEBUG_() webDebugTrace(DEBUG, __FILE__, __LINE__)
-#define DEBUG_INFO_() webDebugTrace(INFO, __FILE__, __LINE__)
-#define DEBUG_WARN_() webDebugTrace(WARN, __FILE__, __LINE__)
-#define DEBUG_ERROR_() webDebugTrace(ERROR, __FILE__, __LINE__)
+/******************************************************************************/
 
-class webDebugTrace
-{
-public:
-	level_t level;
-	webDebugTrace(const level_t level, const std::string file, const int line);
+#define DEBUG_			debug_utils(DEBUG,	__FILE__, __LINE__)
+#define DEBUG_INFO_		debug_utils(INFO,	__FILE__, __LINE__)
+#define DEBUG_WARN_		debug_utils(WARN,	__FILE__, __LINE__)
+#define DEBUG_ERROR_	debug_utils(ERROR,	__FILE__, __LINE__)
 
-	template <class T>
-	webDebugTrace& operator<<(const T &v)
-	{
-	#ifdef WDEBUG
-		if (level < WDEBUG)
+// stream to print nothing in console
+class NullStream : public ostream {
+	public:
+		template <typename T>
+		NullStream& operator<<(const T&) {
 			return *this;
-
-		const string level_str[] = {
-			"DEBUG",
-			"INFO",
-			"WARN",
-			"ERROR"
-		};
-		const string level_color[] = {"\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;31m"};
-		std::cout << level_color[this->level] << v;
-	#endif
-	#ifndef WDEBUG
-		(void)v;
-	#endif
-
-		return *this;
-	}
-
-	~webDebugTrace();
+		}
 };
+
+static const string level_str[]	= {"DEBUG", "INFO ", "WARN ", "ERROR"};
+static const string level_color[] = {GREEN, CYAN, BLUE, RED};
+
+ostream& debug_utils(const level_t level, const string file, const int line);
 
 #endif /* DEBUG_H */
