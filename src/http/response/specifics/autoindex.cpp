@@ -16,6 +16,7 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 	replace_string(autoindex_file, "{{gobacklink}}", gobacklink);
 
 	stringstream fragment;
+	
 	for (vector<AutoindexInput>::const_iterator it = values.begin(); it != values.end(); it++){
 		string autoindex_fragment_file;
 		if (it->type == AINDEX_FOLDER){
@@ -25,6 +26,7 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 			fragment << autoindex_fragment_file;
 		}
 	}
+
 	for (vector<AutoindexInput>::const_iterator it = values.begin(); it != values.end(); it++){
 		string autoindex_fragment_file;
 		if (it->type == AINDEX_FILE){
@@ -36,8 +38,6 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 	}
 
 	replace_string(autoindex_file, "{{fragment}}", fragment.str());
-
-	cout << RED << "=>" << raw_autoindex << RESET << endl;
 
 	return autoindex_file;
 }

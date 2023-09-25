@@ -2,6 +2,17 @@
 
 vector<string>& get_allowed_method();
 
+ErrorPage::ErrorPage():
+code(0)
+{}
+ErrorPage::~ErrorPage(){}
+const ErrorPage& ErrorPage::operator=(const ErrorPage& other) {
+	this->code		= other.code;
+	this->filepath	= other.filepath;
+	this->body		= other.body;
+	this->response	= other.response;
+	return *this;
+}
 
 Location::Location():
 path(),
@@ -14,8 +25,7 @@ allowed_methods(get_allowed_method()),
 download(false),
 has_redirect(false),
 has_index(false),
-has_root(false),
-has_root_param(false)
+has_root(false)
 {}
 
 Location::~Location()
@@ -41,19 +51,10 @@ valid(false)
 		return ;
 	}
 
-	{
-		e_status status = this->parse_conf_file(config_file);
-		config_file.close();
-		if (status & S_ERROR){
-			return ;
-		}
-	}
-
-	{
-		e_status status = this->test_if_file_or_folder_exist();
-		if (status & S_ERROR){
-			return ;
-		}
+	e_status status = this->parse_conf_file(config_file);
+	config_file.close();
+	if (status & S_ERROR){
+		return ;
 	}
 
 	if (servers.size() < 1){

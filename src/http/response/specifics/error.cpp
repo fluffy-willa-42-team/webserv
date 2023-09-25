@@ -5,6 +5,8 @@ void replace_string(string& input, const string& pattern_in, const string& patte
 string raw_error_file;
 map<u_int32_t, string> error_codes_map;
 
+string get_content_type(const string& filename);
+
 string error(u_int32_t code, const string& message){
 	string error_file(raw_error_file);
 	stringstream code_str; code_str << code;
@@ -16,24 +18,27 @@ string error(u_int32_t code, const string& message){
 	else {
 		replace_string(error_file, "{{error_message}}", "");
 	}
-	Headers header;
-	header["Content-Type"] = "text/html";
 
-	cout << RED << "=>" << raw_error_file << RESET << endl;
+	Headers header;
+	header[HEADER_CONTENT_TYPE] = "text/html";
+
 	return get_response(code, header, error_file);
 }
 
-string error_serv(const Server& serv, u_int32_t code, const string& message){
-	map<u_int32_t, string>::const_iterator look = serv.custom_error_page.find(code);
-	if (look != serv.custom_error_page.end()){
-		return look->second;
-	}
-	// if (serv.custom_error_page[code])
-	return error(code, message);
+string create_custom_error(const ErrorPage& page){
+	Headers header;
+	header[HEADER_CONTENT_TYPE] = get_content_type(page.filepath);
+	return get_response(page.code, header, page.body);
 }
 
-map<u_int32_t, string>& get_codes_map(){
-	return error_codes_map;
+string error_serv(const Server& serv, u_int32_t code, const string& message){
+	map<u_int32_t, ErrorPage>::const_iterator look = serv.custom_error_page.find(code);
+	if (look != serv.custom_error_page.end()){
+		cout << RED << "Found custom Error" << endl;
+		cout << YELLOW << look->second.response << RESET << endl;
+		return look->second.response;
+	}
+	return error(code, message);
 }
 
 bool is_valid_error_code(u_int32_t code){

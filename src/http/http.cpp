@@ -178,7 +178,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		loc = find_location(serv, req_path_param);
 	}
 	catch(const exception& e) {
-		return error(404, "This Page has not been Found");
+		return error_serv(serv, 404, "This Page has not been Found");
 	}
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
@@ -196,9 +196,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 		struct stat path_info;
 		if (stat(file_path.c_str(), &path_info) == -1) {
-			if 		(errno == EACCES)	{ return error(403, "stat fail"); }
-			else if (errno == ENOENT)	{ return error(404, "stat fail"); }
-			else 						{ return error(500, "stat fail"); }
+			if 		(errno == EACCES)	{ return error_serv(serv, 403, "stat fail"); }
+			else if (errno == ENOENT)	{ return error_serv(serv, 404, "stat fail"); }
+			else 						{ return error_serv(serv, 500, "stat fail"); }
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
@@ -206,7 +206,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 			if (!loc.autoindex){
-				return error(404, "autoindex not activated");
+				return error_serv(serv, 404, "autoindex not activated");
 			}
 			return get_autoindex(req_path, file_path);
 		}
@@ -217,7 +217,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 			req_path = req_path.substr(0, req_path.find_first_of("?"));
 		}
 		if (req_path != loc.path){
-			return error(404, "This Page has not been Found");
+			return error_serv(serv, 404, "This Page has not been Found");
 		}
 		return get_file_res(loc.index, loc.download);
 	}
@@ -225,5 +225,5 @@ const string http(const string& req, Listener& listener, const Config& config){
 		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	
-	return error(404, "This Page has not been Found");
+	return error_serv(serv, 404, "This Page has not been Found");
 }
