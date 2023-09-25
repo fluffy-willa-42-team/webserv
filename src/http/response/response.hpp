@@ -19,8 +19,9 @@ extern string raw_autoindex_fragment_folder;
 extern string raw_autoindex;
 extern string raw_error_file;
 
-extern map<u_int32_t, string> error_codes_map;
+extern map<u_int32_t, string> codes_map;
 extern map<u_int32_t, string> redirect_codes_map;
+extern map<u_int32_t, string> error_codes_map;
 
 /******************************************************************************/
 
