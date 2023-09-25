@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-string get_response(u_int32_t code, map<string, string> headers, string body = "");
+string get_response(u_int32_t code, Headers headers, string body = "");
 
 string get_file_res(const string& file_path, bool download = false);
 string get_autoindex(const string& req_path, const string& file_path);

@@ -48,7 +48,7 @@ string error(u_int32_t code, const string& message){
 	else {
 		replace_string(error_file, "{{error_message}}", "");
 	}
-	map<string, string> header;
+	Headers header;
 	header["Content-Type"] = "text/html";
 	return get_response(code, header, error_file);
 }

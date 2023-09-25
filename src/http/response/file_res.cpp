@@ -46,7 +46,7 @@ void init_content_type(){
 
 
 string get_content_type(const string& filename){
-	for (map<string, string>::const_iterator ite = content_type.begin(); ite != content_type.end(); ite++){
+	for (Headers::const_iterator ite = content_type.begin(); ite != content_type.end(); ite++){
 		if (endsWith(filename, ite->first)){
 			return ite->second;
 		}
@@ -68,7 +68,7 @@ string get_file_res(const string& file_path, bool download){
 		std::istreambuf_iterator<char>()
 	);
 	input_file.close();
-	map<string, string> header;
+	Headers header;
 
 	if (download){
 		cout << file_path << endl;
