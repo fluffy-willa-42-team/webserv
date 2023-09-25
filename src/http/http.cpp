@@ -9,6 +9,7 @@
 #include <fcntl.h>
 
 string clean_path(string req_path_param);
+string clean_path_file(string req_path_param);
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -182,7 +183,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
-	if (loc.type & E_NORMAL){
+	if (loc.has_root){
 		string req_path = clean_path(req_path_param);
 		string file_path = loc.root + req_path.substr(loc.path.size());
 		
@@ -210,10 +211,19 @@ const string http(const string& req, Listener& listener, const Config& config){
 			return get_autoindex(req_path, file_path);
 		}
 	}
-	else if (loc.type & E_REDIRECT){
+	else if (loc.has_index){
+		string req_path = string(req_path_param);
+		if (req_path.find_first_of("?") != string::npos){
+			req_path = req_path.substr(0, req_path.find_first_of("?"));
+		}
+		if (req_path != loc.path){
+			return error(404, "This Page has not been Found");
+		}
+		return get_file_res(loc.index, loc.download);
+	}
+	else if (loc.has_redirect){
 		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	
-	// return test();
 	return error(404, "This Page has not been Found");
 }

@@ -10,16 +10,6 @@ static e_status err(const string& line, const u_int32_t& index, const string& me
 	return S_ERROR;
 }
 
-static bool is_type_valid(e_location_type& type, e_location_type newType){
-	if (type == E_NOT_SET){
-		type = newType;
-	}
-	else if (type != newType){
-		return false;
-	}
-	return true;
-}
-
 e_status Config::parse_conf_file(ifstream& config_file){
 	string line;
 	vector<string> line_split;
@@ -77,8 +67,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				newServer.has_max_body_size_been_set = true;
 			}
 			else if (is_location_line(line_split)){
-				Location newLocation;
-				newLocation.path = line_split[1];
+				Location loc;
+				
+				loc.path = line_split[1];
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 					if (status & S_PASS) continue;
 					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == PARSING_GROUP_OPENING){
@@ -86,71 +77,79 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					}
 
 					if (is_location_index(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
+						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						newLocation.index = line_split[1];
+						loc.has_index = true;
+						loc.index = line_split[1];
 					}
 					else if (is_location_root(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
+						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						newLocation.root = line_split[1];
-						if (!newLocation.root.empty() && newLocation.root[newLocation.root.size() - 1] == '/'){
-							newLocation.root = newLocation.root.substr(0, newLocation.root.size() - 1);
-						}
-					}
-					else if (is_location_allow_methods(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
-							return err(line, index, "Incompatible location arguments");
-						}
-						for (u_int32_t i = 1; i < line_split.size(); i++){
-							newLocation.allowed_methods.push_back(line_split[i]);
+						loc.has_root = true;
+						loc.root = line_split[1];
+						if (!loc.root.empty() && loc.root[loc.root.size() - 1] == '/'){
+							loc.root = loc.root.substr(0, loc.root.size() - 1);
 						}
 					}
 					else if (is_location_redirect(line_split)){
-						if (!is_type_valid(newLocation.type, E_REDIRECT)){
+						if (loc.has_index || loc.has_root){
 							return err(line, index, "Incompatible location arguments");
 						}
-						if (!newLocation.redirect_path.empty() || newLocation.redirect_code != 0){
-							return (err(line, index, "Duplicate Parameter"));
+						loc.has_redirect = true;
+						loc.redirect_path = line_split[2];
+						loc.redirect_code = stringToNumber(line_split[1]);
+					}
+					else if (is_location_allow_methods(line_split)){
+						if (loc.has_redirect){
+							return err(line, index, "Incompatible location arguments");
 						}
-						newLocation.redirect_path = line_split[2];
-						newLocation.redirect_code = stringToNumber(line_split[1]);
+						for (u_int32_t i = 1; i < line_split.size(); i++){
+							loc.allowed_methods.push_back(line_split[i]);
+						}
 					}
 					else if (is_location_cgi_pass(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
+						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						newLocation.cgi_pass = line_split[1];
+						loc.has_root_param = true;
+						loc.cgi_pass = line_split[1];
 					}
 					else if (is_location_download_file(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
+						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						if (line_split[1] == "ON"){
-							newLocation.download = true;
+							loc.download = true;
 						}
 						else if (line_split[1] == "OFF"){
-							newLocation.download = false;
+							loc.download = false;
 						}
 					}
 					else if (is_location_autoindex(line_split)){
-						if (!is_type_valid(newLocation.type, E_NORMAL)){
+						if (loc.has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
+						loc.has_root_param = true;
 						if (line_split[1] == "ON"){
-							newLocation.autoindex = true;
+							loc.autoindex = true;
 						}
 						else if (line_split[1] == "OFF"){
-							newLocation.autoindex = false;
+							loc.autoindex = false;
 						}
 					}
 					else {
 						return err(line, index);
 					}
 				}
-				newServer.locations.push_back(newLocation);
+				if (!loc.has_root && loc.has_root_param){
+					return err(line, index, "Root Param given whith no root parameter");
+				}
+				if (!loc.has_root && !loc.has_index && !loc.has_redirect){
+					return err(line, index, "Missing parameter: Location has no purpuse");
+				}
+				newServer.locations.push_back(loc);
 			}
 			else {
 				return err(line, index);

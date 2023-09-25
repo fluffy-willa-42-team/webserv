@@ -15,25 +15,25 @@ e_status Config::test_if_file_or_folder_exist(){
 		}
 		
 		for (vector<Location>::const_iterator loc = serv->locations.begin(); loc != serv->locations.end(); loc++){
-			if (loc->type == E_REDIRECT){
+			if (loc->has_redirect){
 				continue;
 			}
 
-			if (loc->root.empty()){
-				return err("Root option is mandatory");
+			if (loc->root.empty() && loc->index.empty()){
+				return err("You must have a Root option or a Index option per location");
 			}
-			if (!doesFolderExists(loc->root)){
+			if (!loc->root.empty() && !doesFolderExists(loc->root)){
 				return err("Root folder inaccessible: \"" + loc->root + "\"");
 			}
 			
-			if (loc->cgi_pass.size() > 0){
+			if (!loc->cgi_pass.empty()){
 				string cgi_pass = mergeFilePaths(loc->root, loc->cgi_pass);
 				if (!isFileExecutable(cgi_pass)){
 					return err("Invalid cgi executable: \"" + cgi_pass + "\"");
 				}
 			}
 
-			if (loc->index.size() > 0){
+			if (!loc->index.empty()){
 				string index = mergeFilePaths(loc->root, loc->index);
 				if (!isFileReadable(index)){
 					return err("Invalid index file: \"" + index + "\"");
