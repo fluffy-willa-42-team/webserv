@@ -196,6 +196,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 		struct stat path_info;
 		if (stat(file_path.c_str(), &path_info) == -1) {
+			// TODO Check if we can check errno here
 			if 		(errno == EACCES)	{ return error_serv(serv, 403, "stat fail"); }
 			else if (errno == ENOENT)	{ return error_serv(serv, 404, "stat fail"); }
 			else 						{ return error_serv(serv, 500, "stat fail"); }
