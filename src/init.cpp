@@ -1,7 +1,5 @@
 #include "webserv.hpp"
 
-void init_error_map();
-void init_redirect_map();
 void init_allowed_method_vector();
 void init_content_type();
 bool init_static_file();

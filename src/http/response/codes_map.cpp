@@ -4,7 +4,7 @@ map<u_int32_t, string> codes_map;
 
 void filter_codes_map(map<u_int32_t, string>& dest, u_int32_t hundredsDigit){
     for (map<u_int32_t, string>::const_iterator ite = codes_map.begin(); ite != codes_map.end(); ite++) {
-        if ((ite->first % 100) == hundredsDigit) {
+       if ((ite->first >= hundredsDigit * 100) && (ite->first < (hundredsDigit + 1) * 100)) {
             dest[ite->first] = ite->second;
         }
     }
@@ -61,7 +61,7 @@ void init_codes_map(){
     codes_map[504] = "Gateway Timeout";					// The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server or some other auxiliary server it needed to access in order to complete the request.
     codes_map[505] = "HTTP Version Not Supported";		// The server does not support the HTTP protocol version used in the request.
 
-	filter_codes_map(redirect_codes_map, 300);
-	filter_codes_map(error_codes_map, 400);
-	filter_codes_map(error_codes_map, 500);
+	filter_codes_map(redirect_codes_map, 3);
+	filter_codes_map(error_codes_map, 4);
+	filter_codes_map(error_codes_map, 5);
 }
