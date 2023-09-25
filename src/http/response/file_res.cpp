@@ -1,28 +1,5 @@
 #include "response.hpp"
 
-/*
-text/html			: ".html"
-text/css			: ".css"
-text/javascript		: ".js"
-application/json	: ".json"
-application/xml		: ".xml"
-text/xml			: ".xml"
-application/pdf		: ".pdf"
-image/jpeg			: ".jpg" ".jpeg"
-image/png			: ".png"
-image/gif			: ".gif"
-audio/mpeg			: ".mpeg"
-audio/wav			: ".wav"
-audio/ogg			: ".ogg"
-video/mp4			: ".mp4"
-video/webm			: ".webm"
-
-text/plain			: ".*"
-
-application/octet-stream
-multipart/form-data
-*/
-
 static map<string, string> content_type;
 static const string error_file_str = readFileIntoString("./src/html/error.html");
 
