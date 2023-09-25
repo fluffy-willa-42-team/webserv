@@ -7,7 +7,7 @@
 
 /* ************************************************************************** */
 
-string readFileIntoString(const string& path);
+e_status readFileIntoString(string path, string& destination);
 void replace_string(string& input, const string& pattern_in, const string& pattern_out);
 vector<string> split(const string& s, const string& delimiter);
 vector<string> splitFirst(const string& s, const string& delimiter);

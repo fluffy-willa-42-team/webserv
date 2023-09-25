@@ -8,8 +8,8 @@
 #include <dirent.h>
 #include <fcntl.h>
 
-string clean_path(string req_path_param);
-string clean_path_file(string req_path_param);
+string remove_end_backslash(string req_path_param);
+string remove_param(string req_path_param);
 
 const string http(const string& req, Listener& listener, const Config& config){
 	stringstream ss_line_by_line(req);
@@ -179,13 +179,13 @@ const string http(const string& req, Listener& listener, const Config& config){
 		loc = find_location(serv, req_path_param);
 	}
 	catch(const exception& e) {
-		return error(404, "This Page has not been Found");
+		return error_serv(serv, 404, "This Page has not been Found");
 	}
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
-	if (loc.has_root){
-		string req_path = clean_path(req_path_param);
+	if (!loc.root.empty()){
+		string req_path = remove_end_backslash(remove_param(req_path_param));
 		string file_path = loc.root + req_path.substr(loc.path.size());
 		
 		DEBUG_INFO_ << file_path << endl;
@@ -197,9 +197,10 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 		struct stat path_info;
 		if (stat(file_path.c_str(), &path_info) == -1) {
-			if 		(errno == EACCES)	{ return error(403, "stat fail"); }
-			else if (errno == ENOENT)	{ return error(404, "stat fail"); }
-			else 						{ return error(500, "stat fail"); }
+			// TODO Check if we can check errno here
+			if 		(errno == EACCES)	{ return error_serv(serv, 403, "stat fail"); }
+			else if (errno == ENOENT)	{ return error_serv(serv, 404, "stat fail"); }
+			else 						{ return error_serv(serv, 500, "stat fail"); }
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
@@ -207,24 +208,21 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 			if (!loc.autoindex){
-				return error(404, "autoindex not activated");
+				return error_serv(serv, 404, "autoindex not activated");
 			}
 			return get_autoindex(req_path, file_path);
 		}
 	}
-	else if (loc.has_index){
-		string req_path = string(req_path_param);
-		if (req_path.find_first_of("?") != string::npos){
-			req_path = req_path.substr(0, req_path.find_first_of("?"));
-		}
+	else if (!loc.index.empty()){
+		string req_path = remove_param(req_path_param);
 		if (req_path != loc.path){
-			return error(404, "This Page has not been Found");
+			return error_serv(serv, 404, "This Page has not been Found");
 		}
 		return get_file_res(loc.index, loc.download);
 	}
-	else if (loc.has_redirect){
+	else if (loc.redirect_code != 0){
 		return redirect(loc.redirect_code, loc.redirect_path);
 	}
 	
-	return error(404, "This Page has not been Found");
+	return error_serv(serv, 404, "This Page has not been Found");
 }

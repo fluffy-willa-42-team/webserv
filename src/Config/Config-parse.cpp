@@ -5,10 +5,24 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+string create_custom_error(const ErrorPage& page);
+
 static e_status err(const string& line, const u_int32_t& index, const string& message = ""){
 	cerr << RED << "[" << index << "] \"" << line << "\"" << RESET << endl;
 	if (!message.empty()){
 		cerr << RED << "=> " << message << RESET << endl;
+	}
+	return S_ERROR;
+}
+
+e_status stringToBool(const string& input, bool& dest){
+	if (input == "ON"){
+		dest = true;
+		return S_CONTINUE;
+	}
+	else if (input == "OFF"){
+		dest = false;
+		return S_CONTINUE;
 	}
 	return S_ERROR;
 }
@@ -25,6 +39,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 		}
 
 		Server newServer;
+		// Parse all line with {} for Server
 		while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 			if (status & S_PASS) continue;
 			if (status & (S_ERROR | S_END)){
@@ -72,7 +87,10 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
-				newServer.custom_error_page[stringToNumber(line_split[1])] = line_split[2];
+				ErrorPage e_page;
+				e_page.filepath = line_split[2];
+				e_page.code = stringToNumber(line_split[1]);
+				newServer.custom_error_page[e_page.code] = e_page;
 			}
 			else if (is_server_option_max_client_body_size(line_split)){
 				if (newServer.has_max_body_size_been_set){
@@ -86,8 +104,13 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			}
 			else if (is_location_line(line_split)){
 				Location loc;
-				
+				bool has_root_param	= false;
+				bool has_redirect	= false;
+				bool has_index		= false;
+				bool has_root		= false;
+
 				loc.path = line_split[1];
+				// Parse all line with {} for Location
 				while (!(parseline(config_file, line, line_split, status, index) & S_STOP)){
 					if (status & S_PASS) continue;
 					if ((status & (S_ERROR | S_END)) || line_split[line_split.size() - 1] == PARSING_GROUP_OPENING){
@@ -95,32 +118,32 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					}
 
 					if (is_location_index(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_index = true;
+						has_index = true;
 						loc.index = line_split[1];
 					}
 					else if (is_location_root(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_root = true;
+						has_root = true;
 						loc.root = line_split[1];
 						if (!loc.root.empty() && loc.root[loc.root.size() - 1] == '/'){
 							loc.root = loc.root.substr(0, loc.root.size() - 1);
 						}
 					}
 					else if (is_location_redirect(line_split)){
-						if (loc.has_index || loc.has_root){
+						if (has_index || has_root){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_redirect = true;
+						has_redirect = true;
 						loc.redirect_path = line_split[2];
 						loc.redirect_code = stringToNumber(line_split[1]);
 					}
 					else if (is_location_allow_methods(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						for (u_int32_t i = 1; i < line_split.size(); i++){
@@ -128,44 +151,59 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						}
 					}
 					else if (is_location_cgi_pass(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_root_param = true;
-						loc.cgi_pass = line_split[1];
+						has_root_param = true;
+						map<string, string>::const_iterator ite = loc.cgi_pass.find(line_split[1]);
+						if (ite != loc.cgi_pass.end()){
+							return err(line, index, "duplicate file extension CGI");
+						}
+						loc.cgi_pass[line_split[1]] = line_split[2];
 					}
 					else if (is_location_download_file(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						if (line_split[1] == "ON"){
-							loc.download = true;
-						}
-						else if (line_split[1] == "OFF"){
-							loc.download = false;
+						if (stringToBool(line_split[1], loc.download) == S_ERROR){
+							return err(line, index);
 						}
 					}
 					else if (is_location_autoindex(line_split)){
-						if (loc.has_redirect){
+						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						loc.has_root_param = true;
-						if (line_split[1] == "ON"){
-							loc.autoindex = true;
-						}
-						else if (line_split[1] == "OFF"){
-							loc.autoindex = false;
+						has_root_param = true;
+						if (stringToBool(line_split[1], loc.autoindex) == S_ERROR){
+							return err(line, index);
 						}
 					}
 					else {
 						return err(line, index);
 					}
 				}
-				if (!loc.has_root && loc.has_root_param){
+
+				// Check all thing that require the Location to have finished parsing
+				if (!has_root && has_root_param){
 					return err(line, index, "Root Param given whith no root parameter");
 				}
-				if (!loc.has_root && !loc.has_index && !loc.has_redirect){
+				if (!has_root && !has_index && !has_redirect){
 					return err(line, index, "Missing parameter: Location has no purpuse");
+				}
+				if (has_root && !doesFolderExists(loc.root)){
+					return err(line, index, "Root folder inaccessible: \"" + loc.root + "\"");
+				}
+				if (has_index){
+					string loc_index = (has_root ? mergeFilePaths(loc.root, loc.index): loc.index);
+					if (!isFileReadable(loc_index)){
+						return err(line, index, "Invalid index file: \"" + loc_index + "\"");
+					}
+				}
+				for (map<string, string>::const_iterator ite = loc.cgi_pass.begin(); ite != loc.cgi_pass.end(); ite++){
+					string cgi_pass_exec = mergeFilePaths(loc.root, ite->second);
+					if (!isFileExecutable(cgi_pass_exec)){
+						return err(line, index, "Invalid cgi executable: \"" + cgi_pass_exec + "\"");
+					}
 				}
 				newServer.locations.push_back(loc);
 			}
@@ -173,6 +211,18 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				return err(line, index);
 			}
 		}
+
+		// Check all thing that require the Server to have finished parsing
+
+		// Charge all custom error page
+		map<u_int32_t, ErrorPage>& e_pages = newServer.custom_error_page;
+		for (map<u_int32_t, ErrorPage>::iterator e_page = e_pages.begin(); e_page != e_pages.end(); e_page++){
+			if (readFileIntoString(e_page->second.filepath, e_page->second.body) == S_ERROR){
+				return err(line, index, "Invalid custom error page: \"" + e_page->second.filepath + "\"");
+			}
+			e_page->second.response = create_custom_error(e_page->second);
+		}
+
 		std::sort(newServer.locations.begin(), newServer.locations.end());
 		servers.push_back(newServer);
 		ports.push_back(newServer.port);

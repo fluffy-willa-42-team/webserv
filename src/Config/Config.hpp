@@ -29,21 +29,31 @@
 
 /******************************************************************************/
 
+class ErrorPage {
+	public:
+		u_int32_t code;
+		string filepath;
+		string body;
+		string response;
+
+		ErrorPage();
+		~ErrorPage();
+		const ErrorPage& operator=(const ErrorPage& other);
+};
+
+/******************************************************************************/
+
 class Location {
 	public:
-		string			path;
-		string			index;
-		string			root;
-		string			cgi_pass;
-		u_int32_t		redirect_code;
-		string			redirect_path;
-		vector<string>	allowed_methods;
-		bool			download;
-		bool			autoindex;
-		bool 			has_redirect;
-		bool 			has_index;
-		bool 			has_root;
-		bool 			has_root_param;
+		string				path;
+		string				index;
+		string				root;
+		map<string, string>	cgi_pass;
+		u_int32_t			redirect_code;
+		string				redirect_path;
+		vector<string>		allowed_methods;
+		bool				download;
+		bool				autoindex;
 
 		Location();
 		~Location();
@@ -61,7 +71,7 @@ class Server {
 		int32_t					max_body_size;
 		bool					has_max_body_size_been_set;
 		vector<Location>		locations;
-		map<u_int32_t, string>	custom_error_page;
+		map<u_int32_t, ErrorPage>	custom_error_page;
 
 		Server();
 		~Server();
@@ -80,7 +90,6 @@ class Config {
 
 	private:
 		e_status parse_conf_file(ifstream& config_file);
-		e_status test_if_file_or_folder_exist();
 };
 
 /******************************************************************************/

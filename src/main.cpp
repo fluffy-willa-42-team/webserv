@@ -3,7 +3,7 @@
 #include <csignal>
 #include "debug.hpp"
 
-void init();
+bool init();
 
 static map<int, Listener> listeners;
 static bool loop = true;
@@ -22,7 +22,10 @@ void shutdown(int signal){
 }
 
 int main(int argc, char* argv[]){
-	init();
+	if (!init()){
+		cerr << RED << "Failed to initialize" << RESET << endl;
+		return 1;
+	}
 
 	// Parse config
 	if (argc > 2){
