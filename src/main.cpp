@@ -16,7 +16,8 @@ void shutdown(int signal){
 	(void) signal;
 	loop = false;
 	for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
-		ite->second.stop();
+		//TODO
+		// ite->second.stop();
 	}
 }
 
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	for (vector<Server>::iterator ite = config.servers.begin(); ite != config.servers.end(); ite++){
+		DEBUG_INFO_ << "Server: " << ite->host << ":" << ite->port << endl;
 		listeners[ite->port] = Listener(ite->host, ite->port);
 	}
 

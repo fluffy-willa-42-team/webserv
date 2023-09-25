@@ -7,28 +7,18 @@
 #include "debug.hpp"
 
 Listener::Listener()
-: port(0), listener_fd(-1), connection_fd(-1), is_running(false)
+: port(0), listener_fd(-1), connection_fd(-1)
 {
-	memset(&address_struct, 0, sizeof(address_struct));
-	memset(buffer, 0, BUFFER_SIZE);
-	address_struct.sin_port = htons(port);
-}
-
-Listener::Listener(u_int16_t port)
-: port(port), listener_fd(-1), connection_fd(-1), is_running(false)
-{
-	memset(&address_struct, 0, sizeof(address_struct));
-	memset(buffer, 0, BUFFER_SIZE);
-	address_struct.sin_port = htons(port);
 }
 
 Listener::Listener(std::string address, u_int16_t port)
-: port(port), listener_fd(-1), connection_fd(-1), is_running(false)
+: port(port), listener_fd(-1), connection_fd(-1)
 {
-	memset(&address_struct, 0, sizeof(address_struct));
-	memset(buffer, 0, BUFFER_SIZE);
-	address_struct.sin_addr.s_addr = inet_addr(address.c_str());
+	// https://web.archive.org/web/20230609152403/https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
+	address_struct.sin_family = AF_INET;
 	address_struct.sin_port = htons(port);
+	inet_aton(address.c_str(), &address_struct.sin_addr);
+
 	DEBUG_ << "address_struct.sin_port: " << address_struct.sin_port << endl;
 	DEBUG_ << "port: " << port << endl;
 	DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
@@ -71,12 +61,8 @@ const Listener& Listener::operator=(const Listener& other)
 	listener_fd = -1;
 	connection_fd = -1;
 
-	is_running = false;
-
-	memset(buffer, 0, sizeof(address_struct));
-	memset(buffer, 0, BUFFER_SIZE);
-
-	address_struct.sin_port = htons(port);
+	address_struct.sin_port = other.address_struct.sin_port;
+	address_struct.sin_addr = other.address_struct.sin_addr;
 
 	return *this;
 }

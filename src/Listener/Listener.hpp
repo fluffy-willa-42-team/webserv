@@ -22,36 +22,22 @@ typedef struct {
 
 class Listener {
 	private:
-
 		u_int16_t port;
 
 		int32_t listener_fd;
 		int32_t connection_fd;
-		pollfd wpoll[1];
 
-		bool is_running;
-
+		pollfd wpoll;
 		sockaddr_in address_struct;
-		char	buffer[BUFFER_SIZE];
-
-
 
 	public:
 		Listener();
-		Listener(u_int16_t port);
 		Listener(std::string address, u_int16_t port);
 		~Listener();
+
 		const Listener& operator=(const Listener& other);
 
-		t_setup setup();
-		e_status try_exec(const Config& config);
-		void exec(const Config& config);
-		void stop();
-		string read_buff();
-
 		const string get_address();
-		bool is_it_running();
-		void print_waiting_msg();
 };
 
 /******************************************************************************/

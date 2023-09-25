@@ -55,6 +55,7 @@ class Location {
 class Server {
 	public:
 		string					host;
+		u_int32_t				host_ip;//TODO
 		u_int32_t				port;
 		int32_t					max_body_size;
 		bool					has_max_body_size_been_set;
