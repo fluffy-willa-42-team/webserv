@@ -44,15 +44,15 @@ class ErrorPage {
 
 class Location {
 	public:
-		string			path;
-		string			index;
-		string			root;
-		string			cgi_pass;
-		u_int32_t		redirect_code;
-		string			redirect_path;
-		vector<string>	allowed_methods;
-		bool			download;
-		bool			autoindex;
+		string				path;
+		string				index;
+		string				root;
+		map<string, string>	cgi_pass;
+		u_int32_t			redirect_code;
+		string				redirect_path;
+		vector<string>		allowed_methods;
+		bool				download;
+		bool				autoindex;
 
 		Location();
 		~Location();

@@ -137,14 +137,18 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return err(line, index, "Incompatible location arguments");
 						}
 						has_root_param = true;
-						loc.cgi_pass = line_split[2];
+						map<string, string>::const_iterator ite = loc.cgi_pass.find(line_split[1]);
+						if (ite != loc.cgi_pass.end()){
+							return err(line, index, "duplicate file extension CGI");
+						}
+						loc.cgi_pass[line_split[1]] = line_split[2];
 					}
 					else if (is_location_download_file(line_split)){
 						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
 						if (stringToBool(line_split[1], loc.download) == S_ERROR){
-							return err(line, index, "wtf?");
+							return err(line, index);
 						}
 					}
 					else if (is_location_autoindex(line_split)){
@@ -153,7 +157,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						}
 						has_root_param = true;
 						if (stringToBool(line_split[1], loc.autoindex) == S_ERROR){
-							return err(line, index, "wtf?");
+							return err(line, index);
 						}
 					}
 					else {
@@ -177,10 +181,10 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						return err(line, index, "Invalid index file: \"" + loc_index + "\"");
 					}
 				}
-				if (!loc.cgi_pass.empty()){
-					string cgi_pass = mergeFilePaths(loc.root, loc.cgi_pass);
-					if (!isFileExecutable(cgi_pass)){
-						return err(line, index, "Invalid cgi executable: \"" + cgi_pass + "\"");
+				for (map<string, string>::const_iterator ite = loc.cgi_pass.begin(); ite != loc.cgi_pass.end(); ite++){
+					string cgi_pass_exec = mergeFilePaths(loc.root, ite->second);
+					if (!isFileExecutable(cgi_pass_exec)){
+						return err(line, index, "Invalid cgi executable: \"" + cgi_pass_exec + "\"");
 					}
 				}
 				newServer.locations.push_back(loc);
