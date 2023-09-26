@@ -12,6 +12,22 @@
 
 #include "debug.hpp"
 
+void print_address(const struct addrinfo *info) {
+    if (info->ai_family == AF_INET) {
+        struct sockaddr_in *addr = (struct sockaddr_in *)info->ai_addr;
+        char ipstr[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
+        std::cout << "IPv4 Address: " << ipstr << std::endl;
+    } else if (info->ai_family == AF_INET6) {
+        struct sockaddr_in6 *addr = (struct sockaddr_in6 *)info->ai_addr;
+        char ipstr[INET6_ADDRSTRLEN];
+        inet_ntop(AF_INET6, &(addr->sin6_addr), ipstr, INET6_ADDRSTRLEN);
+        std::cout << "IPv6 Address: " << ipstr << std::endl;
+    } else {
+        std::cout << "Unknown address family" << std::endl;
+    }
+}
+
 Listener::Listener()
 : listener_fd(-1), connection_fd(-1), host(NULL)
 {
@@ -27,7 +43,11 @@ Listener::Listener(struct addrinfo *host)
 	// DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
 	// DEBUG_ << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr) << endl;
 
-	
+	if (host == NULL){
+		DEBUG_ERROR_ << "Failed to create socket, addrinfo is null?!" << endl;
+		throw std::runtime_error("Failed to create socket");
+	}
+	print_address(host);//TODO remove
 
 	// Create Socket file descriptor for server
 	listener_fd = socket(host->ai_family, host->ai_socktype, host->ai_protocol);
@@ -60,6 +80,8 @@ Listener::Listener(struct addrinfo *host)
 		DEBUG_ERROR_ << "Failed to bind socket" << endl;
 		throw std::runtime_error("Failed to bind socket");
 	}
+
+	getsockname(listener_fd, host->ai_addr, &host->ai_addrlen);
 
 	//TODO WIP @Matthew-Dreemurr https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#listen
 	// start to listens to port for new TCP connection
@@ -99,16 +121,20 @@ Listener::~Listener(){
 		}
 	}
 	DEBUG_ << "connection_fd closed" << endl;
+
+	DEBUG_ << "Try to freeaddrinfo(host)" << endl;
+	if (host){
+		freeaddrinfo(host);
+		host = NULL;
+		DEBUG_INFO_ << "host addrinfo freed" << endl;
+	}
 }
 
 const Listener& Listener::operator=(const Listener& other)
 {
-	port = other.port;
-
 	listener_fd = -1;
 	connection_fd = -1;
 
-	address_struct = other.address_struct;
-
+	host = other.host;
 	return *this;
 }

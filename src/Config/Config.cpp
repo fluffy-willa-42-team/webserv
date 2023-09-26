@@ -41,10 +41,17 @@ custom_error_page()
 
 Server::~Server()
 {
-	if (host_data){
-		freeaddrinfo(host_data);
-		host_data = NULL;
-	}
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// TOFIX we need to rework the Config and Server class to fix this.
+	// TOFIX The rework shold not be a class that pars, only use class to store final data.
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// DEBUG_ << "Server::~Server(): destroy" << endl;
+	// if (host_data){
+		// freeaddrinfo(host_data);
+		// host_data = NULL;
+	// 						// TOFIX The rework shold not be a class that pars, only use class to store final data.						// TOFIX The rework shold not be a class that pars, only use class to store final data.}
 }
 
 Config::Config(const string& filename):

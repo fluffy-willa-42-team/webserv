@@ -88,7 +88,13 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						// Set the family to IPv4
 						hints.ai_family = AF_INET;
 						hints.ai_socktype = SOCK_STREAM;
-
+						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+						// TOFIX gettaddrinfo alloc newServer.host_data, i remove the free in the destructor of Server.
+						// TOFIX we need to rework the Config and Server class to fix this.
+						// TOFIX The rework shold not be a class that pars, only use class to store final data.
+						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
 						const int g_check = getaddrinfo(splited[0].c_str(), splited[1].c_str(), &hints, &newServer.host_data);
 						if (g_check != 0) {
 							DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;

@@ -5,8 +5,8 @@
 #include <arpa/inet.h>
 
 //TODO @Matthew-Dreemurr rework for addrinfo
-const string Listener::get_address(){
-    stringstream ss;
-	ss << inet_ntoa(address_struct.sin_addr) << ":" << port;
-    return ss.str();
-}
+// const string Listener::get_address(){
+//     stringstream ss;
+// 	ss << inet_ntoa(address_struct.sin_addr) << ":" << port;
+//     return ss.str();
+// }

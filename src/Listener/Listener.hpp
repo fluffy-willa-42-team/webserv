@@ -22,9 +22,9 @@ typedef struct {
 
 class Listener {
 	public:
-		struct addrinfo *host;
 		int32_t listener_fd;
 		int32_t connection_fd;
+		struct addrinfo *host;
 
 		pollfd wpoll;
 
