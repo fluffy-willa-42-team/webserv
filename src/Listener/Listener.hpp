@@ -22,16 +22,14 @@ typedef struct {
 
 class Listener {
 	public:
-		u_int16_t port;
-
+		struct addrinfo *host;
 		int32_t listener_fd;
 		int32_t connection_fd;
 
 		pollfd wpoll;
-		sockaddr_in address_struct;
 
 		Listener();
-		Listener(in_addr address, u_int16_t port);
+		Listener(struct addrinfo *host);
 		~Listener();
 
 		const Listener& operator=(const Listener& other);

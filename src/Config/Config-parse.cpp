@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include "file_parsing.hpp"
 #include <algorithm>
+#include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -66,16 +67,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					if (splited.size() != 2){
 						return err(line, index);
 					}
-					// Check if host is not empty
-					if (splited[0].empty()){
-						return err(line, index);
-					}
-					// Check and store host ip
-					// https://www.gta.ufrj.br/ensino/eel878/sockets/inet_ntoaman.html
-					if (!inet_aton(splited[0].c_str(), &newServer.host_ip)) {
-						DEBUG_ERROR_ << "Failed to convert address: " << splited[0] << endl;
-						return err(line, index);
-					}
 					if (!isPositiveInteger(splited[1])){
 						return err(line, index);
 					}
@@ -83,6 +74,26 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					if (!(newServer.port == 80 || newServer.port == 443
 						|| (1024 <= newServer.port && newServer.port <= 65535))){
 						return err(line, index);
+					}
+					// Check if host is not empty
+					if (splited[0].empty()){
+						return err(line, index);
+					}
+					// Check and store host ip
+					// https://beej.us/guide/bgnet/html/#bind
+					{
+						struct addrinfo hints;
+
+						memset(&hints, 0, sizeof(hints));
+						// Set the family to IPv4
+						hints.ai_family = AF_INET;
+						hints.ai_socktype = SOCK_STREAM;
+
+						const int g_check = getaddrinfo(splited[0].c_str(), splited[1].c_str(), &hints, &newServer.host_data);
+						if (g_check != 0) {
+							DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
+							return err(line, index, "Invalid host: \"" + splited[0] + "\"");
+						}
 					}
 				}
 			}

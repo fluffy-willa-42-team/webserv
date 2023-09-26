@@ -2,6 +2,7 @@
 #include "Config.hpp"
 #include <csignal>
 #include "debug.hpp"
+#include <netdb.h>
 
 bool init();
 
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]){
 		DEBUG_ << "Try to start server: " << ite->host << ":" << ite->port << endl;
 		try
 		{
-			listeners[ite->port] = Listener(ite->host_ip, ite->port);
+			listeners[ite->port] = Listener(ite->host_data);
 		}
 		catch(const std::exception& e)
 		{

@@ -1,4 +1,5 @@
 #include "Config.hpp"
+#include <netdb.h>
 
 vector<string>& get_allowed_method();
 
@@ -30,6 +31,7 @@ Location::~Location()
 
 Server::Server():
 host(),
+host_data(NULL),
 port(0),
 max_body_size(DEFAULT_MAX_BODY_SIZE),
 has_max_body_size_been_set(false),
@@ -38,7 +40,12 @@ custom_error_page()
 {}
 
 Server::~Server()
-{}
+{
+	if (host_data){
+		freeaddrinfo(host_data);
+		host_data = NULL;
+	}
+}
 
 Config::Config(const string& filename):
 valid(false)

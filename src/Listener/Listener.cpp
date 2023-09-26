@@ -8,35 +8,30 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <iomanip>
+#include <netdb.h>
 
 #include "debug.hpp"
 
 Listener::Listener()
-: port(0), listener_fd(-1), connection_fd(-1)
+: listener_fd(-1), connection_fd(-1), host(NULL)
 {
 }
 
-Listener::Listener(in_addr address, u_int16_t port)
-: port(port), listener_fd(-1), connection_fd(-1)
+Listener::Listener(struct addrinfo *host)
+: listener_fd(-1), connection_fd(-1), host(host)
 {
-	DEBUG_INFO_ << "Try to create listener on: " << inet_ntoa(address) << ":" << port << endl;
+	// DEBUG_INFO_ << "Try to create listener on: " << inet_ntoa(host->ai_addr) << ":" << port << endl;
 
-	// Setup address_struct
-	// https://web.archive.org/web/20230609152403/https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
-	address_struct.sin_family = AF_INET;
-	address_struct.sin_port = htons(port);
-	// Host ip value is check in the config parser
-	address_struct.sin_addr = address;
+	// DEBUG_ << "address_struct.sin_port: " << address_struct.sin_port << endl;
+	// DEBUG_ << "port: " << port << endl;
+	// DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
+	// DEBUG_ << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr) << endl;
 
-	DEBUG_ << "address_struct.sin_port: " << address_struct.sin_port << endl;
-	DEBUG_ << "port: " << port << endl;
-	DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
-	DEBUG_ << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr) << endl;
+	
 
 	// Create Socket file descriptor for server
-	listener_fd = socket(AF_INET, SOCK_STREAM, 0);
+	listener_fd = socket(host->ai_family, host->ai_socktype, host->ai_protocol);
 	DEBUG_ << "listener_fd: " << listener_fd << endl;
-
 	if (listener_fd < 0){
 		DEBUG_ERROR_ << "Failed to create socket" << endl;
 		throw std::runtime_error("Failed to create socket");
@@ -44,12 +39,16 @@ Listener::Listener(in_addr address, u_int16_t port)
 
 	// retrieve the file descriptor flags
 	int flags = fcntl(listener_fd, F_GETFL, 0);
-    if (flags < 0){
+	if (flags < 0){
+		DEBUG_ERROR_ << "Failed to get socket flags" << endl;
+		throw std::runtime_error("Failed to get socket flags");
 	}
 	
 	// verify the file descriptor has the right O_NONBLOCK flag
 	flags |= O_NONBLOCK;
 	if (fcntl(listener_fd, F_SETFL, flags) < 0){
+		DEBUG_ERROR_ << "Failed to set socket flags" << endl;
+		throw std::runtime_error("Failed to set socket flags");
 	}
 
 	if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(flags)) < 0){
@@ -57,13 +56,13 @@ Listener::Listener(in_addr address, u_int16_t port)
 		throw std::runtime_error("Failed to set socket options");
 	}
 
-	if (bind(listener_fd, (sockaddr*)&address_struct, sizeof(address_struct)) < 0){
+	if (bind(listener_fd, host->ai_addr, host->ai_addrlen) < 0){
 		DEBUG_ERROR_ << "Failed to bind socket" << endl;
 		throw std::runtime_error("Failed to bind socket");
 	}
 
-	// listens to port for new TCP connection
-
+	//TODO WIP @Matthew-Dreemurr https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#listen
+	// start to listens to port for new TCP connection
 	if (listen(listener_fd, 10) < 0){
 		DEBUG_ERROR_ << "Failed to listen socket" << endl;
 		throw std::runtime_error("Failed to listen socket");
