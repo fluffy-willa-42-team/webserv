@@ -27,11 +27,6 @@ Listener::Listener(in_addr address, u_int16_t port)
 	address_struct.sin_port = htons(port);
 	// Host ip value is check in the config parser
 	address_struct.sin_addr = address;
-	// TODO REMOVE check is now done in the config parser
-	// if (!inet_aton(address.c_str(), &address_struct.sin_addr)) {
-	// 	DEBUG_ERROR_ << "Failed to convert address: " << address << endl;
-	// 	throw std::invalid_argument("Failed to convert address: " + address);
-	// }
 
 	DEBUG_ << "address_struct.sin_port: " << address_struct.sin_port << endl;
 	DEBUG_ << "port: " << port << endl;
@@ -79,9 +74,6 @@ Listener::Listener(in_addr address, u_int16_t port)
 	wpoll.fd = listener_fd;
 	wpoll.events = POLLIN;
 	wpoll.revents = 0;
-
-	
-
 }
 
 Listener::~Listener(){

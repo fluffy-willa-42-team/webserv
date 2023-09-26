@@ -21,7 +21,7 @@ typedef struct {
 /******************************************************************************/
 
 class Listener {
-	private:
+	public:
 		u_int16_t port;
 
 		int32_t listener_fd;
@@ -30,7 +30,6 @@ class Listener {
 		pollfd wpoll;
 		sockaddr_in address_struct;
 
-	public:
 		Listener();
 		Listener(in_addr address, u_int16_t port);
 		~Listener();

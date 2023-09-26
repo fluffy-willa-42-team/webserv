@@ -18,18 +18,28 @@ void start(map<int, Listener>& listeners, bool& loop, const Config& config){
 	
 	*/
 	while (loop){
-		// for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end();){
-			// e_status status = ite->second.try_exec(config);
-			// if (status == S_STOP){
-				// ite->second.stop();
-				// std::map<int, Listener>::iterator temp = ite;
-				// ite++;
-				// listeners.erase(temp);
-			// }
-			// else {
-				// ite++;
-			// }
-		// }
-		break; //TODO remove
+		for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end();){
+			// Check new connection
+			const int poll_ret = poll(&ite->second.wpoll, 1, 0);
+			if(poll_ret == 0){
+				++ite;
+				continue ;
+			}
+			if (poll_ret < 0){
+				DEBUG_WARN_ << "Failed to poll, ignoring" << std::endl;
+				++ite;
+				continue ;
+			}
+			if (!(ite->second.wpoll.revents & POLLIN)){
+				DEBUG_WARN_ << "No new connection (revents: " << ite->second.wpoll.revents << "), ignoring" << std::endl;
+				++ite;
+				continue ;
+			}
+
+
+			// Accept new connection
+			ite->second.connection_fd = accept(ite->second.listener_fd, NULL, NULL);
+			//TODO WIP
+		}
 	}
 }

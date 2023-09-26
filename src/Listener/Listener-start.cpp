@@ -9,60 +9,6 @@
 
 #include "debug.hpp"
 
-// t_setup ret(u_int32_t code, const string& message){
-// 	t_setup res;
-// 	res.code = code;
-// 	res.err = errno;
-// 	res.message = message;
-// 	return res;
-// }
-
-
-
-
-
-// t_setup Listener::setup(){
-// 	// Create Socket file descriptor for server
-// 	listener_fd = socket(AF_INET, SOCK_STREAM, 0);
-// 	if (listener_fd < 0){
-// 		return ret(1, "failed to bind socket");
-// 	}
-	
-// 	// retrieve the file descriptor flags
-// 	int flags = fcntl(listener_fd, F_GETFL, 0);
-//     if (flags < 0){
-// 		return ret(2, "failed to retrieve the flags for server file descriptor");
-// 	}
-	
-// 	// verify the file descriptor has the right O_NONBLOCK flag
-// 	flags |= O_NONBLOCK;
-// 	if (fcntl(listener_fd, F_SETFL, flags) < 0){
-// 		return ret(3, "failed to retrieve the flags for server file descriptor");
-// 	}
-	
-// 	if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(int)) < 0){
-// 		return ret(4, "failed to set socket options");
-// 	}
-
-// 	// bind socket to a port
-// 	if (bind(listener_fd, ((sockaddr *)&address_struct), sizeof(sockaddr_in)) < 0){
-// 		return ret(5, "failed to bind socket server to port");
-// 	}
-
-// 	// listens to port for new TCP connection
-// 	if (listen(listener_fd, 256) < 0){
-// 		return ret(6, "failed to listen to socket server");
-// 	}
-	
-// 	// Setup pollfd
-// 	wpoll.fd = listener_fd;
-// 	wpoll.events = POLLIN;
-// 	return ret(0, "success");
-// }
-
-
-
-
 
 // e_status Listener::try_exec(const Config& config){
 // 	if (!is_running){
