@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
 		DEBUG_ << "Try to start server: " << ite->host << ":" << ite->port << endl;
 		try
 		{
-			listeners[ite->port] = Listener(ite->host_data);
+			listeners[ite->port] = Listener(ite->host_ip, ite->host_port);
 		}
 		catch(const std::exception& e)
 		{

@@ -6,6 +6,7 @@ void start(map<int, Listener>& listeners, bool& loop, const Config& config){
 		cout << "No Listener Started" << endl;
 		return ;
 	}
+	DEBUG_ << "Start server" << endl;
 	// Execute try_exec of all server at each execution.
 	/*
 

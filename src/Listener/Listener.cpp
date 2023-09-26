@@ -33,8 +33,8 @@ Listener::Listener()
 {
 }
 
-Listener::Listener(struct addrinfo *host)
-: listener_fd(-1), connection_fd(-1), host(host)
+Listener::Listener(string host_ip, string port)
+: listener_fd(-1), connection_fd(-1) 
 {
 	// DEBUG_INFO_ << "Try to create listener on: " << inet_ntoa(host->ai_addr) << ":" << port << endl;
 
@@ -42,7 +42,26 @@ Listener::Listener(struct addrinfo *host)
 	// DEBUG_ << "port: " << port << endl;
 	// DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
 	// DEBUG_ << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr) << endl;
+	// Check and store host ip
+	// https://beej.us/guide/bgnet/html/#bind
+	struct addrinfo hints;
 
+	memset(&hints, 0, sizeof(hints));
+	// Set the family to IPv4
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// TOFIX gettaddrinfo alloc newServer.host_data, i remove the free in the destructor of Server.
+	// TOFIX we need to rework the Config and Server class to fix this.
+	// TOFIX The rework shold not be a class that pars, only use class to store final data.
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
+	const int g_check = getaddrinfo(host_ip.c_str(), port.c_str(), &hints, &host);
+	if (g_check != 0) {
+		DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
+		throw std::runtime_error("Invalid host: \"" + host_ip + "\"");
+	}
 	if (host == NULL){
 		DEBUG_ERROR_ << "Failed to create socket, addrinfo is null?!" << endl;
 		throw std::runtime_error("Failed to create socket");
@@ -127,6 +146,8 @@ Listener::~Listener(){
 		freeaddrinfo(host);
 		host = NULL;
 		DEBUG_INFO_ << "host addrinfo freed" << endl;
+	} else {
+		DEBUG_WARN_ << "host addrinfo is NULL" << endl;
 	}
 }
 

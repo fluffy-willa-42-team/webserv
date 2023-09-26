@@ -79,6 +79,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					if (splited[0].empty()){
 						return err(line, index);
 					}
+					newServer.host_ip = splited[0];
+					newServer.host_port = splited[1];
+					/**
 					// Check and store host ip
 					// https://beej.us/guide/bgnet/html/#bind
 					{
@@ -101,6 +104,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 							return err(line, index, "Invalid host: \"" + splited[0] + "\"");
 						}
 					}
+					**/
 				}
 			}
 			else if (is_server_option_error_page(line_split)){

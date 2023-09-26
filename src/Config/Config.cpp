@@ -31,7 +31,7 @@ Location::~Location()
 
 Server::Server():
 host(),
-host_data(NULL),
+// host_data(NULL),
 port(0),
 max_body_size(DEFAULT_MAX_BODY_SIZE),
 has_max_body_size_been_set(false),

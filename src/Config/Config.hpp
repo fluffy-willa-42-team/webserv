@@ -66,7 +66,9 @@ class Location {
 class Server {
 	public:
 		string					host;
-		struct addrinfo			*host_data;
+		string					host_ip;
+		string					host_port;
+		// struct addrinfo			*host_data;
 		u_int32_t				port;
 		int32_t					max_body_size;
 		bool					has_max_body_size_been_set;

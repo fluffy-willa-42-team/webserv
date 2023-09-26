@@ -29,7 +29,7 @@ class Listener {
 		pollfd wpoll;
 
 		Listener();
-		Listener(struct addrinfo *host);
+		Listener(string host_ip, string port);
 		~Listener();
 
 		const Listener& operator=(const Listener& other);
