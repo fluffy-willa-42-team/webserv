@@ -185,7 +185,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	if (!loc.root.empty()){
 		string req_path = remove_end_backslash(remove_param(req_path_param));
-		string file_path = loc.root + req_path.substr(loc.path.size());
+		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		
 		DEBUG_INFO_ << file_path << endl;
 		if (!loc.index.empty() && loc.path == req_path){
