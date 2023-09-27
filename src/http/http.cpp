@@ -250,6 +250,12 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
+			if (!loc.cgi_pass.empty()){
+				string cgi_bin;
+				if (is_file_cgi(loc, req_path, cgi_bin)){
+					cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+				}
+			}
 			return get_file_res(file_path, loc.download);
 		}
 		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
@@ -266,6 +272,12 @@ const string http(const string& req, Listener& listener, const Config& config){
 		string req_path = remove_param(req_path_param);
 		if (req_path != loc.path){
 			return error_serv(serv, 404, "This Page has not been Found");
+		}
+		if (!loc.cgi_pass.empty()){
+			string cgi_bin;
+			if (is_file_cgi(loc, req_path, cgi_bin)){
+				cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+			}
 		}
 		return get_file_res(loc.index, loc.download);
 	}

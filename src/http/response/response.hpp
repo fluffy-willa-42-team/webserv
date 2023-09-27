@@ -32,6 +32,8 @@ string get_autoindex(const string& req_path, const string& file_path);
 string redirect(u_int32_t code, const string& path);
 string error(u_int32_t code, const string& message);
 
+bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin);
+
 /******************************************************************************/
 
 #endif /* RESPONSE_HPP */
