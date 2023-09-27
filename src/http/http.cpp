@@ -233,57 +233,86 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	*/
 
-	if (!loc.root.empty()){
-		string req_path = remove_end_backslash(remove_param(req_path_param));
-		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
-		
-		DEBUG_INFO_ << file_path << endl;
-		if (!loc.index.empty() && loc.path == req_path){
-			file_path = mergeFilePaths(loc.root, loc.index);
+	string req_path = remove_end_backslash(remove_param(req_path_param));
+	string file_path = loc.root + "/" + req_path.substr(loc.path.size());
+	if (req_method == "GET"){
+		if (!loc.root.empty()){
+			
+			DEBUG_INFO_ << file_path << endl;
+			if (!loc.index.empty() && loc.path == req_path){
+				file_path = mergeFilePaths(loc.root, loc.index);
+			}
+
+			DEBUG_INFO_ << file_path << endl;
+
+			struct stat path_info;
+			if (stat(file_path.c_str(), &path_info) == -1) {
+				return error_serv(serv, 404, "stat fail");
+			}
+
+			if (S_ISREG(path_info.st_mode)){ // Check if is file
+				if (!loc.cgi_pass.empty()){
+					string cgi_bin;
+					if (is_file_cgi(loc, req_path, cgi_bin)){
+						cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+					}
+				}
+				return get_file_res(file_path, loc.download);
+			}
+			else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
+				if (!loc.autoindex){
+					return error_serv(serv, 404, "autoindex not activated");
+				}
+				return get_autoindex(req_path, file_path);
+			}
+			else {
+				return error_serv(serv, 403, "Only files and folder are allowed to be read");
+			}
 		}
-
-		DEBUG_INFO_ << file_path << endl;
-
-		struct stat path_info;
-		if (stat(file_path.c_str(), &path_info) == -1) {
-			return error_serv(serv, 404, "stat fail");
-		}
-
-		if (S_ISREG(path_info.st_mode)){ // Check if is file
+		else if (!loc.index.empty()){
+			string req_path = remove_param(req_path_param);
+			if (req_path != loc.path){
+				return error_serv(serv, 404, "This Page has not been Found");
+			}
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(loc, req_path, cgi_bin)){
 					cout << "CGI: " << cgi_bin << " | " << req_path << endl;
 				}
 			}
-			return get_file_res(file_path, loc.download);
+			return get_file_res(loc.index, loc.download);
 		}
-		else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
-			if (!loc.autoindex){
-				return error_serv(serv, 404, "autoindex not activated");
-			}
-			return get_autoindex(req_path, file_path);
-		}
-		else {
-			return error_serv(serv, 403, "Only files and folder are allowed to be read");
+		else if (loc.redirect_code != 0){
+			return redirect(loc.redirect_code, loc.redirect_path);
 		}
 	}
-	else if (!loc.index.empty()){
-		string req_path = remove_param(req_path_param);
-		if (req_path != loc.path){
-			return error_serv(serv, 404, "This Page has not been Found");
-		}
+	else if (req_method == "POST"){
 		if (!loc.cgi_pass.empty()){
-			string cgi_bin;
-			if (is_file_cgi(loc, req_path, cgi_bin)){
-				cout << "CGI: " << cgi_bin << " | " << req_path << endl;
-			}
+			return error(405);
 		}
-		return get_file_res(loc.index, loc.download);
+		string cgi_bin;
+		if (is_file_cgi(loc, req_path, cgi_bin)){
+			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		}
 	}
-	else if (loc.redirect_code != 0){
-		return redirect(loc.redirect_code, loc.redirect_path);
+	else if (req_method == "PUT"){
+		if (!loc.cgi_pass.empty()){
+			return error(405);
+		}
+		string cgi_bin;
+		if (is_file_cgi(loc, req_path, cgi_bin)){
+			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		}
 	}
-	
+	else if (req_method == "DELETE"){
+		if (!loc.cgi_pass.empty()){
+			return error(405);
+		}
+		string cgi_bin;
+		if (is_file_cgi(loc, req_path, cgi_bin)){
+			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		}
+	}
+
 	return error_serv(serv, 404, "This Page has not been Found");
 }
