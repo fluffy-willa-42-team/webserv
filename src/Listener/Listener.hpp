@@ -26,6 +26,8 @@ class Listener {
 		int32_t connection_fd;
 		struct addrinfo *host;
 
+		char buffer[BUFFER_SIZE];
+
 		pollfd wpoll;
 
 		Listener();
@@ -35,6 +37,7 @@ class Listener {
 		const Listener& operator=(const Listener& other);
 
 		const string get_address();
+		string read_buff();
 };
 
 /******************************************************************************/

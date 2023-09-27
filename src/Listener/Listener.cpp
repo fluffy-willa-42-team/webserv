@@ -12,20 +12,22 @@
 
 #include "debug.hpp"
 
+
 void print_address(const struct addrinfo *info) {
-    if (info->ai_family == AF_INET) {
-        struct sockaddr_in *addr = (struct sockaddr_in *)info->ai_addr;
-        char ipstr[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
-        std::cout << "IPv4 Address: " << ipstr << std::endl;
-    } else if (info->ai_family == AF_INET6) {
-        struct sockaddr_in6 *addr = (struct sockaddr_in6 *)info->ai_addr;
-        char ipstr[INET6_ADDRSTRLEN];
-        inet_ntop(AF_INET6, &(addr->sin6_addr), ipstr, INET6_ADDRSTRLEN);
-        std::cout << "IPv6 Address: " << ipstr << std::endl;
-    } else {
-        std::cout << "Unknown address family" << std::endl;
-    }
+	if (info->ai_family == AF_INET) {
+		struct sockaddr_in *addr = (struct sockaddr_in *)info->ai_addr;
+		char ipstr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
+
+		std::cout << "IPv4 Address: " << ipstr << std::endl;
+	} else if (info->ai_family == AF_INET6) {
+		struct sockaddr_in6 *addr = (struct sockaddr_in6 *)info->ai_addr;
+		char ipstr[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET6, &(addr->sin6_addr), ipstr, INET6_ADDRSTRLEN);
+		std::cout << "IPv6 Address: " << ipstr << std::endl;
+	} else {
+		std::cout << "Unknown address family" << std::endl;
+	}
 }
 
 Listener::Listener()
@@ -36,77 +38,78 @@ Listener::Listener()
 Listener::Listener(string host_ip, string port)
 : listener_fd(-1), connection_fd(-1) 
 {
-	// DEBUG_INFO_ << "Try to create listener on: " << inet_ntoa(host->ai_addr) << ":" << port << endl;
+	// Need to catch exception to close socket and free c allocation by forcing destructor call
+	try {
+		struct addrinfo hints;
 
-	// DEBUG_ << "address_struct.sin_port: " << address_struct.sin_port << endl;
-	// DEBUG_ << "port: " << port << endl;
-	// DEBUG_ << "address_struct.sin_addr.s_addr: " << address_struct.sin_addr.s_addr << endl;
-	// DEBUG_ << "address_struct.sin_addr: " << inet_ntoa(address_struct.sin_addr) << endl;
-	// Check and store host ip
-	// https://beej.us/guide/bgnet/html/#bind
-	struct addrinfo hints;
+		memset(&hints, 0, sizeof(hints));
+		// Set the family to IPv4
+		hints.ai_family = AF_INET;
+		hints.ai_socktype = SOCK_STREAM;
 
-	memset(&hints, 0, sizeof(hints));
-	// Set the family to IPv4
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
-	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-	// TOFIX gettaddrinfo alloc newServer.host_data, i remove the free in the destructor of Server.
-	// TOFIX we need to rework the Config and Server class to fix this.
-	// TOFIX The rework shold not be a class that pars, only use class to store final data.
-	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-	// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-	const int g_check = getaddrinfo(host_ip.c_str(), port.c_str(), &hints, &host);
-	if (g_check != 0) {
-		DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
-		throw std::runtime_error("Invalid host: \"" + host_ip + "\"");
-	}
-	if (host == NULL){
-		DEBUG_ERROR_ << "Failed to create socket, addrinfo is null?!" << endl;
-		throw std::runtime_error("Failed to create socket");
-	}
-	print_address(host);//TODO remove
+		const int g_check = getaddrinfo(host_ip.c_str(), port.c_str(), &hints, &host);
+		if (g_check != 0) {
+			DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
+			throw std::runtime_error("Invalid host: \"" + host_ip + "\"");
+		}
+		if (host == NULL){
+			DEBUG_ERROR_ << "Failed to create socket, addrinfo is null?!" << endl;
+			throw std::runtime_error("Failed to create socket");
+		}
 
-	// Create Socket file descriptor for server
-	listener_fd = socket(host->ai_family, host->ai_socktype, host->ai_protocol);
-	DEBUG_ << "listener_fd: " << listener_fd << endl;
-	if (listener_fd < 0){
-		DEBUG_ERROR_ << "Failed to create socket" << endl;
-		throw std::runtime_error("Failed to create socket");
-	}
+		if (host->ai_family == AF_INET) {
+			struct sockaddr_in *addr = (struct sockaddr_in *)host->ai_addr;
+			char ipstr[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
+		} else {
+			DEBUG_ERROR_ << "Non ipv4 address family" << endl;
+			throw std::runtime_error("Non ipv4 address family");
+		}
 
-	// retrieve the file descriptor flags
-	int flags = fcntl(listener_fd, F_GETFL, 0);
-	if (flags < 0){
-		DEBUG_ERROR_ << "Failed to get socket flags" << endl;
-		throw std::runtime_error("Failed to get socket flags");
-	}
-	
-	// verify the file descriptor has the right O_NONBLOCK flag
-	flags |= O_NONBLOCK;
-	if (fcntl(listener_fd, F_SETFL, flags) < 0){
-		DEBUG_ERROR_ << "Failed to set socket flags" << endl;
-		throw std::runtime_error("Failed to set socket flags");
-	}
+		// Create Socket file descriptor for server
+		listener_fd = socket(host->ai_family, host->ai_socktype, host->ai_protocol);
+		DEBUG_ << "listener_fd: " << listener_fd << endl;
+		if (listener_fd < 0){
+			DEBUG_ERROR_ << "Failed to create socket: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to create socket");
+		}
 
-	if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(flags)) < 0){
-		DEBUG_ERROR_ << "Failed to set socket options" << endl;
-		throw std::runtime_error("Failed to set socket options");
-	}
+		// retrieve the file descriptor flags
+		int flags = fcntl(listener_fd, F_GETFL, 0);
+		if (flags < 0){
+			DEBUG_ERROR_ << "Failed to get socket flags: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to get socket flags");
+		}
+		
+		// verify the file descriptor has the right O_NONBLOCK flag
+		flags |= O_NONBLOCK;
+		if (fcntl(listener_fd, F_SETFL, flags) < 0){
+			DEBUG_ERROR_ << "Failed to set socket flags: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to set socket flags");
+		}
 
-	if (bind(listener_fd, host->ai_addr, host->ai_addrlen) < 0){
-		DEBUG_ERROR_ << "Failed to bind socket" << endl;
-		throw std::runtime_error("Failed to bind socket");
-	}
+		if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(flags)) < 0){
+			DEBUG_ERROR_ << "Failed to set socket options: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to set socket options");
+		}
 
-	getsockname(listener_fd, host->ai_addr, &host->ai_addrlen);
+		if (bind(listener_fd, host->ai_addr, host->ai_addrlen) < 0){
+			DEBUG_ERROR_ << "Failed to bind socket: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to bind socket");
+		}
 
-	//TODO WIP @Matthew-Dreemurr https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#listen
-	// start to listens to port for new TCP connection
-	if (listen(listener_fd, 10) < 0){
-		DEBUG_ERROR_ << "Failed to listen socket" << endl;
-		throw std::runtime_error("Failed to listen socket");
+		// getsockname(listener_fd, host->ai_addr, &host->ai_addrlen);
+
+		//TODO WIP @Matthew-Dreemurr https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#listen
+		// start to listens to port for new TCP connection
+		if (listen(listener_fd, 10) < 0){
+			DEBUG_ERROR_ << "Failed to listen socket: errno: " << strerror(errno) << endl;
+			throw std::runtime_error("Failed to listen socket");
+		}
+
+	} catch (const std::exception& e) {
+		Listener::~Listener();
+		throw e;
 	}
 
 	// Setup pollfd to listen to new connection with poll()
@@ -149,6 +152,16 @@ Listener::~Listener(){
 	} else {
 		DEBUG_WARN_ << "host addrinfo is NULL" << endl;
 	}
+}
+
+string Listener::read_buff(){
+	memset(buffer, 0, BUFFER_SIZE);
+	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
+	if (length_read == -1){
+		DEBUG_WARN_ << "Failed to read from socket";
+		throw exception();
+	}
+	return string(buffer, length_read);
 }
 
 const Listener& Listener::operator=(const Listener& other)

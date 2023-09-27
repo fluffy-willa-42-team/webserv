@@ -16,11 +16,6 @@ void shutdown(int signal){
 	DEBUG_ << "SIGINT caught" << endl;
 	(void) signal;
 	loop = false;
-	// for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
-		//TODO
-		// ite->second.stop();
-		// delete ite->second;
-	// }
 }
 
 int main(int argc, char* argv[]){
@@ -58,6 +53,8 @@ int main(int argc, char* argv[]){
 	}
 
 	std::signal(SIGINT, &shutdown);
-	// setup(listeners);
 	start(listeners, loop, config);
+	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
+		delete ite->second;
+	}
 }

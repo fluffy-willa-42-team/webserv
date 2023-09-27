@@ -46,7 +46,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 			if (status & (S_ERROR | S_END)){
 				return err(line, index);
 			}
-
 			if (is_server_option_server_name(line_split)){
 				if (newServer.host.size() > 0){
 					return err(line, index, "Duplicate Parameter");
@@ -73,6 +72,9 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					newServer.port = stringToNumber(splited[1]);
 					if (!isPositiveInteger(splited[1])){
 						return err(line, index, "Invalid port");
+					}
+					if (newServer.port <= 0 || newServer.port > 65535){
+						return err(line, index, "Port out of range, must be between 1 and 65535");
 					}
 					newServer.host_ip = splited[0];
 					newServer.host_port = splited[1];
