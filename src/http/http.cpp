@@ -158,11 +158,11 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 
 
-	/*===-----						XXXX							  -----===*/
+	/*===-----			Find Server and Location to execute			  -----===*\
 
-	/*
 	now that the request is parsed we now have to parse to config of all server
 	to find the one that is valid and that worked an execute that.
+
 	*/
 
 	Server serv;
@@ -183,6 +183,56 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
+
+
+
+
+
+	/*===-----			Find Server and Location to execute			  -----===*\
+	
+	Now that we have the right Location and Server to execute, we will find the
+	right method and the right response to generate.
+
+	Pseudo code:
+
+	switch (req_method){
+		case "GET": {
+			switch (loc_type) {
+				case IS_FOLDER: {
+					if (file_is_cgi){
+						return CGI_response();
+					}
+					else if (get_file()){
+						return file_reponse();
+					}
+					else if (loc.autoindex){
+						return autoindex_response();
+					}
+				}
+				case IS_FILE: {
+					if (file_is_cgi){
+						return CGI_response();
+					}
+					return file_reponse();
+				}
+				case IS_REDIRECT: {
+					return redirect_response();
+				}
+			}
+		}
+		case "POST": {
+			return CGI_response();
+		}
+		case "PUT": {
+			return CGI_response();
+		}
+		case "DELETE": {
+			return CGI_response();
+		}
+	}
+
+	*/
+
 	if (!loc.root.empty()){
 		string req_path = remove_end_backslash(remove_param(req_path_param));
 		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
@@ -196,10 +246,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 		struct stat path_info;
 		if (stat(file_path.c_str(), &path_info) == -1) {
-			// TODO Check if we can check errno here
-			if 		(errno == EACCES)	{ return error_serv(serv, 403, "stat fail"); }
-			else if (errno == ENOENT)	{ return error_serv(serv, 404, "stat fail"); }
-			else 						{ return error_serv(serv, 500, "stat fail"); }
+			return error_serv(serv, 404, "stat fail");
 		}
 
 		if (S_ISREG(path_info.st_mode)){ // Check if is file
@@ -210,6 +257,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 				return error_serv(serv, 404, "autoindex not activated");
 			}
 			return get_autoindex(req_path, file_path);
+		}
+		else {
+			return error_serv(serv, 403, "Only files and folder are allowed to be read");
 		}
 	}
 	else if (!loc.index.empty()){
