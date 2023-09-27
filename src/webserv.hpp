@@ -23,6 +23,8 @@
 # define HEADER_HOST			"Host"
 # define HEADER_REDIRECT		"Location"
 
+# define NOT_FOUND_DESCRIPTION	"This Page has not been Found"
+
 /* ************************************************************************** */
 
 typedef enum {

@@ -178,7 +178,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		loc = find_location(serv, req_path_param);
 	}
 	catch(const exception& e) {
-		return error_serv(serv, 404, "This Page has not been Found");
+		return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 	}
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
@@ -246,7 +246,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 
 			struct stat path_info;
 			if (stat(file_path.c_str(), &path_info) == -1) {
-				return error_serv(serv, 404, "stat fail");
+				return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 			}
 
 			if (S_ISREG(path_info.st_mode)){ // Check if is file
@@ -260,7 +260,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 			}
 			else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 				if (!loc.autoindex){
-					return error_serv(serv, 404, "autoindex not activated");
+					return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 				}
 				return get_autoindex(req_path, file_path);
 			}
@@ -271,7 +271,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 		else if (!loc.index.empty()){
 			string req_path = remove_param(req_path_param);
 			if (req_path != loc.path){
-				return error_serv(serv, 404, "This Page has not been Found");
+				return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 			}
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
@@ -288,36 +288,36 @@ const string http(const string& req, Listener& listener, const Config& config){
 	else if (req_method == "POST"){
 		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		string cgi_bin;
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		return cgi(cgi_bin, file_path);
 	}
 	else if (req_method == "PUT"){
 		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		string cgi_bin;
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		return cgi(cgi_bin, file_path);
 	}
 	else if (req_method == "DELETE"){
 		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		string cgi_bin;
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
-			return error(404, "This Page has not been Found");
+			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		return cgi(cgi_bin, file_path);
 	}
 
-	return error_serv(serv, 404, "This Page has not been Found");
+	return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 }
