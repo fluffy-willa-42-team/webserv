@@ -234,11 +234,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 	*/
 
 	string req_path = remove_end_backslash(remove_param(req_path_param));
-	string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 	if (req_method == "GET"){
-		DEBUG_INFO_ << "METHOD: " << req_method << endl;
 		if (!loc.root.empty()){
-			
+			string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 			DEBUG_INFO_ << file_path << endl;
 			if (!loc.index.empty() && loc.path == req_path){
 				file_path = mergeFilePaths(loc.root, loc.index);
@@ -255,7 +253,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
 					if (is_file_cgi(loc, req_path, cgi_bin)){
-						cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+						return cgi(cgi_bin, file_path);
 					}
 				}
 				return get_file_res(file_path, loc.download);
@@ -278,7 +276,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(loc, req_path, cgi_bin)){
-					cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+					return cgi(cgi_bin, loc.index);
 				}
 			}
 			return get_file_res(loc.index, loc.download);
@@ -288,34 +286,37 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 	}
 	else if (req_method == "POST"){
-		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
 			return error(404, "This Page has not been Found");
 		}
 		string cgi_bin;
-		if (is_file_cgi(loc, req_path, cgi_bin)){
-			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		if (!is_file_cgi(loc, req_path, cgi_bin)){
+			return error(404, "This Page has not been Found");
 		}
+		return cgi(cgi_bin, file_path);
 	}
 	else if (req_method == "PUT"){
-		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
-			return error(405);
+			return error(404, "This Page has not been Found");
 		}
 		string cgi_bin;
-		if (is_file_cgi(loc, req_path, cgi_bin)){
-			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		if (!is_file_cgi(loc, req_path, cgi_bin)){
+			return error(404, "This Page has not been Found");
 		}
+		return cgi(cgi_bin, file_path);
 	}
 	else if (req_method == "DELETE"){
-		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
-			return error(405);
+			return error(404, "This Page has not been Found");
 		}
 		string cgi_bin;
-		if (is_file_cgi(loc, req_path, cgi_bin)){
-			cout << "CGI: " << cgi_bin << " | " << req_path << endl;
+		if (!is_file_cgi(loc, req_path, cgi_bin)){
+			return error(404, "This Page has not been Found");
 		}
+		return cgi(cgi_bin, file_path);
 	}
 
 	return error_serv(serv, 404, "This Page has not been Found");

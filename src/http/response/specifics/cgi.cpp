@@ -9,3 +9,9 @@ bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
 	}
 	return false;
 }
+
+string cgi(const string& cgi_bin, const string& filepath){
+	cout << "CGI: " << cgi_bin << " | " << filepath << endl;
+	Headers headers;
+	return get_response(200, headers, ":D");
+}
