@@ -6,20 +6,21 @@
 
 bool init();
 
-static map<int, Listener> listeners;
+static map<int, Listener*> listeners;
 static bool loop = true;
 
-void setup(map<int, Listener>& listeners);
-void start(map<int, Listener>& listeners, bool& loop, const Config& config);
+void setup(map<int, Listener*>& listeners);
+void start(map<int, Listener*>& listeners, bool& loop, const Config& config);
 void shutdown(int signal){
 	cout << endl;
 	DEBUG_ << "SIGINT caught" << endl;
 	(void) signal;
 	loop = false;
-	for (map<int, Listener>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
+	// for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
 		//TODO
 		// ite->second.stop();
-	}
+		// delete ite->second;
+	// }
 }
 
 int main(int argc, char* argv[]){
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]){
 		DEBUG_ << "Try to start server: " << ite->host << ":" << ite->port << endl;
 		try
 		{
-			listeners[ite->port] = Listener(ite->host_ip, ite->host_port);
+			listeners[ite->port] = new Listener(ite->host_ip, ite->host_port);
 		}
 		catch(const std::exception& e)
 		{

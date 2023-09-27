@@ -67,44 +67,15 @@ e_status Config::parse_conf_file(ifstream& config_file){
 					if (splited.size() != 2){
 						return err(line, index);
 					}
-					if (!isPositiveInteger(splited[1])){
-						return err(line, index);
+					if (splited[0].empty() || splited[1].empty()){
+						return err(line, index, "Empty host or port");
 					}
 					newServer.port = stringToNumber(splited[1]);
-					if (!(newServer.port == 80 || newServer.port == 443
-						|| (1024 <= newServer.port && newServer.port <= 65535))){
-						return err(line, index);
-					}
-					// Check if host is not empty
-					if (splited[0].empty()){
-						return err(line, index);
+					if (!isPositiveInteger(splited[1])){
+						return err(line, index, "Invalid port");
 					}
 					newServer.host_ip = splited[0];
 					newServer.host_port = splited[1];
-					/**
-					// Check and store host ip
-					// https://beej.us/guide/bgnet/html/#bind
-					{
-						struct addrinfo hints;
-
-						memset(&hints, 0, sizeof(hints));
-						// Set the family to IPv4
-						hints.ai_family = AF_INET;
-						hints.ai_socktype = SOCK_STREAM;
-						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-						// TOFIX gettaddrinfo alloc newServer.host_data, i remove the free in the destructor of Server.
-						// TOFIX we need to rework the Config and Server class to fix this.
-						// TOFIX The rework shold not be a class that pars, only use class to store final data.
-						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-						// WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN ! WARN
-						const int g_check = getaddrinfo(splited[0].c_str(), splited[1].c_str(), &hints, &newServer.host_data);
-						if (g_check != 0) {
-							DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
-							return err(line, index, "Invalid host: \"" + splited[0] + "\"");
-						}
-					}
-					**/
 				}
 			}
 			else if (is_server_option_error_page(line_split)){
