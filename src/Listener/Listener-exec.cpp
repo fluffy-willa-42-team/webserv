@@ -15,7 +15,7 @@ void Listener::exec(const Config& config){
 		return ;
 	}
 	
-	DEBUG_INFO_ << "Request: " << buf;
+	DEBUG_INFO_ << "Request: " << endl << BLUE << buf << RESET << endl;
 
 	string response = http(buf, *this, config);
 

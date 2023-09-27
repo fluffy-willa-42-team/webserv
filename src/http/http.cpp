@@ -236,6 +236,7 @@ const string http(const string& req, Listener& listener, const Config& config){
 	string req_path = remove_end_backslash(remove_param(req_path_param));
 	string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 	if (req_method == "GET"){
+		DEBUG_INFO_ << "METHOD: " << req_method << endl;
 		if (!loc.root.empty()){
 			
 			DEBUG_INFO_ << file_path << endl;
@@ -287,8 +288,9 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 	}
 	else if (req_method == "POST"){
-		if (!loc.cgi_pass.empty()){
-			return error(405);
+		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		if (loc.cgi_pass.empty()){
+			return error(404, "This Page has not been Found");
 		}
 		string cgi_bin;
 		if (is_file_cgi(loc, req_path, cgi_bin)){
@@ -296,7 +298,8 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 	}
 	else if (req_method == "PUT"){
-		if (!loc.cgi_pass.empty()){
+		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		if (loc.cgi_pass.empty()){
 			return error(405);
 		}
 		string cgi_bin;
@@ -305,7 +308,8 @@ const string http(const string& req, Listener& listener, const Config& config){
 		}
 	}
 	else if (req_method == "DELETE"){
-		if (!loc.cgi_pass.empty()){
+		DEBUG_INFO_ << "METHOD: " << req_method << endl;
+		if (loc.cgi_pass.empty()){
 			return error(405);
 		}
 		string cgi_bin;
