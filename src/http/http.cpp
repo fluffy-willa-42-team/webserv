@@ -11,7 +11,9 @@
 string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
-const string http(const string& req, Listener& listener, const Config& config){
+const string http(Listener& listener, const Config& config){
+	string req = listener.read_buff();
+
 	stringstream ss_line_by_line(req);
     string line;
 

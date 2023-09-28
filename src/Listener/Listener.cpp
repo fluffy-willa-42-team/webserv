@@ -108,7 +108,7 @@ Listener::Listener(string host_ip, string port)
 		}
 
 	} catch (const std::exception& e) {
-		Listener::~Listener();
+		this->~Listener();
 		throw e;
 	}
 

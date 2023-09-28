@@ -35,7 +35,7 @@ string error_serv(const Server& serv, u_int32_t code, const string& message = ""
 const Server& find_server(const Config& config, Headers headers);
 const Location& find_location(const Server& serv, const string& req_path_param);
 
-const string http(const string& req, Listener& listener, const Config& config);
+const string http(Listener& listener, const Config& config);
 
 /******************************************************************************/
 

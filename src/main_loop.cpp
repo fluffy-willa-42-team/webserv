@@ -57,13 +57,10 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 			DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
 			DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
 
-			// TODO REMOVE
-			string buff = ite->second->read_buff();
-			DEBUG_ << "buff: " << buff << endl;
+			string response = http(*(ite->second), config);
 
-			// TODO @willaCS how we need to handle error ?
-			http(buff, *(ite->second), config);
-
+			write(ite->second->connection_fd, response.c_str(), response.length());
+			close(ite->second->connection_fd);
 		}
 	}
 
