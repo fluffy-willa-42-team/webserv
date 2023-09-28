@@ -12,7 +12,7 @@
 /******************************************************************************/
 
 typedef map<string, string> Headers;
-
+typedef map<string, string> Env;
 
 typedef enum {
 	AINDEX_FILE,
