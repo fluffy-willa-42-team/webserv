@@ -35,13 +35,20 @@ typedef enum level_e {
 #define DEBUG_ERROR_	debug_utils(ERROR,	__FILE__, __LINE__)
 
 // stream to print nothing in console
-class NullStream : public ostream {
-	public:
-		template <typename T>
-		NullStream& operator<<(const T&) {
-			return *this;
-		}
+class NullBuffer : public std::streambuf
+{
+public:
+    int overflow(int c) { return c; }
 };
+
+class NullStream : public std::ostream
+{
+public:
+    NullStream() : std::ostream(&m_sb) {}
+private:
+    NullBuffer m_sb;
+};
+
 
 static const string level_str[]	= {"DEBUG", "INFO ", "WARN ", "ERROR"};
 static const string level_color[] = {GREEN, CYAN, BLUE, RED};

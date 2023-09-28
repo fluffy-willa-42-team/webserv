@@ -13,6 +13,7 @@ string remove_param(string req_path_param);
 
 const string http(Listener& listener, const Config& config){
 	string req = listener.read_buff();
+	DEBUG_INFO_ << "Req: " << endl << BLUE << req << RESET << endl;
 
 	stringstream ss_line_by_line(req);
     string line;
