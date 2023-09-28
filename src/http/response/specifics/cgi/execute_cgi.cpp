@@ -56,26 +56,10 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 	int status = 0;
 	waitpid(pid, &status, 0);
 
-	cout << YELLOW << status << RESET << endl;
-
-	// string test = readFromFD(pipe_fd[0]);
-
-	
-	// cout << YELLOW << test << RESET << endl;
-
-	// execve("/bin/test", ["/bin/test", "-s", "ereerer"], env);
-
-	// char** ptr = env_cast;
-
-    // while (*ptr) {
-    //     cout << string(*ptr) << endl;
-    //     ptr++;
-    // }
+	cout << YELLOW << pid << " | " << status << RESET << endl;
 
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	freeCopy(env, env_cast);
-
-
 	return "OK";
 }
