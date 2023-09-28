@@ -1,21 +1,18 @@
 #include "utils.hpp"
 
-char** createCopy(const map<string, string>& myMap) {
-    char** charArray = new char*[myMap.size()];
+char** createCopy(const vector<string>& vec) {
+    char** charArray = new char*[vec.size() + 1];
+    memset(charArray, 0, (vec.size() + 1) * sizeof(char*));
 
-    size_t i = 0;
-    for (map<string, string>::const_iterator it = myMap.begin(); it != myMap.end(); ++it) {
-        string keyValue = it->first + "=" + it->second;
-        charArray[i] = new char[keyValue.length() + 1];
-        std::strcpy(charArray[i], keyValue.c_str());
-        ++i;
+    for (size_t i = 0; i < vec.size(); ++i) {
+        charArray[i] = new char[vec[i].length() + 1];
+        std::strcpy(charArray[i], vec[i].c_str());
     }
-
     return charArray;
 }
 
-void freeCopy(const map<string, string>& myMap, char** copy) {
-    for (size_t i = 0; i < myMap.size(); ++i) {
+void freeCopy(const vector<string>& vec, char** copy) {
+    for (size_t i = 0; i < vec.size(); ++i) {
         delete[] copy[i];
     }
     delete[] copy;

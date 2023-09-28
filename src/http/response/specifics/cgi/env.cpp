@@ -2,7 +2,6 @@
 
 void add_env(Env& env, const string& header, const string& value){
 	env.push_back(header + "=" + value);
-	cout << env.size() << endl;
 }
 
 Env create_env(
