@@ -14,14 +14,6 @@ Env create_env(
 	const string& req_path,
 	const string& req_param
 ){
-	(void) env;
-	(void) serv;
-	(void) loc;
-	(void) cgi_bin;
-	(void) req_method;
-	(void) req_path;
-	(void) req_param;
-
 	Env req_env(env);
 	
 	add_env(req_env, "SERVER_SOFTWARE", SERVER_VERSION);		// The name and version of hte server software.
@@ -52,10 +44,6 @@ Env create_env(
 
 	// add_env(req_env, "CONTENT_LENGTH"); = "";
 	// add_env(req_env, "CONTENT_TYPE"); = "";
-
-	for (Env::const_iterator ite = req_env.begin(); ite != req_env.end(); ite++){
-		cout << RED << *ite << RESET << endl;
-	}
 
 	return req_env;
 }
