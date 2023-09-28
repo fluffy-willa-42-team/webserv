@@ -22,13 +22,12 @@ Env create_env(
 	add_env(req_env, "SERVER_NAME", serv.host);					// This meta variable holds domain / IP address to which the request was sent by the client.
 	add_env(req_env, "SERVER_PORT", numberToString(serv.port));	// This meta variable holds port to which the request was sent by the client.
 
-	add_env(req_env, "SERVER_SOFTWARE", SERVER_VERSION);
-	add_env(req_env, "SERVER_SOFTWARE", SERVER_VERSION);
-
 	add_env(req_env, "REQUEST_METHOD", req_method);				// GET POST PUT *PATCH* DELETE
 
 	add_env(req_env, "SCRIPT_NAME", cgi_bin);					// TODO verify this
 	add_env(req_env, "SCRIPT_FILENAME", cgi_bin);				// TODO verify this
+
+	add_env(req_env, "REDIRECT_STATUS", "200");					// TODO verify this
 
 	add_env(req_env, "PATH_INFO", req_path);
 	// TODO verify this - The part of the request URI that succeeds the portion that locates the CGI script.									

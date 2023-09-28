@@ -1,3 +1,10 @@
+<?php
+if ($_SERVER['REDIRECT_STATUS'] === '200') {
+    echo "This is the initial request.";
+} else {
+    echo "This is a redirected request.";
+}
+?>
 <html>
 	<head>
 		<title>PHP index</title>
