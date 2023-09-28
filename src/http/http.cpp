@@ -12,11 +12,21 @@ string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
 const string http(Listener& listener, const Config& config){
-	string req = listener.read_buff();
+	string req;
+	try
+	{
+		req = listener.read_buff();
+	}
+	catch(const exception& e)
+	{
+		DEBUG_ << "The Request is empty" << endl;
+		return error(400, "The Request is empty");
+	}
+	
 	DEBUG_INFO_ << "Req: " << endl << BLUE << req << RESET << endl;
 
 	stringstream ss_line_by_line(req);
-    string line;
+	string line;
 
 	/*===-----						Init Line						   -----===*
 	METHOD PATH+PARAMS PROTOCOL
@@ -124,8 +134,6 @@ const string http(Listener& listener, const Config& config){
 			return error(400, "Missing host header");
 		}
 	}
-
-	
 
 
 	/*===-----						Body							  -----===*/

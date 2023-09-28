@@ -158,7 +158,7 @@ string Listener::read_buff(){
 	memset(buffer, 0, BUFFER_SIZE);
 	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
 	if (length_read == -1){
-		DEBUG_WARN_ << "Failed to read from socket";
+		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
 		throw exception();
 	}
 	return string(buffer, length_read);
