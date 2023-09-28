@@ -52,26 +52,15 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 				++ite;
 				continue ;
 			}
-			DEBUG_ << "Connection fd: " << ite->second->connection_fd << endl;
-			DEBUG_ << "There is data to pull ? " << (ite->second->wpoll.revents & POLLIN) << endl;
-			DEBUG_ << "There is data to push ? " << (ite->second->wpoll.revents & POLLOUT) << endl;
-			DEBUG_ << "There is an error ? " << (ite->second->wpoll.revents & POLLERR) << endl;
-			DEBUG_ << "There is a hangup ? " << (ite->second->wpoll.revents & POLLHUP) << endl;
-			DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
-			DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
+			// DEBUG_ << "Connection fd: " << ite->second->connection_fd << endl;
+			// DEBUG_ << "There is data to pull ? " << (ite->second->wpoll.revents & POLLIN) << endl;
+			// DEBUG_ << "There is data to push ? " << (ite->second->wpoll.revents & POLLOUT) << endl;
+			// DEBUG_ << "There is an error ? " << (ite->second->wpoll.revents & POLLERR) << endl;
+			// DEBUG_ << "There is a hangup ? " << (ite->second->wpoll.revents & POLLHUP) << endl;
+			// DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
+			// DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
 
 			string response = http(*(ite->second), config);
-
-			{
-				const int poll_ret = poll(&(ite->second->wpoll), 1, 0);
-				DEBUG_ << "Connection fd: " << ite->second->connection_fd << endl;
-				DEBUG_ << "There is data to pull ? " << (ite->second->wpoll.revents & POLLIN) << endl;
-				DEBUG_ << "There is data to push ? " << (ite->second->wpoll.revents & POLLOUT) << endl;
-				DEBUG_ << "There is an error ? " << (ite->second->wpoll.revents & POLLERR) << endl;
-				DEBUG_ << "There is a hangup ? " << (ite->second->wpoll.revents & POLLHUP) << endl;
-				DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
-				DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
-			}
 
 			if (write(ite->second->connection_fd, response.c_str(), response.length()) < 0) {
 				DEBUG_WARN_ << "Failed to write to socket" << endl;
