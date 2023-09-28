@@ -1,7 +1,7 @@
 #include "response.hpp"
 
 Env create_env(const Env& env, const Server& serv, const Location& loc, const string& cgi_bin, const string& req_method, const string& req_path, const string& req_param);
-string exec_cgi(const Env& env, const string& cgi_bin);
+string exec_cgi(const Env& env, const string& cgi_bin, const string& file);
 string parse_cgi_response(const string& cgi_response, Headers& headers, string& body);
 
 bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
@@ -27,9 +27,19 @@ string cgi(const Env& env,
 
 	Env req_env = create_env(env, serv, loc, cgi_bin, req_method, req_path, req_param);
 
-	string cgi_response = exec_cgi(req_env, cgi_bin);
+	string cgi_response;
+	try {
+		cgi_response = exec_cgi(req_env, cgi_bin, filepath);
+	}
+	catch(const exception& e)
+	{
+		return error(500, e.what());
+	}
+	
+
 
 	Headers headers;
+	headers[HEADER_CONTENT_TYPE] = "text/plain";
 	string body;
 
 	string response = parse_cgi_response(cgi_response, headers, body);
