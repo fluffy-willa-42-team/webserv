@@ -36,6 +36,8 @@ typedef enum {
 	S_ERROR		= 0b10000,
 }	e_status;
 
+typedef vector<string> Env;
+
 /* ************************************************************************** */
 
 #endif /* WEBSERV_HPP */

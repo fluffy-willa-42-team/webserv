@@ -4,13 +4,12 @@
 #include "debug.hpp"
 #include <netdb.h>
 
-bool init();
+bool init(Env& env, char* envp[]);
 
 static map<int, Listener*> listeners;
 static bool loop = true;
 
-void setup(map<int, Listener*>& listeners);
-void start(map<int, Listener*>& listeners, bool& loop, const Config& config);
+void start(map<int, Listener*>& listeners, bool& loop, const Config& config, const Env& env);
 void shutdown(int signal){
 	cout << endl;
 	DEBUG_ << "SIGINT caught" << endl;
@@ -18,8 +17,10 @@ void shutdown(int signal){
 	loop = false;
 }
 
-int main(int argc, char* argv[]){
-	if (!init()){
+int main(int argc, char* argv[], char* envp[]){
+	Env env;
+
+	if (!init(env, envp)){
 		cerr << RED << "Failed to initialize" << RESET << endl;
 		return 1;
 	}
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]){
 	}
 
 	std::signal(SIGINT, &shutdown);
-	start(listeners, loop, config);
+	start(listeners, loop, config, env);
 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ite++){
 		delete ite->second;
 	}

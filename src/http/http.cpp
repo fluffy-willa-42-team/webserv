@@ -11,7 +11,7 @@
 string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
-const string http(Listener& listener, const Config& config){
+const string http(Listener& listener, const Config& config, const Env& env){
 	string req = listener.read_buff();
 
 	stringstream ss_line_by_line(req);
@@ -268,7 +268,7 @@ const string http(Listener& listener, const Config& config){
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
 					if (is_file_cgi(loc, req_path, cgi_bin)){
-						return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
+						return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
 					}
 				}
 				return get_file_res(file_path, loc.download);
@@ -291,7 +291,7 @@ const string http(Listener& listener, const Config& config){
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(loc, req_path, cgi_bin)){
-					return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, loc.index);
+					return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, loc.index);
 				}
 			}
 			return get_file_res(loc.index, loc.download);
@@ -309,7 +309,7 @@ const string http(Listener& listener, const Config& config){
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
-		return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
+		return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
 	}
 
 	return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);

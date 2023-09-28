@@ -34,6 +34,7 @@ string error(u_int32_t code, const string& message);
 
 bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin);
 string cgi(
+	const Env& env,
 	const Server& serv,
 	const Location& loc,
 	const string& cgi_bin,
