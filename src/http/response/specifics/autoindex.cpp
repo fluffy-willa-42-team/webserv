@@ -45,9 +45,7 @@ string get_autoindex_html(const string& path, const string& gobacklink, const ve
 string get_autoindex(const string& req_path, const string& file_path){
 	DIR* dir = opendir(file_path.c_str());
 	if (!dir){
-		if 		(errno == EACCES)	{ return error(403, "folder fail"); }
-		else if (errno == ENOENT)	{ return error(404, "folder fail"); }
-		else 						{ return error(500, "folder fail"); }
+		return error(404, NOT_FOUND_DESCRIPTION);
 	}
 
 	const string gobacklink = req_path.substr(0, req_path.find_last_of('/'));

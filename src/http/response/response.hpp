@@ -31,6 +31,9 @@ string get_file_res(const string& file_path, bool download = false);
 string get_autoindex(const string& req_path, const string& file_path);
 string redirect(u_int32_t code, const string& path);
 string error(u_int32_t code, const string& message);
+string cgi(const string& cgi_bin, const string& filepath);
+
+bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin);
 
 /******************************************************************************/
 
