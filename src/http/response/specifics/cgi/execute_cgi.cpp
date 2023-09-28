@@ -2,6 +2,17 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+void exit_exec_cgi(const Env& env, char * const *env_cast, int pipe_fd[2], const string& message){
+	freeCopy(env, env_cast);
+	if (pipe_fd[0] >= 0){
+		close(pipe_fd[0]);
+	}
+	if (pipe_fd[1] >= 0){
+		close(pipe_fd[1]);
+	}
+	throw runtime_error(message);
+}
+
 void exec_child(char *const *argv, char *const *env, int pipe_fd[2]){
 	if (dup2(pipe_fd[0], STDOUT_FILENO) < 0){
 		return ;
@@ -15,17 +26,6 @@ void exec_child(char *const *argv, char *const *env, int pipe_fd[2]){
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	exit(0);
-}
-
-void exit_exec_cgi(const Env& env, char * const *env_cast, int pipe_fd[2], const string& message){
-	freeCopy(env, env_cast);
-	if (pipe_fd[0] >= 0){
-		close(pipe_fd[0]);
-	}
-	if (pipe_fd[1] >= 0){
-		close(pipe_fd[1]);
-	}
-	throw runtime_error(message);
 }
 
 string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
