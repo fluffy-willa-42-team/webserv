@@ -57,12 +57,21 @@ const string http(Listener& listener, const Config& config){
 	}
 
 	// Path + Param
-	string req_path_param = initline[1];
+	string req_path;
+	string req_param;
 	{
-		DEBUG_INFO_ << "Path + Param: " << req_path_param << endl;
+		string req_path_param = initline[1];
 		if (!is_path_valid(req_path_param)){
 			DEBUG_ << "Path is invalid" << endl;
 			return error(400, "Path is invalid");
+		}
+		if (req_path_param.find_first_of('?') != string::npos){
+			req_path = remove_end_backslash(req_path_param.substr(0, req_path_param.find_first_of('?')));
+			req_param = req_path_param.substr(req_path_param.find_first_of('?') + 1, req_path_param.size());
+			DEBUG_INFO_ << "Path + Param: " << req_path << " ? " << req_param << endl;
+		}
+		else {
+			req_path = remove_end_backslash(req_path_param);
 		}
 	}
 
@@ -182,7 +191,7 @@ const string http(Listener& listener, const Config& config){
 
 	Location loc;
 	try {
-		loc = find_location(serv, req_path_param);
+		loc = find_location(serv, req_path);
 	}
 	catch(const exception& e) {
 		return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
@@ -240,7 +249,6 @@ const string http(Listener& listener, const Config& config){
 
 	*/
 
-	string req_path = remove_end_backslash(remove_param(req_path_param));
 	if (req_method == "GET"){
 		if (!loc.root.empty()){
 			string file_path = loc.root + "/" + req_path.substr(loc.path.size());
@@ -260,7 +268,7 @@ const string http(Listener& listener, const Config& config){
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
 					if (is_file_cgi(loc, req_path, cgi_bin)){
-						return cgi(cgi_bin, file_path);
+						return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
 					}
 				}
 				return get_file_res(file_path, loc.download);
@@ -276,14 +284,14 @@ const string http(Listener& listener, const Config& config){
 			}
 		}
 		else if (!loc.index.empty()){
-			string req_path = remove_param(req_path_param);
+			string req_path = remove_param(req_path);
 			if (req_path != loc.path){
 				return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 			}
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(loc, req_path, cgi_bin)){
-					return cgi(cgi_bin, loc.index);
+					return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, loc.index);
 				}
 			}
 			return get_file_res(loc.index, loc.download);
@@ -292,7 +300,7 @@ const string http(Listener& listener, const Config& config){
 			return redirect(loc.redirect_code, loc.redirect_path);
 		}
 	}
-	else if (req_method == "POST"){
+	else if (req_method == "POST" || req_method == "PUT" || req_method == "DELETE"){
 		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
 			return error(404, NOT_FOUND_DESCRIPTION);
@@ -301,29 +309,7 @@ const string http(Listener& listener, const Config& config){
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
-		return cgi(cgi_bin, file_path);
-	}
-	else if (req_method == "PUT"){
-		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
-		if (loc.cgi_pass.empty()){
-			return error(404, NOT_FOUND_DESCRIPTION);
-		}
-		string cgi_bin;
-		if (!is_file_cgi(loc, req_path, cgi_bin)){
-			return error(404, NOT_FOUND_DESCRIPTION);
-		}
-		return cgi(cgi_bin, file_path);
-	}
-	else if (req_method == "DELETE"){
-		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
-		if (loc.cgi_pass.empty()){
-			return error(404, NOT_FOUND_DESCRIPTION);
-		}
-		string cgi_bin;
-		if (!is_file_cgi(loc, req_path, cgi_bin)){
-			return error(404, NOT_FOUND_DESCRIPTION);
-		}
-		return cgi(cgi_bin, file_path);
+		return cgi(serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
 	}
 
 	return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
