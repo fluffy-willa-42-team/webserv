@@ -34,6 +34,7 @@ Env create_env(
 	// TODO verify this - The part of the request URI that succeeds the portion that locates the CGI script.									
 	// For example, in the URI — http://localhost:8888/cgi/blog/posts/1 , PATH_INFO would be posts/1 which											
 	// basically identifies an application specific resource to be interpreted by the individual cgi scripts.
+	
 	if (!req_param.empty()){
 		add_env(req_env, "QUERY_STRING", req_param);
 	}
