@@ -11,9 +11,6 @@ def get_response(headers: dict, body: str = ""):
 
 
 
-
-code = 200
-
 headers = {}
 headers['status'] = '200 OK'
 headers['MyHeader'] = 'Test'
