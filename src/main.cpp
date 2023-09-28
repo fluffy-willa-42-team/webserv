@@ -45,7 +45,7 @@ int main(int argc, char* argv[]){
 		{
 			listeners[ite->port] = new Listener(ite->host_ip, ite->host_port);
 		}
-		catch(const std::exception& e)
+		catch(const exception& e)
 		{
 			DEBUG_WARN_ << "Server: " << ite->host << ":" << ite->port << ": " << e.what() << ", ignoring"<< endl;
 		}

@@ -22,7 +22,7 @@ bool endsWith(const string& input, const string& suffix);
 /* ************************************************************************** */
 
 bool isFileReadable(const string& filepath);
-bool isFileExecutable(const std::string& filepath);
+bool isFileExecutable(const string& filepath);
 bool doesFolderExists(const string& folderPath);
 string mergeFilePaths(const string& base, const string& path);
 

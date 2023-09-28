@@ -12,12 +12,6 @@
 
 # define BUFFER_SIZE 800
 
-typedef struct {
-	u_int32_t code;
-	int32_t err; // TODO Remove
-	string message;
-}	t_setup;
-
 /******************************************************************************/
 
 class Listener {

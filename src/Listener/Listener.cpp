@@ -19,14 +19,14 @@ void print_address(const struct addrinfo *info) {
 		char ipstr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
 
-		std::cout << "IPv4 Address: " << ipstr << std::endl;
+		cout << "IPv4 Address: " << ipstr << endl;
 	} else if (info->ai_family == AF_INET6) {
 		struct sockaddr_in6 *addr = (struct sockaddr_in6 *)info->ai_addr;
 		char ipstr[INET6_ADDRSTRLEN];
 		inet_ntop(AF_INET6, &(addr->sin6_addr), ipstr, INET6_ADDRSTRLEN);
-		std::cout << "IPv6 Address: " << ipstr << std::endl;
+		cout << "IPv6 Address: " << ipstr << endl;
 	} else {
-		std::cout << "Unknown address family" << std::endl;
+		cout << "Unknown address family" << endl;
 	}
 }
 
@@ -50,11 +50,11 @@ Listener::Listener(string host_ip, string port)
 		const int g_check = getaddrinfo(host_ip.c_str(), port.c_str(), &hints, &host);
 		if (g_check != 0) {
 			DEBUG_WARN_ << "getaddrinfo: " << gai_strerror(g_check) << endl;
-			throw std::runtime_error("Invalid host: \"" + host_ip + "\"");
+			throw runtime_error("Invalid host: \"" + host_ip + "\"");
 		}
 		if (host == NULL){
 			DEBUG_ERROR_ << "Failed to create socket, addrinfo is null?!" << endl;
-			throw std::runtime_error("Failed to create socket");
+			throw runtime_error("Failed to create socket");
 		}
 
 		if (host->ai_family == AF_INET) {
@@ -63,7 +63,7 @@ Listener::Listener(string host_ip, string port)
 			inet_ntop(AF_INET, &(addr->sin_addr), ipstr, INET_ADDRSTRLEN);
 		} else {
 			DEBUG_ERROR_ << "Non ipv4 address family" << endl;
-			throw std::runtime_error("Non ipv4 address family");
+			throw runtime_error("Non ipv4 address family");
 		}
 
 		// Create Socket file descriptor for server
@@ -71,31 +71,31 @@ Listener::Listener(string host_ip, string port)
 		DEBUG_ << "listener_fd: " << listener_fd << endl;
 		if (listener_fd < 0){
 			DEBUG_ERROR_ << "Failed to create socket: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to create socket");
+			throw runtime_error("Failed to create socket");
 		}
 
 		// retrieve the file descriptor flags
 		int flags = fcntl(listener_fd, F_GETFL, 0);
 		if (flags < 0){
 			DEBUG_ERROR_ << "Failed to get socket flags: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to get socket flags");
+			throw runtime_error("Failed to get socket flags");
 		}
 		
 		// verify the file descriptor has the right O_NONBLOCK flag
 		flags |= O_NONBLOCK;
 		if (fcntl(listener_fd, F_SETFL, flags) < 0){
 			DEBUG_ERROR_ << "Failed to set socket flags: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to set socket flags");
+			throw runtime_error("Failed to set socket flags");
 		}
 
 		if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(flags)) < 0){
 			DEBUG_ERROR_ << "Failed to set socket options: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to set socket options");
+			throw runtime_error("Failed to set socket options");
 		}
 
 		if (bind(listener_fd, host->ai_addr, host->ai_addrlen) < 0){
 			DEBUG_ERROR_ << "Failed to bind socket: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to bind socket");
+			throw runtime_error("Failed to bind socket");
 		}
 
 		// getsockname(listener_fd, host->ai_addr, &host->ai_addrlen);
@@ -104,10 +104,10 @@ Listener::Listener(string host_ip, string port)
 		// start to listens to port for new TCP connection
 		if (listen(listener_fd, 10) < 0){
 			DEBUG_ERROR_ << "Failed to listen socket: errno: " << strerror(errno) << endl;
-			throw std::runtime_error("Failed to listen socket");
+			throw runtime_error("Failed to listen socket");
 		}
 
-	} catch (const std::exception& e) {
+	} catch (const exception& e) {
 		this->~Listener();
 		throw e;
 	}

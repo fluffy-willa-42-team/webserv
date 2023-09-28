@@ -31,6 +31,7 @@ using std::memset;
 using std::getline;
 
 using std::exception;
+using std::runtime_error;
 
 /* ************************************************************************** */
 

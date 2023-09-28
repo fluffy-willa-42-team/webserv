@@ -30,12 +30,12 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 				continue ;
 			}
 			if (poll_ret < 0){
-				DEBUG_WARN_ << "Failed to poll, ignoring" << std::endl;
+				DEBUG_WARN_ << "Failed to poll, ignoring" << endl;
 				++ite;
 				continue ;
 			}
 			if (!(ite->second->wpoll.revents & POLLIN)){
-				DEBUG_WARN_ << "No new connection (revents: " << ite->second->wpoll.revents << "), ignoring" << std::endl;
+				DEBUG_WARN_ << "No new connection (revents: " << ite->second->wpoll.revents << "), ignoring" << endl;
 				++ite;
 				continue ;
 			}
@@ -45,7 +45,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 			// Accept new connection
 			ite->second->connection_fd = accept(ite->second->listener_fd, NULL, NULL);
 			if (ite->second->connection_fd < 0){
-				DEBUG_WARN_ << "Failed to accept new connection, ignoring" << std::endl;
+				DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
 				++ite;
 				continue ;
 			}
