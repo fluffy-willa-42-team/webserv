@@ -88,7 +88,7 @@ e_status exec_cgi(
 	else if (pid == 0){
 		if (!req_body.empty()){
 			// save STDOUT
-			// int save_out = dup(STDOUT_FILENO);
+			// int fd_write = dup(STDOUT_FILENO);
 
 			// pipe2.write => STDIN
 			if (dup2(pipe2.write, STDIN_FILENO) < 0){
@@ -103,13 +103,6 @@ e_status exec_cgi(
 				free_exec_cgi(env, env_cast, pipe1, pipe2);
 				exit(EXIT_FAILURE);
 			}
-
-
-			// // pipe1.write => Saved STDOUT
-			// if (dup2(save_out, STDOUT_FILENO) < 0){
-			// 	free_exec_cgi(env, env_cast, pipe1, pipe2);
-			// 	exit(EXIT_FAILURE);
-			// }
 		}
 		if (dup2(pipe1.write, STDOUT_FILENO) < 0){
 			free_exec_cgi(env, env_cast, pipe1, pipe2);
