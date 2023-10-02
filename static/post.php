@@ -1,6 +1,6 @@
 <?php
 
-var_dump($_POST);
+echo "Post\n";
 
 $handle = fopen ("php://stdin","r");
 while (!feof($handle)) {
@@ -8,3 +8,5 @@ while (!feof($handle)) {
     echo $buffer;
 }
 fclose($handle);
+
+var_dump($_POST);
