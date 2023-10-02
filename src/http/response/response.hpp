@@ -22,6 +22,7 @@ extern string raw_error_file;
 extern map<u_int32_t, string> codes_map;
 extern map<u_int32_t, string> redirect_codes_map;
 extern map<u_int32_t, string> error_codes_map;
+extern map<string, u_int32_t> default_codes;
 
 /******************************************************************************/
 

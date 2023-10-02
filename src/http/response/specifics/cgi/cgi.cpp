@@ -47,7 +47,8 @@ string cgi(const Env& env,
 		return error(500);
 	}
 	if (code == 0){
-		code = 200;
+		DEBUG_WARN_ << code << " | " << req_method << " | " << default_codes[req_method] << endl;
+		code = default_codes[req_method];
 	}
 
 	return get_response(code, headers, body);
