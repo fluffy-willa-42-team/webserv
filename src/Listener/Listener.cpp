@@ -97,11 +97,6 @@ Listener::Listener(string host_ip, string port)
 			throw runtime_error("Failed to set socket options");
 		}
 
-		if (setsockopt(listener_fd, SOL_SOCKET, SO_REUSEPORT, &flags, sizeof(flags)) < 0){
-			DEBUG_ERROR_ << "Failed to set socket options: errno: " << strerror(errno) << endl;
-			throw runtime_error("Failed to set socket options");
-		}
-
 		if (bind(listener_fd, host->ai_addr, host->ai_addrlen) < 0){
 			DEBUG_ERROR_ << "Failed to bind socket: errno: " << strerror(errno) << endl;
 			throw runtime_error("Failed to bind socket");
