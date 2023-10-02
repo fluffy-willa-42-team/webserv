@@ -39,10 +39,8 @@ string cgi(
 	const Server& serv,
 	const Location& loc,
 	const string& cgi_bin,
-	const string& req_method,
-	const string& req_path,
-	const string& req_param,
-	const string& filepath
+	const string& filepath,
+	const Request& req
 );
 
 /******************************************************************************/

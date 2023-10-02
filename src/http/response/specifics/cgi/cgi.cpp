@@ -5,12 +5,18 @@ Env create_env(
 	const Server& serv,
 	const Location& loc,
 	const string& cgi_bin,
-	const string& req_method,
-	const string& req_path,
-	const string& req_param,
-	const string& filepath
+	const string& filepath,
+	const Request& req
 );
-e_status exec_cgi(const Env& env, const string& cgi_bin, const string& file, string& response);
+
+e_status exec_cgi(
+	const Env& env,
+	const string& cgi_bin,
+	const string& req_body,
+	const string& file,
+	string& response
+);
+
 e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers& headers, string& body);
 
 bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
@@ -23,19 +29,18 @@ bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
 	return false;
 }
 
-string cgi(const Env& env,
+string cgi(
+	const Env& env,
 	const Server& serv,
 	const Location& loc,
 	const string& cgi_bin,
-	const string& req_method,
-	const string& req_path,
-	const string& req_param,
-	const string& filepath
+	const string& filepath,
+	const Request& req
 ){
-	Env req_env = create_env(env, serv, loc, cgi_bin, req_method, req_path, req_param, filepath);
+	Env req_env = create_env(env, serv, loc, cgi_bin, filepath, req);
 
 	string cgi_response;
-	if (exec_cgi(req_env, cgi_bin, filepath, cgi_response) != S_CONTINUE){
+	if (exec_cgi(req_env, cgi_bin, req.body, filepath, cgi_response) != S_CONTINUE){
 		return error(500);
 	}
 
@@ -47,8 +52,7 @@ string cgi(const Env& env,
 		return error(500);
 	}
 	if (code == 0){
-		DEBUG_WARN_ << code << " | " << req_method << " | " << default_codes[req_method] << endl;
-		code = default_codes[req_method];
+		code = default_codes[req.method];
 	}
 
 	return get_response(code, headers, body);
