@@ -161,7 +161,6 @@ string Listener::read_buff(){
 		DEBUG_WARN_ << "Failed to read from socket" << endl;;
 		throw exception();
 	}
-	DEBUG_INFO_ << "Read Socker [" << length_read << "]" << endl;
 	return string(buffer, length_read);
 }
 
