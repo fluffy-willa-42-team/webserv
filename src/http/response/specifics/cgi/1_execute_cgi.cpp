@@ -30,7 +30,7 @@ string read_buff_cgi(int fd, e_status& r_status){
 	int32_t length_read = read(fd, buffer, BUFFER_SIZE);
 	if (length_read < 0){
 		r_status = S_STOP;
-		DEBUG_WARN_ << "Failed to read from CGI response: " << errno << endl;
+		// DEBUG_WARN_ << "Failed to read from CGI response: " << errno << endl;
 		return "";
 	}
 	else if (length_read != BUFFER_SIZE){
@@ -77,8 +77,6 @@ e_status exec_cgi(
 		}
 	}
 
-	cout << "pipe: " << pipe1.read << " " << pipe1.write << " " << pipe2.read << " " << pipe2.write << endl;
-
 	pid_t pid = fork();
 	if (pid < 0){
 		free_exec_cgi(env, env_cast, pipe1, pipe2);
@@ -87,19 +85,25 @@ e_status exec_cgi(
 	}
 	else if (pid == 0){
 		if (!req_body.empty()){
-			// save STDOUT
-			// int fd_write = dup(STDOUT_FILENO);
+			//  save STDOUT
+			int fd_write = dup(STDOUT_FILENO);
 
-			// pipe2.write => STDIN
+			//  pipe2.write => STDIN
 			if (dup2(pipe2.write, STDIN_FILENO) < 0){
+				free_exec_cgi(env, env_cast, pipe1, pipe2);
+				exit(EXIT_FAILURE);
+			}
+
+			//  pipe2.read => STDOUT
+			if (dup2(pipe2.read, STDOUT_FILENO) < 0){
 				free_exec_cgi(env, env_cast, pipe1, pipe2);
 				exit(EXIT_FAILURE);
 			}
 
 			cout << req_body;
 
-			// pipe2.read => STDOUT
-			if (dup2(pipe2.read, STDOUT_FILENO) < 0){
+			//  STDOUT Copy => STDOUT
+			if (dup2(fd_write, STDOUT_FILENO) < 0){
 				free_exec_cgi(env, env_cast, pipe1, pipe2);
 				exit(EXIT_FAILURE);
 			}
