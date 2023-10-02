@@ -61,19 +61,19 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 			throw runtime_error("Failed to execute");
 		}
 
-		string test;
+		string cgi_response;
 		e_status r_status = S_CONTINUE;
 		while (r_status == S_CONTINUE){
-			test += read_buff_cgi(pipe_fd[0], r_status);
+			cgi_response += read_buff_cgi(pipe_fd[0], r_status);
 			if (r_status == S_ERROR){
 				free_exec_cgi(env, env_cast, pipe_fd);
 				throw runtime_error("Could not Read");
 			}
 		}
 
-		DEBUG_ << "CGI response: " << endl << BLUE << test << RESET << endl;
+		DEBUG_ << "CGI response: " << endl << BLUE << cgi_response << RESET << endl;
 		
 		free_exec_cgi(env, env_cast, pipe_fd);
-		return test;
+		return cgi_response;
 	}
 }
