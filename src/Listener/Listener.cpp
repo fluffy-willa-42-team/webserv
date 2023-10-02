@@ -10,7 +10,9 @@
 #include <iomanip>
 #include <netdb.h>
 #include <sys/types.h>
-// #include <sys/event.h>
+#ifdef KOS_DARWIN
+	#include <sys/event.h>
+#endif
 #include <sys/time.h>
 #include "debug.hpp"
 
@@ -113,7 +115,6 @@ Listener::Listener(string host_ip, string port)
 			DEBUG_ERROR_ << "Failed to listen socket: errno: " << strerror(errno) << endl;
 			throw runtime_error("Failed to listen socket");
 		}
-
 	} catch (const exception& e) {
 		this->~Listener();
 		throw e;
@@ -162,54 +163,47 @@ Listener::~Listener(){
 }
 
 string Listener::read_buff(){
-/** //TODO only compile on macos
-	//TODO WIP @Matthew-Dreemurr reade more doc about nonblocking I/O
-	// https://www.ibm.com/docs/en/i/7.5?topic=designs-example-nonblocking-io-select
-    int kq = kqueue();
-	DEBUG_ << "Kqueue: " << kq << endl;
-    if (kq == -1) {
+#ifdef KOS_DARWIN
+	int kq;
+	struct kevent change;
+	struct kevent event;
+
+	kq = kqueue();
+	if (kq == -1) {
 		DEBUG_ERROR_ << "Failed to create kqueue: errno: " << strerror(errno) << endl;
 		throw runtime_error("Failed to create kqueue");
-        // handle error
-    }
+	}
 
-    struct kevent change;
-    struct kevent event;
+	EV_SET(&change, connection_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
 
-    EV_SET(&change, connection_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
-
-    if (kevent(kq, &change, 1, &event, 1, NULL) == -1) {
-        // handle error
+	const int kvent_check = kevent(kq, &change, 1, &event, 1, NULL);
+	if (kvent_check == 0) {
+		DEBUG_INFO_ << "Kevent: Time limit expire" << endl;
+	}
+	if (kvent_check == -1) {
 		DEBUG_ERROR_ << "Failed to kevent: errno: " << strerror(errno) << endl;
 		throw runtime_error("Failed to kevent");
-    }
+	}
 
-    if (event.flags & EV_EOF) {
-        // handle EOF condition
-		DEBUG_WARN_ << "EOF" << endl;
-		throw runtime_error("EOF");
-    } else if (event.flags & EV_ERROR) {
-        // handle error reported in event
-		DEBUG_WARN_ << "EV_ERROR" << endl;
-		throw runtime_error("EV_ERROR");
-    } else {
-        memset(buffer, 0, BUFFER_SIZE);
-        int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
-        if (length_read == -1){
-            // handle read error
-			DEBUG_ERROR_ << "Failed to read: errno: " << strerror(errno) << endl;
-			throw runtime_error("Failed to read");
-        }
-		close (kq);
-        return string(buffer, length_read);
-    }
-	*/
+	if (event.flags & EV_EOF) {
+		DEBUG_WARN_ << "Kevent flag EV_EOF: reach EOF" << endl;
+		throw runtime_error("Kevent flag EV_EOF");
+	} else if (event.flags & EV_ERROR) {
+		DEBUG_WARN_ << "Kevent flag EV_ERROR: errno: " << strerror(errno) << endl;
+		throw runtime_error("Kevent flag EV_ERROR");
+	}
+
+	close (kq);
+#endif
+
+	// Start reading events
 	memset(buffer, 0, BUFFER_SIZE);
+
 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 	if (length_read == -1){
 		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
-		throw exception();
 	}
+
 	return string(buffer, length_read);
 }
 

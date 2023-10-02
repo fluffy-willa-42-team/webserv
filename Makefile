@@ -6,7 +6,7 @@
 #    By: awillems <awillems@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/09 08:35:24 by awillems          #+#    #+#              #
-#    Updated: 2023/09/25 11:24:14 by awillems         ###   ########.fr        #
+#    Updated: 2023/09/29 12:07:10 by mahadad          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,20 @@ else ifeq ($(DLEVEL), 2)
 else ifeq ($(DLEVEL), 3)
 	FLAGS += -D WDEBUG=ERROR
 endif
+
+ifeq ($(OS),Windows_NT)
+	$(error Dont compiles on windows)
+else
+	UNAME_S := $(shell uname -s)
+
+	ifeq ($(UNAME_S),Linux)
+		FLAGS += -D KOS_LINUX
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		FLAGS += -D KOS_DARWIN
+	endif
+endif
+
 
 # **************************************************************************** #
 
@@ -120,7 +134,7 @@ print:
 # **************************************************************************** #
 
 clean:
-	@rm -rf $(OBJ)
+	@rm -rf $(OBJ_DIR)
 	@for path in $(ALL_LIB); do \
 		make -sC $$path clean;\
 	done
