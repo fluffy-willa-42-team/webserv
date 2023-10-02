@@ -18,6 +18,7 @@ void init_content_type(){
 	content_type[".ogg"]	= "audio/ogg";
 	content_type[".mp4"]	= "video/mp4";
 	content_type[".webm"]	= "video/webm";
+	content_type[".svg"]	= "image/svg+xml";
 }
 
 
