@@ -36,7 +36,7 @@ Listener::Listener()
 }
 
 Listener::Listener(string host_ip, string port)
-: listener_fd(-1), connection_fd(-1) 
+: listener_fd(-1), connection_fd(-1), host(NULL) 
 {
 	// Need to catch exception to close socket and free c allocation by forcing destructor call
 	try {
