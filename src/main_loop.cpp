@@ -2,7 +2,7 @@
 #include "http.hpp"
 #include <unistd.h>
 
-void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
+void start(map<int, Listener*>& listeners, bool& loop, const Config& config, const Env& env){
 	// Return if all failed to start
 	if (listeners.size() < 1){
 		cout << "No Listener Started" << endl;
@@ -60,7 +60,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 			// DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
 			// DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
 
-			string response = http(*(ite->second), config);
+			string response = http(*(ite->second), config, env);
 
 			if (write(ite->second->connection_fd, response.c_str(), response.length()) < 0) {
 				DEBUG_WARN_ << "Failed to write to socket" << endl;
@@ -68,6 +68,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config){
 			if (close(ite->second->connection_fd) < 0) {
 				DEBUG_WARN_ << "Failed to close socket" << endl;
 			}
+			DEBUG_INFO_ << "End of connection" << endl;
 		}
 	}
 

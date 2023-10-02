@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <netdb.h>
 #include <sys/types.h>
-#include <sys/event.h>
+// #include <sys/event.h>
 #include <sys/time.h>
 #include "debug.hpp"
 
@@ -38,7 +38,7 @@ Listener::Listener()
 }
 
 Listener::Listener(string host_ip, string port)
-: listener_fd(-1), connection_fd(-1) 
+: listener_fd(-1), connection_fd(-1), host(NULL) 
 {
 	// Need to catch exception to close socket and free c allocation by forcing destructor call
 	try {
@@ -157,6 +157,7 @@ Listener::~Listener(){
 }
 
 string Listener::read_buff(){
+/** //TODO only compile on macos
 	//TODO WIP @Matthew-Dreemurr reade more doc about nonblocking I/O
 	// https://www.ibm.com/docs/en/i/7.5?topic=designs-example-nonblocking-io-select
     int kq = kqueue();
@@ -197,6 +198,14 @@ string Listener::read_buff(){
 		close (kq);
         return string(buffer, length_read);
     }
+	*/
+	memset(buffer, 0, BUFFER_SIZE);
+	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
+	if (length_read == -1){
+		DEBUG_WARN_ << "Failed to read from socket" << endl;;
+		throw exception();
+	}
+	return string(buffer, length_read);
 }
 
 const Listener& Listener::operator=(const Listener& other)

@@ -26,9 +26,7 @@ const Server& find_server(const Config& config, Headers req_headers){
 	throw exception();
 }
 
-const Location& find_location(const Server& serv, const string& req_path_param){
-	string req_path = remove_end_backslash(remove_param(req_path_param));
-
+const Location& find_location(const Server& serv, const string& req_path){
 	for (vector<Location>::const_iterator loc = serv.locations.begin(); loc != serv.locations.end(); loc++){
 		if (req_path == loc->path || startsWith(req_path, loc->path == "/" ? "/" : loc->path + "/")){
 			DEBUG_INFO_ << "Server Location Found: " << req_path << " (" << loc->path << "}" << endl;

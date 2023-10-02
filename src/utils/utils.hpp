@@ -29,7 +29,7 @@ string mergeFilePaths(const string& base, const string& path);
 /* ************************************************************************** */
 
 char** createCopy(const vector<string>& vec);
-void freeCopy(const vector<string>& vec, char** copy);
+void freeCopy(const vector<string>& vec, char *const *copy);
 
 /* ************************************************************************** */
 

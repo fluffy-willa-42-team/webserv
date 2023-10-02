@@ -24,7 +24,13 @@
 # define HEADER_HOST			"Host"
 # define HEADER_REDIRECT		"Location"
 
+# define CGI_HEADER_STATUS		"Status"
+
 # define NOT_FOUND_DESCRIPTION	"This Page has not been Found"
+
+/* ************************************************************************** */
+
+# define BUFFER_SIZE 2
 
 /* ************************************************************************** */
 
@@ -35,6 +41,8 @@ typedef enum {
 	S_END		= 0b01000,
 	S_ERROR		= 0b10000,
 }	e_status;
+
+typedef vector<string> Env;
 
 /* ************************************************************************** */
 
