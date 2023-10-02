@@ -2,6 +2,9 @@
 
 char** createCopy(const vector<string>& vec) {
 	char** charArray = new char*[vec.size() + 1];
+	if (!charArray){
+		return NULL;
+	}
 	memset(charArray, 0, (vec.size() + 1) * sizeof(char*));
 
 	for (size_t i = 0; i < vec.size(); ++i) {

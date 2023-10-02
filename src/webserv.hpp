@@ -24,6 +24,8 @@
 # define HEADER_HOST			"Host"
 # define HEADER_REDIRECT		"Location"
 
+# define CGI_HEADER_STATUS		"Status"
+
 # define NOT_FOUND_DESCRIPTION	"This Page has not been Found"
 
 /* ************************************************************************** */

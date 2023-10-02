@@ -28,6 +28,30 @@ Content-type: text/html; charset=UTF-8
 
 */
 
-string parse_cgi_response(const string& cgi_response, Headers& headers, string& body){
-	return body;
+string parse_cgi_response(const string& cgi_response, uint32_t& code, Headers& headers, string& body){
+	size_t header_body_separator = cgi_response.find("\r\n\r\n");
+
+    if (header_body_separator != string::npos) {
+        string header_string = cgi_response.substr(0, header_body_separator);
+        body = cgi_response.substr(header_body_separator + 4);
+
+        stringstream header_stream(header_string);
+        string line;
+        while (getline(header_stream, line) && removeCarriageReturn(line)) {
+            size_t separator = line.find(": ");
+            if (separator != string::npos) {
+                string field_name = line.substr(0, separator);
+                string field_value = line.substr(separator + 2);
+				if (field_name == CGI_HEADER_STATUS){
+					code = stringToNumber(string(field_value, 0, 3));
+					DEBUG_INFO_ << "[" << string(field_value, 0, 3) << "] : " << code << endl;
+				}
+				else {
+               		headers[field_name] = field_value;
+				}
+            }
+        }
+    }
+
+    return body;
 }

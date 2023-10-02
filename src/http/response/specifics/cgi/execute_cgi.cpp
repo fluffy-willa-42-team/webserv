@@ -1,45 +1,27 @@
 #include "response.hpp"
 #include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
-void exit_exec_cgi(const Env& env, char * const *env_cast, int pipe_fd[2]){
-	freeCopy(env, env_cast);
-	if (pipe_fd[0] >= 0){
-		close(pipe_fd[0]);
-	}
-	if (pipe_fd[1] >= 0){
-		close(pipe_fd[1]);
-	}
-	
-}
-
-void exec_child(char *const *argv, char *const *env, int pipe_fd[2]){
-	if (dup2(pipe_fd[0], STDIN_FILENO) < 0){
-		return ;
-	}
-
-	execve(argv[0], argv, env);
-
-	DEBUG_WARN_ << "execve fail" << endl;
-	perror("execve");
-
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	exit(1);
-}
+void free_exec_cgi(const Env& env, char * const *env_cast, int pipe_fd[2]);
+string read_buff_cgi(int fd, e_status& r_status);
 
 string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
-	char * const *env_cast = createCopy(env);
+	int pipe_fd[2] = {-1, -1};
 	char * const argv[3] = {
 		(char *const) cgi_bin.c_str(),
 		(char *const) file.c_str(),
 		NULL
 	};
+	char * const *env_cast = createCopy(env);
 
-	int pipe_fd[2] = {-1, -1};
+	if (!env_cast){
+		free_exec_cgi(env, env_cast, pipe_fd);
+		throw runtime_error("Env allocation failure");
+	}
+
 	if (pipe(pipe_fd) < 0){
-		cout << "xx" << endl;
-		exit_exec_cgi(env, env_cast, pipe_fd);
+		free_exec_cgi(env, env_cast, pipe_fd);
 		throw runtime_error("Pipe allocation failure");
 	}
 
@@ -47,37 +29,58 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 
 	pid_t pid = fork();
 	if (pid < 0){
-		cout << "xxx" << endl;
-		exit_exec_cgi(env, env_cast, pipe_fd);
+		free_exec_cgi(env, env_cast, pipe_fd);
 		throw runtime_error("Failure to fork");
 	}
 	else if (pid == 0){
-		exec_child(argv, env_cast, pipe_fd);
-		exit_exec_cgi(env, env_cast, pipe_fd);
-		exit(0);
+		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0){
+			DEBUG_WARN_ << "Du2 fail" << endl;
+			free_exec_cgi(env, env_cast, pipe_fd);
+			exit(EXIT_FAILURE);
+		}
+
+		execve(argv[0], argv, env_cast);
+
+		// DEBUG_WARN_ << "execve fail" << endl;
+
+		free_exec_cgi(env, env_cast, pipe_fd);
+		exit(EXIT_FAILURE);
 	}
+	else {
+		int status = 0;
+		waitpid(pid, &status, 0);
 
-	int status = 0;
-	waitpid(pid, &status, 0);
-	
-	if (WEXITSTATUS(status) != 0){
-		exit_exec_cgi(env, env_cast, pipe_fd);
-		throw runtime_error("Failed to execute");
+		int flags = fcntl(pipe_fd[0], F_GETFL, 0);
+		if (flags == -1) {
+			perror("fcntl");
+			throw runtime_error("Failed to execute");
+		}
+
+		if (fcntl(pipe_fd[0], F_SETFL, flags | O_NONBLOCK) == -1) {
+			perror("fcntl");
+			throw runtime_error("Failed to execute");
+		}
+		
+		if (!WIFEXITED(status)){
+			free_exec_cgi(env, env_cast, pipe_fd);
+			throw runtime_error("Failed to execute");
+		}
+
+		DEBUG_INFO_ << "TEST1" << endl;
+
+		string test;
+		e_status r_status = S_CONTINUE;
+		while (r_status == S_CONTINUE){
+			test += read_buff_cgi(pipe_fd[0], r_status);
+			if (r_status == S_ERROR){
+				free_exec_cgi(env, env_cast, pipe_fd);
+				throw runtime_error("Could not Read");
+			}
+		}
+
+		DEBUG_ << test << endl;
+		
+		free_exec_cgi(env, env_cast, pipe_fd);
+		return test;
 	}
-
-	char buffer[BUFFER_SIZE];
-
-	ssize_t char_read = read(pipe_fd[1], buffer, BUFFER_SIZE);
-
-	if (char_read < 0){
-		perror("test");
-		exit_exec_cgi(env, env_cast, pipe_fd);
-		throw runtime_error("xxxx");
-	}
-	cout << YELLOW << char_read << " | " << RESET << endl;
-
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	freeCopy(env, env_cast);
-	return "OK";
 }
