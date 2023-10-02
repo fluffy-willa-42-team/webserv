@@ -61,6 +61,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			write(ite->second->connection_fd, response.c_str(), response.length());
 			close(ite->second->connection_fd);
+
+			DEBUG_INFO_ << "End of connection" << endl;
 		}
 	}
 

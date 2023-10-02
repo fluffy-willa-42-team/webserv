@@ -1,16 +1,18 @@
-<?php
-if ($_SERVER['REDIRECT_STATUS'] === '200') {
-    echo 'This is the initial request.';
-} else {
-    echo 'This is a redirected request.';
-}
-?>
 <html>
 	<head>
 		<title>PHP index</title>
 	</head>
 	<body>
 		<h1>PHP index</h1>
+		<h2>
+			<?php
+			if ($_SERVER['REDIRECT_STATUS'] === '200') {
+				print 'This is a php generated message for get';
+			} else {
+				print 'This is a php generated message for redirect';
+			}
+			?>
+		</h2>
 	</body>
 </html>
 

@@ -11,7 +11,8 @@ Env create_env(
 	const string& cgi_bin,
 	const string& req_method,
 	const string& req_path,
-	const string& req_param
+	const string& req_param,
+	const string& filepath
 ){
 	Env req_env(env);
 	
@@ -24,8 +25,8 @@ Env create_env(
 
 	add_env(req_env, "REQUEST_METHOD", req_method);				// GET POST PUT *PATCH* DELETE
 
-	add_env(req_env, "SCRIPT_NAME", cgi_bin);					// TODO verify this
-	add_env(req_env, "SCRIPT_FILENAME", cgi_bin);				// TODO verify this
+	add_env(req_env, "SCRIPT_NAME", filepath);					// TODO verify this
+	add_env(req_env, "SCRIPT_FILENAME", filepath);				// TODO verify this
 
 	add_env(req_env, "REDIRECT_STATUS", "200");					// TODO verify this
 

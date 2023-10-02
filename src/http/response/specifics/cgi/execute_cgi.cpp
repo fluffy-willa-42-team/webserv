@@ -25,8 +25,6 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 		throw runtime_error("Pipe allocation failure");
 	}
 
-	cout << pipe_fd[0] << " | " << pipe_fd[1] << endl;
-
 	pid_t pid = fork();
 	if (pid < 0){
 		free_exec_cgi(env, env_cast, pipe_fd);
@@ -34,14 +32,11 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 	}
 	else if (pid == 0){
 		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0){
-			DEBUG_WARN_ << "Du2 fail" << endl;
 			free_exec_cgi(env, env_cast, pipe_fd);
 			exit(EXIT_FAILURE);
 		}
 
 		execve(argv[0], argv, env_cast);
-
-		// DEBUG_WARN_ << "execve fail" << endl;
 
 		free_exec_cgi(env, env_cast, pipe_fd);
 		exit(EXIT_FAILURE);
@@ -66,8 +61,6 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 			throw runtime_error("Failed to execute");
 		}
 
-		DEBUG_INFO_ << "TEST1" << endl;
-
 		string test;
 		e_status r_status = S_CONTINUE;
 		while (r_status == S_CONTINUE){
@@ -78,7 +71,7 @@ string exec_cgi(const Env& env, const string& cgi_bin, const string& file){
 			}
 		}
 
-		DEBUG_ << test << endl;
+		DEBUG_ << "CGI response: " << endl << BLUE << test << RESET << endl;
 		
 		free_exec_cgi(env, env_cast, pipe_fd);
 		return test;
