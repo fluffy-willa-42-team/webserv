@@ -22,6 +22,9 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	*/
 	while (loop){
 		for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end();){
+			if (!loop) {
+				break;
+			}
 			//TODO Check if we proprely use poll()
 			// https://beej.us/guide/bgnet/html/split/slightly-advanced-techniques.html#blocking
 			// Check new connection
