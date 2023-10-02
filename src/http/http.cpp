@@ -284,7 +284,6 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			}
 		}
 		else if (!loc.index.empty()){
-			string req_path = remove_param(req_path);
 			if (req_path != loc.path){
 				return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 			}
