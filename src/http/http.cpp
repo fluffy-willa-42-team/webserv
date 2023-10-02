@@ -155,34 +155,25 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 	/*===-----						Body							  -----===*/
 	string req_body;
+	if (req_method == "POST" || req_method == "PUT" || req_method == "PATCH" || req_method == "DELETE")
 	{
-		stringstream remainingContentStream;
-		remainingContentStream << ss_line_by_line.rdbuf();
-		req_body = remainingContentStream.str();
-		if (req_body.length() != 0){
-			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
-				DEBUG_ << "Missing \"Content-Length\" header" << endl;
-				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
-			}
-			else {
-				u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
-				while (req_body.length() < content_length){
-					string buf;
-					try {
-						DEBUG_ << "Try to read_buff" << endl;
-						buf = listener.read_buff();
-						// cout << "TODO: read_buff" << endl;//TODO REMOVE
-					}
-					catch(const exception& e) {
-						DEBUG_ << "Invalid \"Content-Length\" header" << endl;
-						return error(411, "Invalid \"Content-Length\" header");
-					}
-					req_body += buf;
+		if (map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
+			stringstream remainingContentStream;
+			remainingContentStream << ss_line_by_line.rdbuf();
+			req_body = remainingContentStream.str();
+
+			u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
+			while (req_body.length() < content_length){
+				string buf;
+				try {
+					buf = listener.read_buff();
 				}
+				catch(const exception& e) {
+					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
+					return error(411, "Invalid \"Content-Length\" header");
+				}
+				req_body += buf;
 			}
-		}
-		else {
-			DEBUG_ << "req_body is empty" << endl;
 		}
 	}
 
