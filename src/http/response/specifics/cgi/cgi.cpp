@@ -11,7 +11,7 @@ Env create_env(
 	const string& filepath
 );
 e_status exec_cgi(const Env& env, const string& cgi_bin, const string& file, string& response);
-string parse_cgi_response(const string& cgi_response, uint32_t& code, Headers& headers, string& body);
+e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers& headers, string& body);
 
 bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
 	for (map<string, string>::const_iterator ite = loc.cgi_pass.begin(); ite != loc.cgi_pass.end(); ite++){
@@ -43,10 +43,12 @@ string cgi(const Env& env,
 	Headers headers;
 	string body;
 
-	string response = parse_cgi_response(cgi_response, code, headers, body);
-	if (code < 100 || code >= 600){
+	if (parse_cgi_response(cgi_response, code, headers, body) != S_CONTINUE){
+		return error(500);
+	}
+	if (code == 0){
 		code = 200;
 	}
 
-	return get_response(code, headers, response);
+	return get_response(code, headers, body);
 }
