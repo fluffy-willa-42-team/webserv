@@ -95,7 +95,6 @@ e_status exec_cgi(const Env& env, const string& cgi_bin, const string& file, str
 			response += read_buff_cgi(pipe_fd[0], r_status);
 			if (r_status == S_ERROR){
 				free_exec_cgi(env, env_cast, pipe_fd);
-				throw runtime_error("Could not Read");
 				DEBUG_ERROR_ << "CGI: Could not Read" << endl;
 				return S_ERROR;
 			}

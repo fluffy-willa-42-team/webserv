@@ -12,7 +12,22 @@ string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
 const string http(Listener& listener, const Config& config, const Env& env){
-	string req = listener.read_buff();
+	string req;
+	try {
+		req += listener.read_buff();
+	}
+	catch(const exception& e) {
+		return error(400);
+	}
+	
+	while (req.find("\r\n\r\n") == string::npos){
+		try {
+			req += listener.read_buff();
+		}
+		catch(const exception& e) {
+			return error(400);
+		}
+	}
 
 	stringstream ss_line_by_line(req);
     string line;
