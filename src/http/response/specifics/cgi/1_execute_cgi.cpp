@@ -88,14 +88,14 @@ e_status exec_cgi(
 			//  save STDOUT
 			int fd_write = dup(STDOUT_FILENO);
 
-			//  pipe2.write => STDIN
-			if (dup2(pipe2.write, STDIN_FILENO) < 0){
+			//  pipe2.write => STDOUT
+			if (dup2(pipe2.write, STDOUT_FILENO) < 0){
 				free_exec_cgi(env, env_cast, pipe1, pipe2);
 				exit(EXIT_FAILURE);
 			}
 
-			//  pipe2.read => STDOUT
-			if (dup2(pipe2.read, STDOUT_FILENO) < 0){
+			//  pipe2.read => STDIN
+			if (dup2(pipe2.read, STDIN_FILENO) < 0){
 				free_exec_cgi(env, env_cast, pipe1, pipe2);
 				exit(EXIT_FAILURE);
 			}
