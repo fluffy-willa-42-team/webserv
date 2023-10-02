@@ -15,10 +15,9 @@ string read_buff_cgi(int fd, e_status& r_status){
 	static char buffer[BUFFER_SIZE];
 	memset(buffer, 0, BUFFER_SIZE);
 	int32_t length_read = read(fd, buffer, BUFFER_SIZE);
-	// DEBUG_INFO_ << "l_read = " << length_read << "[" << (int) buffer[0] << "] [" << (int) buffer[1] << "]" << endl;
 	if (length_read < 0){
 		r_status = S_ERROR;
-		DEBUG_WARN_ << "Failed to read from socket: " << errno << endl;
+		DEBUG_WARN_ << "Failed to read from CGI response: " << errno << endl;
 		return "";
 	}
 	else if (length_read != BUFFER_SIZE){
