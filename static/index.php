@@ -13,6 +13,13 @@
 			}
 			?>
 		</h2>
+
+		<form action="/php/post.php" method="post">
+			<label for="hello">Drop file</label>
+			<input type="text" id="hello" name="ererer">
+
+			<input type="submit" value="Hello">
+		</form>
 	</body>
 </html>
 

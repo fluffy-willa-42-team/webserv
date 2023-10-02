@@ -10,7 +10,13 @@ Env create_env(
 	const string& req_param,
 	const string& filepath
 );
-e_status exec_cgi(const Env& env, const string& cgi_bin, const string& file, string& response);
+e_status exec_cgi(
+	const Env& env,
+	const string& cgi_bin,
+	const string& req_body,
+	const string& file,
+	string& response
+);
 e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers& headers, string& body);
 
 bool is_file_cgi(const Location& loc, const string& filename, string& cgi_bin){
@@ -27,15 +33,16 @@ string cgi(const Env& env,
 	const Server& serv,
 	const Location& loc,
 	const string& cgi_bin,
+	const string& filepath,
 	const string& req_method,
 	const string& req_path,
 	const string& req_param,
-	const string& filepath
+	const string& req_body
 ){
 	Env req_env = create_env(env, serv, loc, cgi_bin, req_method, req_path, req_param, filepath);
 
 	string cgi_response;
-	if (exec_cgi(req_env, cgi_bin, filepath, cgi_response) != S_CONTINUE){
+	if (exec_cgi(req_env, cgi_bin, req_body, filepath, cgi_response) != S_CONTINUE){
 		return error(500);
 	}
 

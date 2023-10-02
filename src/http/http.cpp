@@ -29,6 +29,8 @@ const string http(Listener& listener, const Config& config, const Env& env){
 		}
 	}
 
+	DEBUG_ << "Request: " << endl << BLUE << req << RESET << endl;
+
 	stringstream ss_line_by_line(req);
     string line;
 
@@ -158,7 +160,6 @@ const string http(Listener& listener, const Config& config, const Env& env){
 		remainingContentStream << ss_line_by_line.rdbuf();
 		req_body = remainingContentStream.str();
 		if (req_body.length() != 0){
-			DEBUG_INFO_ << "Req body: " << req_body;
 			if (!map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
 				DEBUG_ << "Missing \"Content-Length\" header" << endl;
 				return error(411, "Missing \"Content-Length\" header"); // TODO verify it is not code 412
@@ -178,12 +179,14 @@ const string http(Listener& listener, const Config& config, const Env& env){
 					}
 					req_body += buf;
 				}
-				DEBUG_INFO_ << "Req body: " << req_body;
 			}
-		} else {
+		}
+		else {
 			DEBUG_ << "req_body is empty" << endl;
 		}
 	}
+
+	DEBUG_ << "req_body: " << endl << BLUE << req_body << RESET << endl;
 
 
 
@@ -283,7 +286,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
 					if (is_file_cgi(loc, req_path, cgi_bin)){
-						return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
+						return cgi(env, serv, loc, cgi_bin, file_path, req_method, req_path, req_param);
 					}
 				}
 				return get_file_res(file_path, loc.download);
@@ -305,7 +308,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(loc, req_path, cgi_bin)){
-					return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, loc.index);
+					return cgi(env, serv, loc, cgi_bin, loc.index, req_method, req_path, req_param);
 				}
 			}
 			return get_file_res(loc.index, loc.download);
@@ -323,7 +326,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 		if (!is_file_cgi(loc, req_path, cgi_bin)){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
-		return cgi(env, serv, loc, cgi_bin, req_method, req_path, req_param, file_path);
+		return cgi(env, serv, loc, cgi_bin, file_path, req_method, req_path, req_param, req_body);
 	}
 
 	return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
