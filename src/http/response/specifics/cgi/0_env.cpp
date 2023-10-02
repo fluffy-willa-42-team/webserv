@@ -55,9 +55,5 @@ Env create_env(
 	// add_env(req_env, "CONTENT_LENGTH"); = "";
 	// add_env(req_env, "CONTENT_TYPE"); = "";
 
-	for (Env::const_iterator ite = req_env.begin(); ite != req_env.end(); ite++){
-		cout << "=> " << *ite << endl; 
-	}
-
 	return req_env;
 }
