@@ -25,6 +25,14 @@ typedef struct {
 	off_t fileSize;
 } AutoindexInput;
 
+typedef struct {
+	string	method;
+	string	path;
+	string	param;
+	Headers	headers;
+	string	body;
+}	Request;
+
 
 /******************************************************************************/
 

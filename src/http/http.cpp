@@ -12,27 +12,29 @@ string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
 const string http(Listener& listener, const Config& config, const Env& env){
-	string req;
+	string req_raw;
 	try {
-		req += listener.read_buff();
+		req_raw += listener.read_buff();
 	}
 	catch(const exception& e) {
 		return error(400);
 	}
 	
-	while (req.find("\r\n\r\n") == string::npos){
+	while (req_raw.find("\r\n\r\n") == string::npos){
 		try {
-			req += listener.read_buff();
+			req_raw += listener.read_buff();
 		}
 		catch(const exception& e) {
 			return error(400);
 		}
 	}
 
-	DEBUG_ << "Request: " << endl << BLUE << req << RESET << endl;
+	DEBUG_ << "Request: " << endl << BLUE << req_raw << RESET << endl;
 
-	stringstream ss_line_by_line(req);
+	stringstream ss_line_by_line(req_raw);
     string line;
+
+	Request req;
 
 	/*===-----						Init Line						   -----===*
 	METHOD PATH+PARAMS PROTOCOL
@@ -59,10 +61,10 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 
 	// Method
-	string req_method = initline[0];
+	req.method = initline[0];
 	{
-		DEBUG_INFO_ << "Method: " << req_method << endl;
-		e_validation_status validation_status = is_method_valid(req_method);
+		DEBUG_INFO_ << "Method: " << req.method << endl;
+		e_validation_status validation_status = is_method_valid(req.method);
 		if (validation_status == NOT_ALLOWED){
 			DEBUG_ << "Method is not allowed" << endl;
 			return error(405);
@@ -74,8 +76,6 @@ const string http(Listener& listener, const Config& config, const Env& env){
 	}
 
 	// Path + Param
-	string req_path;
-	string req_param;
 	{
 		string req_path_param = initline[1];
 		if (!is_path_valid(req_path_param)){
@@ -83,12 +83,12 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			return error(400, "Path is invalid");
 		}
 		if (req_path_param.find_first_of('?') != string::npos){
-			req_path = remove_end_backslash(req_path_param.substr(0, req_path_param.find_first_of('?')));
-			req_param = req_path_param.substr(req_path_param.find_first_of('?') + 1, req_path_param.size());
-			DEBUG_INFO_ << "Path + Param: " << req_path << " ? " << req_param << endl;
+			req.path = remove_end_backslash(req_path_param.substr(0, req_path_param.find_first_of('?')));
+			req.param = req_path_param.substr(req_path_param.find_first_of('?') + 1, req_path_param.size());
+			DEBUG_INFO_ << "Path + Param: " << req.path << " ? " << req.param << endl;
 		}
 		else {
-			req_path = remove_end_backslash(req_path_param);
+			req.path = remove_end_backslash(req_path_param);
 		}
 	}
 
@@ -96,7 +96,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 	{
 		string req_protocol = initline[2];
 		DEBUG_INFO_ << "Protocol: " << req_protocol << endl;
-		e_validation_status validation_status = is_method_valid(req_method);
+		e_validation_status validation_status = is_method_valid(req.method);
 		if (validation_status == NOT_ALLOWED){
 			DEBUG_ << "Protocol is not allowed" << endl;
 				return error(505); // HTTP Version not allowed
@@ -118,14 +118,13 @@ const string http(Listener& listener, const Config& config, const Env& env){
 	Ex:
 	Accept-Language: en-US,en
 	*/
-	Headers req_headers;
     while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
 			DEBUG_ << "Headers are invalid" << endl;
 			return error(400, "Headers are invalid");
 		}
-        req_headers[headerline[0]] = headerline[1];
+        req.headers[headerline[0]] = headerline[1];
     }
 
 
@@ -144,7 +143,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 	Host: awillems.42.fr:4000
 	*/
 	{
-		if (!map_has_key(req_headers, string(HEADER_HOST))){
+		if (!map_has_key(req.headers, string(HEADER_HOST))){
 			DEBUG_ << "Missing host header" << endl;
 			return error(400, "Missing host header");
 		}
@@ -154,16 +153,15 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 
 	/*===-----						Body							  -----===*/
-	string req_body;
-	if (req_method == "POST" || req_method == "PUT" || req_method == "PATCH" || req_method == "DELETE")
+	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
 	{
-		if (map_has_key(req_headers, string(HEADER_CONTENT_LENGTH))){
+		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
 			stringstream remainingContentStream;
 			remainingContentStream << ss_line_by_line.rdbuf();
-			req_body = remainingContentStream.str();
+			req.body = remainingContentStream.str();
 
-			u_int32_t content_length = stringToNumber(req_headers[HEADER_CONTENT_LENGTH]);
-			while (req_body.length() < content_length){
+			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
+			while (req.body.length() < content_length){
 				string buf;
 				try {
 					buf = listener.read_buff();
@@ -172,12 +170,12 @@ const string http(Listener& listener, const Config& config, const Env& env){
 					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
 					return error(411, "Invalid \"Content-Length\" header");
 				}
-				req_body += buf;
+				req.body += buf;
 			}
 		}
 	}
 
-	DEBUG_ << "req_body: " << endl << BLUE << req_body << RESET << endl;
+	DEBUG_ << "req.body: " << endl << BLUE << req.body << RESET << endl;
 
 
 
@@ -192,7 +190,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 	Server serv;
 	try {
-		serv = find_server(config, req_headers);
+		serv = find_server(config, req.headers);
 	}
 	catch(const exception& e) {
 		return error(404, "This host has not been found");
@@ -200,7 +198,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 	Location loc;
 	try {
-		loc = find_location(serv, req_path);
+		loc = find_location(serv, req.path);
 	}
 	catch(const exception& e) {
 		return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
@@ -220,7 +218,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 	Pseudo code:
 
-	switch (req_method){
+	switch (req.method){
 		case "GET": {
 			switch (loc_type) {
 				case IS_FOLDER: {
@@ -258,11 +256,11 @@ const string http(Listener& listener, const Config& config, const Env& env){
 
 	*/
 
-	if (req_method == "GET"){
+	if (req.method == "GET"){
 		if (!loc.root.empty()){
-			string file_path = loc.root + "/" + req_path.substr(loc.path.size());
+			string file_path = loc.root + "/" + req.path.substr(loc.path.size());
 			DEBUG_INFO_ << file_path << endl;
-			if (!loc.index.empty() && loc.path == req_path){
+			if (!loc.index.empty() && loc.path == req.path){
 				file_path = mergeFilePaths(loc.root, loc.index);
 			}
 
@@ -276,8 +274,8 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			if (S_ISREG(path_info.st_mode)){ // Check if is file
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
-					if (is_file_cgi(loc, req_path, cgi_bin)){
-						return cgi(env, serv, loc, cgi_bin, file_path, req_method, req_path, req_param);
+					if (is_file_cgi(loc, req.path, cgi_bin)){
+						return cgi(env, serv, loc, cgi_bin, file_path, req);
 					}
 				}
 				return get_file_res(file_path, loc.download);
@@ -286,20 +284,20 @@ const string http(Listener& listener, const Config& config, const Env& env){
 				if (!loc.autoindex){
 					return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 				}
-				return get_autoindex(req_path, file_path);
+				return get_autoindex(req.path, file_path);
 			}
 			else {
 				return error_serv(serv, 403, "Only files and folder are allowed to be read");
 			}
 		}
 		else if (!loc.index.empty()){
-			if (req_path != loc.path){
+			if (req.path != loc.path){
 				return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
 			}
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
-				if (is_file_cgi(loc, req_path, cgi_bin)){
-					return cgi(env, serv, loc, cgi_bin, loc.index, req_method, req_path, req_param);
+				if (is_file_cgi(loc, req.path, cgi_bin)){
+					return cgi(env, serv, loc, cgi_bin, loc.index, req);
 				}
 			}
 			return get_file_res(loc.index, loc.download);
@@ -308,16 +306,16 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			return redirect(loc.redirect_code, loc.redirect_path);
 		}
 	}
-	else if (req_method == "POST" || req_method == "PUT" || req_method == "DELETE"){
-		string file_path = loc.root + "/" + req_path.substr(loc.path.size());
+	else if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE"){
+		string file_path = loc.root + "/" + req.path.substr(loc.path.size());
 		if (loc.cgi_pass.empty()){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		string cgi_bin;
-		if (!is_file_cgi(loc, req_path, cgi_bin)){
+		if (!is_file_cgi(loc, req.path, cgi_bin)){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
-		return cgi(env, serv, loc, cgi_bin, file_path, req_method, req_path, req_param, req_body);
+		return cgi(env, serv, loc, cgi_bin, file_path, req);
 	}
 
 	return error_serv(serv, 404, NOT_FOUND_DESCRIPTION);
