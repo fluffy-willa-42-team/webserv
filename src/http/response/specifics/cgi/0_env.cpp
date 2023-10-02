@@ -14,6 +14,15 @@ Env create_env(
 	const string& req_param,
 	const string& filepath
 ){
+	(void) env;
+	(void) serv;
+	(void) loc;
+	(void) cgi_bin;
+	(void) req_method;
+	(void) req_path;
+	(void) req_param;
+	(void) filepath;
+
 	Env req_env(env);
 	
 	add_env(req_env, "SERVER_SOFTWARE", SERVER_VERSION);		// The name and version of hte server software.
