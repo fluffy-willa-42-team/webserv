@@ -34,8 +34,8 @@ string read_buff_cgi(int fd, e_status& r_status){
 e_status exec_cgi(const Env& env, const string& cgi_bin, const string& file, string& response){
 	int pipe_fd[2] = {-1, -1};
 	char * const argv[3] = {
-		(char *const) cgi_bin.c_str(),
-		(char *const) file.c_str(),
+		const_cast<char*>(cgi_bin.c_str()),
+		const_cast<char*>(file.c_str()),
 		NULL
 	};
 	char * const *env_cast = createCopy(env);

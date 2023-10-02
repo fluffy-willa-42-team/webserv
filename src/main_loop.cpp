@@ -62,7 +62,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			string response = http(*(ite->second), config, env);
 
-			if (write(ite->second->connection_fd, response.c_str(), response.length()) < 0) {
+			if (send(ite->second->connection_fd, response.c_str(), response.length(), 0) < 0) {
 				DEBUG_WARN_ << "Failed to write to socket" << endl;
 			}
 			if (close(ite->second->connection_fd) < 0) {

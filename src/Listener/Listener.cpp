@@ -200,7 +200,7 @@ string Listener::read_buff(){
     }
 	*/
 	memset(buffer, 0, BUFFER_SIZE);
-	int32_t length_read = read(connection_fd, buffer, BUFFER_SIZE);
+	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 	if (length_read == -1){
 		DEBUG_WARN_ << "Failed to read from socket" << endl;;
 		throw exception();
