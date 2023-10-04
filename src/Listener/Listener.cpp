@@ -157,50 +157,50 @@ Listener::~Listener(){
 	}
 }
 
-string Listener::read_buff(){
-#ifdef KOS_DARWIN
-	int kq;
-	struct kevent change;
-	struct kevent event;
+// string Listener::read_buff(){
+// #ifdef KOS_DARWIN
+// 	int kq;
+// 	struct kevent change;
+// 	struct kevent event;
 
-	kq = kqueue();
-	if (kq == -1) {
-		DEBUG_ERROR_ << "Failed to create kqueue: errno: " << strerror(errno) << endl;
-		throw runtime_error("Failed to create kqueue");
-	}
+// 	kq = kqueue();
+// 	if (kq == -1) {
+// 		DEBUG_ERROR_ << "Failed to create kqueue: errno: " << strerror(errno) << endl;
+// 		throw runtime_error("Failed to create kqueue");
+// 	}
 
-	EV_SET(&change, connection_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
+// 	EV_SET(&change, connection_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
 
-	const int kvent_check = kevent(kq, &change, 1, &event, 1, NULL);
-	if (kvent_check == 0) {
-		DEBUG_INFO_ << "Kevent: Time limit expire" << endl;
-	}
-	if (kvent_check == -1) {
-		DEBUG_ERROR_ << "Failed to kevent: errno: " << strerror(errno) << endl;
-		throw runtime_error("Failed to kevent");
-	}
+// 	const int kvent_check = kevent(kq, &change, 1, &event, 1, NULL);
+// 	if (kvent_check == 0) {
+// 		DEBUG_INFO_ << "Kevent: Time limit expire" << endl;
+// 	}
+// 	if (kvent_check == -1) {
+// 		DEBUG_ERROR_ << "Failed to kevent: errno: " << strerror(errno) << endl;
+// 		throw runtime_error("Failed to kevent");
+// 	}
 
-	if (event.flags & EV_EOF) {
-		DEBUG_WARN_ << "Kevent flag EV_EOF: reach EOF" << endl;
-		throw runtime_error("Kevent flag EV_EOF");
-	} else if (event.flags & EV_ERROR) {
-		DEBUG_WARN_ << "Kevent flag EV_ERROR: errno: " << strerror(errno) << endl;
-		throw runtime_error("Kevent flag EV_ERROR");
-	}
+// 	if (event.flags & EV_EOF) {
+// 		DEBUG_WARN_ << "Kevent flag EV_EOF: reach EOF" << endl;
+// 		throw runtime_error("Kevent flag EV_EOF");
+// 	} else if (event.flags & EV_ERROR) {
+// 		DEBUG_WARN_ << "Kevent flag EV_ERROR: errno: " << strerror(errno) << endl;
+// 		throw runtime_error("Kevent flag EV_ERROR");
+// 	}
 
-	close (kq);
-#endif
+// 	close (kq);
+// #endif
 
-	// Start reading events
-	memset(buffer, 0, BUFFER_SIZE);
+// 	// Start reading events
+// 	memset(buffer, 0, BUFFER_SIZE);
 
-	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
-	if (length_read == -1){
-		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
-	}
+// 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
+// 	if (length_read == -1){
+// 		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
+// 	}
 
-	return string(buffer, length_read);
-}
+// 	return string(buffer, length_read);
+// }
 
 const Listener& Listener::operator=(const Listener& other)
 {

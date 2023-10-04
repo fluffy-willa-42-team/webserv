@@ -16,7 +16,7 @@ class Listener {
 		int32_t connection_fd;
 		struct addrinfo *host;
 
-		char buffer[BUFFER_SIZE];
+		// char buffer[BUFFER_SIZE];
 
 		pollfd wpoll;
 

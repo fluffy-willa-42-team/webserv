@@ -11,10 +11,24 @@
 string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
-const string http(Listener& listener, const Config& config, const Env& env){
+string read_buff(int connection_fd, char* buffer){
+	// Start reading events
+	memset(buffer, 0, BUFFER_SIZE);
+
+	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
+	if (length_read == -1){
+		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
+	}
+
+	return string(buffer, length_read);
+}
+
+const string http(const int fd, const Config& config, const Env& env){
+	char* buffer = new char[BUFFER_SIZE];
 	string req_raw;
+
 	try {
-		req_raw += listener.read_buff();
+		req_raw += read_buff(fd, buffer);
 	}
 	catch(const exception& e) {
 		DEBUG_ << "The Request is empty" << endl;
@@ -23,7 +37,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 	
 	while (req_raw.find("\r\n\r\n") == string::npos){
 		try {
-			req_raw += listener.read_buff();
+			req_raw += read_buff(fd, buffer);
 		}
 		catch(const exception& e) {
 			return error(400);
@@ -163,7 +177,7 @@ const string http(Listener& listener, const Config& config, const Env& env){
 			while (req.body.length() < content_length){
 				string buf;
 				try {
-					buf = listener.read_buff();
+					req_raw += read_buff(fd, buffer);
 				}
 				catch(const exception& e) {
 					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
