@@ -63,6 +63,10 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 			// DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
 			// DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
 
+			if (!loop) {// TODO check on macos if this fix the freez with ctrl+c
+				DEBUG_INFO_ << "Loop stoped just befor reading http request!" << endl;
+				return ;
+			}
 			string response = http(*(ite->second), config, env);
 
 			if (send(ite->second->connection_fd, response.c_str(), response.length(), 0) < 0) {
