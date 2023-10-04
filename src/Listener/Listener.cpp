@@ -115,11 +115,6 @@ Listener::Listener(string host_ip, string port)
 		throw e;
 	}
 
-	// Setup pollfd to listen to new connection with poll()
-
-	wpoll.fd = listener_fd;
-	wpoll.events = POLLIN;
-	wpoll.revents = 0;
 }
 
 Listener::~Listener(){

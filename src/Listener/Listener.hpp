@@ -16,10 +16,6 @@ class Listener {
 		int32_t connection_fd;
 		struct addrinfo *host;
 
-		// char buffer[BUFFER_SIZE];
-
-		pollfd wpoll;
-
 		Listener();
 		Listener(string host_ip, string port);
 		~Listener();

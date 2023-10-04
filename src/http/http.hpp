@@ -18,6 +18,8 @@ typedef enum {
 	AINDEX_FOLDER,
 } AutoindexValue;
 
+
+
 typedef struct {
 	AutoindexValue type;
 	string path;

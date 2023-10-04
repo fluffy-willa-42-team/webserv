@@ -2,8 +2,9 @@
 #include "http.hpp"
 #include <vector>
 #include <unistd.h>
+#include "Poll.hpp"
 
-void start(map<int, Listener*>& listeners, bool& loop, const Config& config, const Env& env){
+void start(map<int, Listener*>& listeners, bool& loop, const Config& config, const Env& env) {
 	// Return if all failed to start
 	if (listeners.size() < 1){
 		cout << "No Listener Started" << endl;
@@ -25,9 +26,12 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 	//TODO WARN If a server faild it weel be destroy ?
 	const int listener_nb = listeners.size();
-	vector<pollfd> pollfds;
+	vector<Poll> poll_queue;
+
+	//Store all listener pollfd
 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ++ite){
-		pollfds.push_back(ite->second->wpoll);
+		const pollfd tmp = {ite->second->listener_fd, POLLIN, 0};
+		poll_queue.push_back(Poll(LISTENER, tmp, ""));
 	}
 
 	// Execute try_exec of all server at each execution.
@@ -43,63 +47,101 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	*/
 	while (loop){
 
-		const int poll_ret = poll(pollfds.data(), 1, 0);
-		for (vector<pollfd>::iterator ite = pollfds.begin(); ite != pollfds.end();) {
+		for (vector<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();) {
 			if (!loop) {
 				break;
 			}
 
-			if (ite - pollfds.begin() > listener_nb) {
-				if (!loop) {// TODO check on macos if this fix the freez with ctrl+c
-					DEBUG_INFO_ << "Loop stoped just befor reading http request!" << endl;
-					return ;
-				}
-				string response = http(ite->fd, config, env);
+			const int poll_ret = poll(&(ite->poll), 1, 0);
 
-				if (send(ite->second->connection_fd, response.c_str(), response.length(), 0) < 0) {
-					DEBUG_WARN_ << "Failed to write to socket" << endl;
-				}
-				if (close(ite->second->connection_fd) < 0) {
-					DEBUG_WARN_ << "Failed to close socket" << endl;
-				}
-				DEBUG_INFO_ << "End of connection" << endl;
+			if (poll_ret < 0) {
+				DEBUG_WARN_ << "Failed to poll id: " << ite->id << ", ignoring" << endl;
+				DEBUG_WARN_ << "Error: " << strerror(errno) << endl;
+				++ite;
+				continue ;
 			}
-			//TODO Check if we proprely use poll()
-			// https://beej.us/guide/bgnet/html/split/slightly-advanced-techniques.html#blocking
-			// Check new connection
-
 			if(poll_ret == 0){
 				++ite;
 				// DEBUG_WARN_ << "No new connection, ignoring" << endl;
 				continue ;
 			}
-			if (poll_ret < 0){
-				DEBUG_WARN_ << "Failed to poll, ignoring" << endl;
+			if (!(ite->poll.revents & POLLIN)){
+				DEBUG_WARN_ << "No new connection poll id: " << ite->id << " (revents: " << ite->poll.revents << "), ignoring" << endl;
 				++ite;
 				continue ;
 			}
-			if (!(ite->revents & POLLIN)){
-				DEBUG_WARN_ << "No new connection (revents: " << ite->revents << "), ignoring" << endl;
-				++ite;
+
+
+			if (!loop) {// TODO check on macos if this fix the freez with ctrl+c
+				DEBUG_INFO_ << "Loop stoped just befor reading request!" << endl;
+				return ;
+			}
+
+			const PollType type = ite->type;
+			const pollfd poll = ite->poll;
+
+			if (type == LISTENER) {
+
+				DEBUG_ << "Connection poll id: " << ite->id << endl;
+				// Accept new connection
+				const int connection_fd = accept(poll.fd, NULL, NULL);
+				if (connection_fd < 0){
+					DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
+					++ite;
+					continue ;
+				}
+
+				DEBUG_ << "New connection accepted and stored: " << connection_fd << endl;
+
+				pollfd new_pollfd = {connection_fd, POLLIN, 0};
+				poll_queue.push_back(Poll(READ, new_pollfd, ""));
+				ite ++;
 				continue ;
 			}
-			DEBUG_ << "New connection" << endl;
-			DEBUG_ << "Listener fd: " << ite->fd << endl;
+
+			if (type == READ) {
+
+				DEBUG_ << "Read poll id: " << ite->id << endl;
+				ite->response = http(poll.fd, config, env);
+				ite->type = WRITE;
+				ite++;
+				continue;
+			}
+
+			if (type == WRITE) {
+				DEBUG_ << "Write poll id: " << ite->id << endl;
+				if (send(poll.fd, ite->response.c_str(), ite->response.length(), 0) < 0) {
+					DEBUG_WARN_ << "Failed to write to socket" << endl;
+				}
+				if (close(poll.fd) < 0) {
+					DEBUG_WARN_ << "Failed to close socket" << endl;
+				}
+				DEBUG_INFO_ << "End of connection" << endl;
+				ite++;
+				continue;
+			}
+
+			//TODO Check if we proprely use poll()
+			// https://beej.us/guide/bgnet/html/split/slightly-advanced-techniques.html#blocking
+			// Check new connection
+
+
+		// 	DEBUG_ << "Listener fd: " << ite->fd << endl;
 		
-			// Accept new connection
-			const int connection_fd = accept(ite->fd, NULL, NULL);
-			if (connection_fd < 0){
-				DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
-				++ite;
-				continue ;
-			}
+		// 	// Accept new connection
+		// 	const int connection_fd = accept(ite->fd, NULL, NULL);
+		// 	if (connection_fd < 0){
+		// 		DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
+		// 		++ite;
+		// 		continue ;
+		// 	}
 
-			DEBUG_ << "New connection accepted and stored: " << connection_fd << endl;
+		// 	DEBUG_ << "New connection accepted and stored: " << connection_fd << endl;
 
-			pollfd new_pollfd = {connection_fd, POLLIN, 0};
-			pollfds.push_back(new_pollfd);
-			ite ++;
-		}
+		// 	pollfd new_pollfd = {connection_fd, POLLIN, 0};
+		// 	pollfds.push_back(new_pollfd);
+		// 	ite ++;
+		// }
 	// 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end();){
 	// 		if (!loop) {
 	// 			break;
@@ -158,4 +200,5 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	// 	}
 	}
 
+}
 }
