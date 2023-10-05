@@ -1,6 +1,6 @@
 #include "Listener.hpp"
 #include "http.hpp"
-#include <vector>
+#include <list>
 #include <unistd.h>
 #include "Poll.hpp"
 
@@ -12,21 +12,9 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	}
 	DEBUG_ << "Start server" << endl;
 
-	//TODO Create array of pollfd and fill it with all listener_fd and connection_fd
-
-
-	//TODO REWORK
-	//TODO REWORK
-	//TODO REWORK Create a new class that will handle all the pollfd for accept, read and write
-	//TODO REWORK Each class will have a type [LISTENER, CONNECTION, READ, WRITE]
-	//TODO REWORK Each class will store a pollfd and the data needed for the type (aka connection_fd for connection, http response for write, etc...)
-	//TODO REWORK
-	//TODO REWORK
-
-
 	//TODO WARN If a server faild it weel be destroy ?
 	const int listener_nb = listeners.size();
-	vector<Poll> poll_queue;
+	std::list<Poll> poll_queue;
 
 	//Store all listener pollfd
 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ++ite){
@@ -51,11 +39,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	*/
 	while (loop){
 		
-		//TODO tempory fix, check if there is a better way to not invalidate iterator
-		//TODO need to be able to pop finished Poll
-		vector<Poll> temp_queue;
-
-		for (vector<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();++ite) {
+		for (std::list<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();) {
+			cout << "poll queue size: " << poll_queue.size() << endl;
 			if (!loop && ite == poll_queue.end()) {
 				break;
 			}
@@ -65,14 +50,17 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 			if (poll_ret < 0) {
 				DEBUG_WARN_ << "Failed to poll id: " << ite->id << ", ignoring" << endl;
 				DEBUG_WARN_ << "Error: " << strerror(errno) << endl;
+				++ite;
 				continue ;
 			}
 			if(poll_ret == 0){
 				// DEBUG_WARN_ << "No new connection, ignoring" << endl;
+				++ite;
 				continue ;
 			}
-			if (!(ite->poll.revents & POLLIN)){
+			if (!(ite->poll.revents & POLLIN) && !(ite->poll.revents & POLLOUT)) {
 				DEBUG_WARN_ << "No new connection poll id: " << ite->id << " (revents: " << ite->poll.revents << "), ignoring" << endl;
+				++ite;
 				continue ;
 			}
 
@@ -92,6 +80,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				const int connection_fd = accept(poll.fd, NULL, NULL);
 				if (connection_fd < 0){
 					DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
+					++ite;
 					continue ;
 				}
 
@@ -101,20 +90,27 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				new_pollfd.events = POLLIN;
 				new_pollfd.fd     = connection_fd;
 				new_pollfd.revents= 0;
-				temp_queue.push_back(Poll(READ, new_pollfd, ""));
+				//TODO handle error
+				poll_queue.push_back(Poll(READ, new_pollfd, ""));
+				++ite;
 				continue ;
 			}
 
 			if (type == READ) {
 
 				DEBUG_ << "Read poll id: " << ite->id << endl;
+				//TODO handle error
 				ite->response = http(poll.fd, config, env);
 				ite->type = WRITE;
+				ite->poll.events = POLLOUT;
+				++ite;
 				continue;
 			}
 
 			if (type == WRITE) {
 				DEBUG_ << "Write poll id: " << ite->id << endl;
+				DEBUG_ << "Response: " << endl << ite->response << endl;
+				//TODO handle error
 				if (send(poll.fd, ite->response.c_str(), ite->response.length(), 0) < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
 				}
@@ -122,10 +118,9 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					DEBUG_WARN_ << "Failed to close socket" << endl;
 				}
 				DEBUG_INFO_ << "End of connection" << endl;
+				ite = poll_queue.erase(ite);
 				continue;
 			}
 		}
-		//TODO tempory fix, check if there is a better way to not invalidate iterator
-		poll_queue.insert(poll_queue.end(), temp_queue.begin(), temp_queue.end());
 	}
 }
