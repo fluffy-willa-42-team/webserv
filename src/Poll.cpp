@@ -13,7 +13,7 @@ Poll::Poll(PollType type, pollfd poll, string response)
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz";
-	int len = 10;
+	int len = 5;
 	for (int i = 0; i < len; ++i) {
 		id += alphanum[rand() % (sizeof(alphanum) - 1)];
 	}

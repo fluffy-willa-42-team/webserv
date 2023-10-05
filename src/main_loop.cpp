@@ -30,7 +30,11 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 	//Store all listener pollfd
 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ++ite){
-		const pollfd tmp = {ite->second->listener_fd, POLLIN, 0};
+		pollfd tmp;
+		// = {ite->second->listener_fd, POLLIN, 0}
+		tmp.events = POLLIN;
+		tmp.fd     = ite->second->listener_fd;
+		tmp.revents= 0;
 		poll_queue.push_back(Poll(LISTENER, tmp, ""));
 	}
 
@@ -46,9 +50,13 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	
 	*/
 	while (loop){
+		
+		//TODO tempory fix, check if there is a better way to not invalidate iterator
+		//TODO need to be able to pop finished Poll
+		vector<Poll> temp_queue;
 
-		for (vector<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();) {
-			if (!loop) {
+		for (vector<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();++ite) {
+			if (!loop && ite == poll_queue.end()) {
 				break;
 			}
 
@@ -57,17 +65,14 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 			if (poll_ret < 0) {
 				DEBUG_WARN_ << "Failed to poll id: " << ite->id << ", ignoring" << endl;
 				DEBUG_WARN_ << "Error: " << strerror(errno) << endl;
-				++ite;
 				continue ;
 			}
 			if(poll_ret == 0){
-				++ite;
 				// DEBUG_WARN_ << "No new connection, ignoring" << endl;
 				continue ;
 			}
 			if (!(ite->poll.revents & POLLIN)){
 				DEBUG_WARN_ << "No new connection poll id: " << ite->id << " (revents: " << ite->poll.revents << "), ignoring" << endl;
-				++ite;
 				continue ;
 			}
 
@@ -87,15 +92,16 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				const int connection_fd = accept(poll.fd, NULL, NULL);
 				if (connection_fd < 0){
 					DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
-					++ite;
 					continue ;
 				}
 
 				DEBUG_ << "New connection accepted and stored: " << connection_fd << endl;
 
-				pollfd new_pollfd = {connection_fd, POLLIN, 0};
-				poll_queue.push_back(Poll(READ, new_pollfd, ""));
-				ite ++;
+				pollfd new_pollfd;
+				new_pollfd.events = POLLIN;
+				new_pollfd.fd     = connection_fd;
+				new_pollfd.revents= 0;
+				temp_queue.push_back(Poll(READ, new_pollfd, ""));
 				continue ;
 			}
 
@@ -104,7 +110,6 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				DEBUG_ << "Read poll id: " << ite->id << endl;
 				ite->response = http(poll.fd, config, env);
 				ite->type = WRITE;
-				ite++;
 				continue;
 			}
 
@@ -117,88 +122,10 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					DEBUG_WARN_ << "Failed to close socket" << endl;
 				}
 				DEBUG_INFO_ << "End of connection" << endl;
-				ite++;
 				continue;
 			}
-
-			//TODO Check if we proprely use poll()
-			// https://beej.us/guide/bgnet/html/split/slightly-advanced-techniques.html#blocking
-			// Check new connection
-
-
-		// 	DEBUG_ << "Listener fd: " << ite->fd << endl;
-		
-		// 	// Accept new connection
-		// 	const int connection_fd = accept(ite->fd, NULL, NULL);
-		// 	if (connection_fd < 0){
-		// 		DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
-		// 		++ite;
-		// 		continue ;
-		// 	}
-
-		// 	DEBUG_ << "New connection accepted and stored: " << connection_fd << endl;
-
-		// 	pollfd new_pollfd = {connection_fd, POLLIN, 0};
-		// 	pollfds.push_back(new_pollfd);
-		// 	ite ++;
-		// }
-	// 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end();){
-	// 		if (!loop) {
-	// 			break;
-	// 		}
-	// 		//TODO Check if we proprely use poll()
-	// 		// https://beej.us/guide/bgnet/html/split/slightly-advanced-techniques.html#blocking
-	// 		// Check new connection
-	// 		const int poll_ret = poll(&(ite->second->wpoll), 1, 0);
-
-	// 		if(poll_ret == 0){
-	// 			++ite;
-	// 			// DEBUG_WARN_ << "No new connection, ignoring" << endl;
-	// 			continue ;
-	// 		}
-	// 		if (poll_ret < 0){
-	// 			DEBUG_WARN_ << "Failed to poll, ignoring" << endl;
-	// 			++ite;
-	// 			continue ;
-	// 		}
-	// 		if (!(ite->second->wpoll.revents & POLLIN)){
-	// 			DEBUG_WARN_ << "No new connection (revents: " << ite->second->wpoll.revents << "), ignoring" << endl;
-	// 			++ite;
-	// 			continue ;
-	// 		}
-	// 		DEBUG_ << "New connection" << endl;
-	// 		DEBUG_ << "Listener fd: " << ite->second->listener_fd << endl;
-		
-	// 		// Accept new connection
-	// 		ite->second->connection_fd = accept(ite->second->listener_fd, NULL, NULL);
-	// 		if (ite->second->connection_fd < 0){
-	// 			DEBUG_WARN_ << "Failed to accept new connection, ignoring" << endl;
-	// 			++ite;
-	// 			continue ;
-	// 		}
-	// 		// DEBUG_ << "Connection fd: " << ite->second->connection_fd << endl;
-	// 		// DEBUG_ << "There is data to pull ? " << (ite->second->wpoll.revents & POLLIN) << endl;
-	// 		// DEBUG_ << "There is data to push ? " << (ite->second->wpoll.revents & POLLOUT) << endl;
-	// 		// DEBUG_ << "There is an error ? " << (ite->second->wpoll.revents & POLLERR) << endl;
-	// 		// DEBUG_ << "There is a hangup ? " << (ite->second->wpoll.revents & POLLHUP) << endl;
-	// 		// DEBUG_ << "There is a priority event ? " << (ite->second->wpoll.revents & POLLPRI) << endl;
-	// 		// DEBUG_ << "There is a invalid request ? " << (ite->second->wpoll.revents & POLLNVAL) << endl;
-
-	// 		if (!loop) {// TODO check on macos if this fix the freez with ctrl+c
-	// 			DEBUG_INFO_ << "Loop stoped just befor reading http request!" << endl;
-	// 			return ;
-	// 		}
-	// 		string response = http(*(ite->second), config, env);
-
-	// 		if (send(ite->second->connection_fd, response.c_str(), response.length(), 0) < 0) {
-	// 			DEBUG_WARN_ << "Failed to write to socket" << endl;
-	// 		}
-	// 		if (close(ite->second->connection_fd) < 0) {
-	// 			DEBUG_WARN_ << "Failed to close socket" << endl;
-	// 		}
-	// 		DEBUG_INFO_ << "End of connection" << endl;
-	// 	}
+		}
+		//TODO tempory fix, check if there is a better way to not invalidate iterator
+		poll_queue.insert(poll_queue.end(), temp_queue.begin(), temp_queue.end());
 	}
-
-}
 }
