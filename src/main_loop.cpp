@@ -12,7 +12,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	}
 	DEBUG_ << "Start server" << endl;
 
-	//TODO WARN If a server faild it weel be destroy ?
+	//TODO WARN If a server failed it will be destroyed ?
 	const int listener_nb = listeners.size();
 	std::list<Poll> poll_queue;
 
@@ -40,7 +40,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	while (loop){
 		
 		for (std::list<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();) {
-			cout << "poll queue size: " << poll_queue.size() << endl;
+			// cout << "poll queue size: " << poll_queue.size() << endl;
 			if (!loop && ite == poll_queue.end()) {
 				break;
 			}
