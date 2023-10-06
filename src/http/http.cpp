@@ -293,7 +293,7 @@ const string http(const int fd, const Config& config, const Env& env){
 			if (S_ISREG(path_info.st_mode)){ // Check if is file
 				if (!loc.cgi_pass.empty()){
 					string cgi_bin;
-					if (is_file_cgi(loc, req.path, cgi_bin)){
+					if (is_file_cgi(loc, file_path, cgi_bin)){
 						return cgi(env, serv, loc, cgi_bin, file_path, req);
 					}
 				}
@@ -315,7 +315,7 @@ const string http(const int fd, const Config& config, const Env& env){
 			}
 			if (!loc.cgi_pass.empty()){
 				string cgi_bin;
-				if (is_file_cgi(loc, req.path, cgi_bin)){
+				if (is_file_cgi(loc, loc.index, cgi_bin)){
 					return cgi(env, serv, loc, cgi_bin, loc.index, req);
 				}
 			}
@@ -331,7 +331,7 @@ const string http(const int fd, const Config& config, const Env& env){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		string cgi_bin;
-		if (!is_file_cgi(loc, req.path, cgi_bin)){
+		if (!is_file_cgi(loc, file_path, cgi_bin)){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
 		return cgi(env, serv, loc, cgi_bin, file_path, req);
