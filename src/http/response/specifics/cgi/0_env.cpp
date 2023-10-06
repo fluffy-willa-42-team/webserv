@@ -7,8 +7,6 @@ void add_env(Env& env, const string& header, const string& value){
 Env create_env(
 	const Env& env,
 	const Server& serv,
-	const Location& loc,
-	const string& cgi_bin,
 	const string& filepath,
 	const Request& req
 ){

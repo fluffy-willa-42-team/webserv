@@ -3,8 +3,6 @@
 Env create_env(
 	const Env& env,
 	const Server& serv,
-	const Location& loc,
-	const string& cgi_bin,
 	const string& filepath,
 	const Request& req
 );
@@ -37,7 +35,9 @@ string cgi(
 	const string& filepath,
 	const Request& req
 ){
-	Env req_env = create_env(env, serv, loc, cgi_bin, filepath, req);
+	(void) loc;
+	
+	Env req_env = create_env(env, serv, filepath, req);
 
 	string cgi_response;
 	if (exec_cgi(req_env, cgi_bin, req.body, filepath, cgi_response) != S_CONTINUE){
