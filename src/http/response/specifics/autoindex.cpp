@@ -48,7 +48,8 @@ string get_autoindex(const string& req_path, const string& file_path){
 		return error(404, NOT_FOUND_DESCRIPTION);
 	}
 
-	const string gobacklink = req_path.substr(0, req_path.find_last_of('/'));
+	size_t pos = req_path.find_last_of('/');
+	const string gobacklink = pos != 0 ? req_path.substr(0, pos) : "/"; 
 
 	vector<AutoindexInput> autoindex_inputs;
 	struct dirent* entry;

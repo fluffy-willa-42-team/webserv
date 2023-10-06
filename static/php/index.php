@@ -14,7 +14,7 @@
 			?>
 		</h2>
 
-		<form action="/php/post.php" method="post" enctype="multipart/form-data">
+		<form action="/php/postfile.php" method="post" enctype="multipart/form-data">
 			<label for="hello">Drop file</label>
 			<input type="file" id="hello" name="fileToUpload">
 
