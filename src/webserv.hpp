@@ -12,6 +12,7 @@
 # define PROTOCOL 				"HTTP/1.1"
 # define CGI_VERSION			"CGI/1.1"
 # define DEFAULT_CONFIG_PATH	"./conf/default.conf"
+# define DEFAULT_MAX_BODY_SIZE 64
 
 /* ************************************************************************** */
 

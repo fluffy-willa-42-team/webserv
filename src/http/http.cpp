@@ -166,28 +166,6 @@ const string http(const int fd, const Config& config, const Env& env){
 	}
 
 
-	/*===-----						Body							  -----===*/
-	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
-	{
-		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
-			stringstream remainingContentStream;
-			remainingContentStream << ss_line_by_line.rdbuf();
-			req.body = remainingContentStream.str();
-
-			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
-			while (req.body.length() < content_length){
-				try {
-					req.body += read_buff(fd);
-				}
-				catch(const exception& e) {
-					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
-					return error(411, "Invalid \"Content-Length\" header");
-				}
-			}
-		}
-	}
-
-
 
 
 
@@ -216,12 +194,43 @@ const string http(const int fd, const Config& config, const Env& env){
 
 	DEBUG_INFO_ << "Location: " << loc.path << endl;
 
+	if (!vec_has(loc.allowed_methods, req.method)){
+		return error_serv(serv, 404);
+	}
 
 
 
 
 
-	/*===-----			Find Server and Location to execute			  -----===*\
+	/*===-----						Body							  -----===*/
+	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
+	{
+		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
+			stringstream remainingContentStream;
+			remainingContentStream << ss_line_by_line.rdbuf();
+			req.body = remainingContentStream.str();
+
+			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
+			
+			while (req.body.length() < content_length){
+				if (serv.has_max_body_size_been_set && serv.max_body_size < (u_int32_t) req.body.size()){
+					return error_serv(serv, 413);
+				}
+				try {
+					req.body += read_buff(fd);
+				}
+				catch(const exception& e) {
+					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
+					return error_serv(serv, 411, "Invalid \"Content-Length\" header");
+				}
+			}
+		}
+	}
+
+
+
+
+	/*===-----				Execute the Location found				  -----===*\
 	
 	Now that we have the right Location and Server to execute, we will find the
 	right method and the right response to generate.

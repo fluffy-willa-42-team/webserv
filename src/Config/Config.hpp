@@ -9,7 +9,6 @@
 
 /******************************************************************************/
 
-# define DEFAULT_MAX_BODY_SIZE 64
 
 #define SERVER_OPT						"server"
 #define SERVER_OPT_SERVER_NAME			"server_name"
@@ -70,7 +69,7 @@ class Server {
 		string					host_port;
 		// struct addrinfo			*host_data;
 		u_int32_t				port;
-		int32_t					max_body_size;
+		u_int32_t				max_body_size;
 		bool					has_max_body_size_been_set;
 		vector<Location>		locations;
 		map<u_int32_t, ErrorPage>	custom_error_page;

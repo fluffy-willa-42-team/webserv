@@ -4,6 +4,7 @@
 /* ************************************************************************** */
 
 #include "webserv.hpp"
+#include <algorithm>
 
 /* ************************************************************************** */
 
@@ -38,6 +39,12 @@ bool map_has_key(const map<T1, T2>& i_map, const T1& key){
 	typename map<T1, T2>::const_iterator it = i_map.find(key);
 	return (it != i_map.end());
 }
+template<typename T>
+bool vec_has(const vector<T>& i_vec, const T& val){
+	typename vector<T>::const_iterator it = std::find(i_vec.begin(), i_vec.end(), val);
+	return (it != i_vec.end());
+}
+
 
 /* ************************************************************************** */
 
