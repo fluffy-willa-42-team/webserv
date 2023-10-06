@@ -11,24 +11,24 @@
 string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
 
-string read_buff(int connection_fd, char* buffer){
-	// Start reading events
+string read_buff(int connection_fd){
+	static char buffer[BUFFER_SIZE];
 	memset(buffer, 0, BUFFER_SIZE);
 
 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 	if (length_read == -1){
 		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
+		throw exception();
 	}
 
 	return string(buffer, length_read);
 }
 
 const string http(const int fd, const Config& config, const Env& env){
-	char* buffer = new char[BUFFER_SIZE];
 	string req_raw;
 
 	try {
-		req_raw += read_buff(fd, buffer);
+		req_raw += read_buff(fd);
 	}
 	catch(const exception& e) {
 		DEBUG_ << "The Request is empty" << endl;
@@ -37,7 +37,7 @@ const string http(const int fd, const Config& config, const Env& env){
 	
 	while (req_raw.find("\r\n\r\n") == string::npos){
 		try {
-			req_raw += read_buff(fd, buffer);
+			req_raw += read_buff(fd);
 		}
 		catch(const exception& e) {
 			return error(400);
@@ -105,6 +105,8 @@ const string http(const int fd, const Config& config, const Env& env){
 		else {
 			req.path = remove_end_backslash(req_path_param);
 		}
+		DEBUG_INFO_ << "Path: " << req.path << endl;
+		DEBUG_INFO_ << "Param: " << req.param << endl;
 	}
 
 	// Protocol
@@ -145,7 +147,6 @@ const string http(const int fd, const Config& config, const Env& env){
 
 
 
-
 	/*===-----						Host Header						   -----===*
 	Host: HOSTNAME:PORT
 
@@ -175,15 +176,13 @@ const string http(const int fd, const Config& config, const Env& env){
 
 			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
 			while (req.body.length() < content_length){
-				string buf;
 				try {
-					req_raw += read_buff(fd, buffer);
+					req.body += read_buff(fd);
 				}
 				catch(const exception& e) {
 					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
 					return error(411, "Invalid \"Content-Length\" header");
 				}
-				req.body += buf;
 			}
 		}
 	}

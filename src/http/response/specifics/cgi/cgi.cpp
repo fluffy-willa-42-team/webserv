@@ -43,6 +43,7 @@ string cgi(
 	if (exec_cgi(req_env, cgi_bin, req.body, filepath, cgi_response) != S_CONTINUE){
 		return error(500);
 	}
+	DEBUG_ << "CGI: executed" << endl;
 
 	uint32_t code = 0;
 	Headers headers;
@@ -54,6 +55,6 @@ string cgi(
 	if (code == 0){
 		code = default_codes[req.method];
 	}
-
+	DEBUG_ << "CGI: parsed" << endl;
 	return get_response(code, headers, body);
 }
