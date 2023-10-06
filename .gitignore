@@ -34,3 +34,4 @@ webserv
 obj/
 include/
 settings.json
+static/upload/

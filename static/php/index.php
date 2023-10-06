@@ -16,7 +16,7 @@
 
 		<form action="/php/post.php" method="post" enctype="multipart/form-data">
 			<label for="hello">Drop file</label>
-			<input type="file" id="hello" name="ererer">
+			<input type="file" id="hello" name="fileToUpload">
 
 			<input type="submit" value="Hello">
 		</form>

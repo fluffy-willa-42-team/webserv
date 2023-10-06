@@ -12,7 +12,6 @@ e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers&
 	stringstream header_stream(header_string);
 	string line;
 	while (getline(header_stream, line) && removeCarriageReturn(line)) {
-		DEBUG_ << "CGI_PARSE_GET_LINE" << endl;
 		size_t separator = line.find(": ");
 		if (separator == string::npos) {
 			continue;

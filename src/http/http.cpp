@@ -187,8 +187,6 @@ const string http(const int fd, const Config& config, const Env& env){
 		}
 	}
 
-	DEBUG_ << "req.body: " << endl << BLUE << req.body << RESET << endl;
-
 
 
 

@@ -2,7 +2,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the file was uploaded without errors
     if (isset($_FILES["fileToUpload"]) && $_FILES["fileToUpload"]["error"] == 0) {
-        $targetDirectory = "upload/"; // Create a directory for storing uploaded files
+        $targetDirectory = "/home/willa/19/webserv/static/upload/"; // Create a directory for storing uploaded files
         $targetFile = $targetDirectory . basename($_FILES["fileToUpload"]["name"]);
 
         // Check if the file already exists

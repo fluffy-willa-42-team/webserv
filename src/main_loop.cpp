@@ -109,7 +109,6 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			if (type == WRITE) {
 				DEBUG_ << "Write poll id: " << ite->id << endl;
-				DEBUG_ << "Response: " << endl << ite->response << endl;
 				//TODO handle error
 				if (send(poll.fd, ite->response.c_str(), ite->response.length(), 0) < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
