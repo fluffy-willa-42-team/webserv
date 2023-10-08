@@ -17,7 +17,7 @@ print <<HTML;
 	<body>
 		<h1>Perl index</h1>
 		<h2>$message</h2>
-		<form action="/perl/postfile.pl" method="post" enctype="multipart/form-data">
+		<form action="/perl/post.pl" method="post" enctype="multipart/form-data">
 			<label for="hello">Drop file</label>
 			<input type="file" id="hello" name="fileToUpload">
 
