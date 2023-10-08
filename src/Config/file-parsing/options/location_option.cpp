@@ -26,7 +26,7 @@ bool is_location_allow_methods(vector<string>& line_split){
 		return false;
 	}
 	for (u_int32_t i = 1; i < line_split.size(); i++){
-		if (is_method_valid(line_split[1]) != SUCCESS){
+		if (is_method_valid(line_split[i]) != SUCCESS){
 			return false;
 		}
 	}
