@@ -10,7 +10,7 @@ filename = cgi_form.getvalue('filename')
 
 # Check if the filename is provided
 if not filename:
-    print("Content-type: text/html\n")
+    print("Content-type: text/html\r\n\r\n")
     print("Please enter a filename to delete.")
 else:
     # Define the directory where files are stored (change this to your directory)
@@ -22,11 +22,11 @@ else:
     # Attempt to delete the file
     try:
         os.remove(full_path)
-        print("Content-type: text/html\n")
+        print("Content-type: text/html\r\n\r\n")
         print(f"File '{filename}' has been deleted.")
     except FileNotFoundError:
-        print("Content-type: text/html\n")
+        print("Content-type: text/html\r\n\r\n")
         print(f"File '{filename}' not found.")
     except Exception as e:
-        print("Content-type: text/html\n")
+        print("Content-type: text/html\r\n\r\n")
         print(f"Error deleting file '{filename}': {e}")

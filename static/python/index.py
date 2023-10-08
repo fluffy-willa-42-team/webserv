@@ -14,7 +14,7 @@ else:
     message = 'This is a Python generated message for redirect'
 
 # Print the CGI header
-print("Content-type: text/html\n")
+print("Content-type: text/html\r\n\r\n")
 
 # Generate the HTML response
 print(""" 

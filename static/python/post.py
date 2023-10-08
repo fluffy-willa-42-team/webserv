@@ -6,15 +6,15 @@ import os
 form = cgi.FieldStorage()
 
 # Print the CGI header
-print("Content-type: text/html\n")
+print("Content-type: text/html\r\n\r\n")
 
 # Define the target directory where uploaded files will be stored
 target_directory = "/home/willa/19/webserv/static/upload/"
 
 # Check if the request method is POST
 if os.environ.get("REQUEST_METHOD", "") == "POST":
-    file_field = form["fileToUpload"]
-    if file_field:
+    if "fileToUpload" in form:
+        file_field = form["fileToUpload"]
         # Get the filename from the form data
         filename = os.path.basename(file_field.filename)
 

@@ -4,11 +4,9 @@ e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers&
 	size_t header_body_separator = cgi_response.find("\r\n\r\n");
 
     if (header_body_separator == string::npos) {
-		header_body_separator = cgi_response.find("\n\n");
-		if (header_body_separator == string::npos){
-			return S_ERROR;
-		}
+		return S_ERROR;
 	}
+	cout << "test: " << header_body_separator << " " << cgi_response.length() << endl;
 	string header_string = cgi_response.substr(0, header_body_separator);
 	body = cgi_response.substr(header_body_separator + 4);
 
