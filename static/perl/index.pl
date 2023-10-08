@@ -23,7 +23,7 @@ print <<HTML;
 
 			<input type="submit" value="submit">
 		</form>
-		<form action="delete_file.cgi" method="POST">
+		<form action="/perl/delete.pl" method="POST">
 			<label for="filename">Enter the filename to delete: </label>
 			<input type="text" name="filename">
 			<input type="submit" value="Delete">
