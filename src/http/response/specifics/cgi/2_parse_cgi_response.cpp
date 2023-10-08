@@ -6,7 +6,6 @@ e_status parse_cgi_response(const string& cgi_response, uint32_t& code, Headers&
     if (header_body_separator == string::npos) {
 		return S_ERROR;
 	}
-	cout << "test: " << header_body_separator << " " << cgi_response.length() << endl;
 	string header_string = cgi_response.substr(0, header_body_separator);
 	body = cgi_response.substr(header_body_separator + 4);
 
