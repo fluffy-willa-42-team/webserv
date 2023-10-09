@@ -35,9 +35,16 @@ const string http(const int fd, const Config& config, const Env& env){
 		return error(400, "The Request is empty");
 	}
 	
+	u_int32_t verif = 0;
 	while (req_raw.find("\r\n\r\n") == string::npos){
 		try {
-			req_raw += read_buff(fd);
+			string new_cont = read_buff(fd);
+			req_raw += new_cont;
+			if (new_cont.length() == 0){
+				if (verif > 100){
+					return error(408);
+				}
+			}
 		}
 		catch(const exception& e) {
 			return error(400);
