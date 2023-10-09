@@ -327,6 +327,9 @@ const string http(const int fd, const Config& config, const Env& env){
 	}
 	else if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE"){
 		string file_path = loc.root + "/" + req.path.substr(loc.path.size());
+		if (!loc.index.empty() && loc.path == req.path){
+			file_path = mergeFilePaths(loc.root, loc.index);
+		}
 		if (loc.cgi_pass.empty()){
 			return error(404, NOT_FOUND_DESCRIPTION);
 		}
