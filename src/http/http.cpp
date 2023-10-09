@@ -240,8 +240,8 @@ const string http(const int fd, const Config& config, const Env& env){
 					}
 				}
 				catch(const exception& e) {
-					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
-					return error_serv(serv, 411, "Invalid \"Content-Length\" header");
+					DEBUG_ << "Fail Readbuf in body" << endl;
+					return error_serv(serv, 400);
 				}
 			}
 		}
