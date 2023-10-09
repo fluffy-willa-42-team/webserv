@@ -19,8 +19,8 @@ OBJ_EXT		:= .o
 CODE_EXT	:= .cpp
 HEAD_EXT	:= .hpp
 INC			:= -I include
-FLAGS		:= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
-DEV_FLAGS	:= -Wno-error=unused-parameter -Wno-error=unused-variable
+FLAGS		:= -W{all,extra,error} -std=c++98
+DEV_FLAGS	:= -Wno-error={unused-parameter,unused-variable} -Wfatal-errors
 DLEVEL		:= -1
 SANI		:= 0
 DEBUG		:= 0
