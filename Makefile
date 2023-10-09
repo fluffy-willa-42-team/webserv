@@ -74,6 +74,7 @@ COLOR_NORMAL= \033[32;0m
 COLOR_RED	= \033[31;1m
 COLOR_BLUE	= \033[36;1m
 COLOR_GREEN	= \033[32;1m
+COLOR_YELLOW= \033[33;1m
 
 # **************************************************************************** #
 
@@ -102,11 +103,15 @@ THISPATH	= $(shell pwd)
 
 # **************************************************************************** #
 
-all: $(DIR) $(ALL_LIB) $(NAME)
+all: print $(DIR) $(ALL_LIB)
+	@make -j -s compile
+
+compile: $(NAME)
 
 # Creates every repositories if it does not exist
 $(DIR):
 	@mkdir $@
+	@printf "$(COLOR_YELLOW).$(COLOR_NORMAL)"
 
 # Compiles every lib in the lib repository
 $(ALL_LIB): 
@@ -119,11 +124,11 @@ $(OBJ_DIR)/%$(OBJ_EXT): %$(CODE_EXT) $(HEADER)
 
 # Takes any header files and creates a hard link in INC_DIR
 $(INC_DIR)/%$(HEAD_EXT): %$(HEAD_EXT)
-	@ln -s $(THISPATH)/$< $(INC_DIR)
+	@ln -s $(THISPATH)/$< $(INC_DIR)/
 	@printf "$(COLOR_BLUE).$(COLOR_NORMAL)"
 
 # Takes an name of executable and compiles everything into it
-$(NAME): print $(HEADER) $(OBJ)
+$(NAME): $(HEADER) $(OBJ)
 	@$(CC) $(FLAGS) $(OBJ) $(INC) $(LIB) -o $(NAME)
 	@chmod 777 $(NAME)
 	@printf "\n"
@@ -142,7 +147,7 @@ clean:
 # **************************************************************************** #
 
 fclean:
-	@rm -rf $(OBJ) $(INC_DIR)* $(NAME)
+	@rm -rf $(OBJ_DIR)* $(INC_DIR)* $(NAME)
 	@for path in $(ALL_LIB); do \
 		make -sC $$path fclean;\
 	done
