@@ -97,7 +97,7 @@ LIB			:= $(shell find $(LIB_DIR)/ -type f -name "*.a")
 HEADER		:= $(addprefix $(INC_DIR)/, $(notdir $(shell find $(SRC_DIR)/ -type f -name "*$(HEAD_EXT)")))
 
 # All directories
-DIR			:= $(SRC_DIR) $(INC_DIR) $(OBJ_DIR) $(LIB_DIR)
+DIR			:= $(SRC_DIR) $(INC_DIR) $(OBJ_DIR) $(LIB_DIR) ./static/upload
 
 # Path to here
 THISPATH	:= $(shell pwd)
