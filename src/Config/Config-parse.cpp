@@ -148,7 +148,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
-						has_root_param = true;
 						map<string, string>::const_iterator ite = loc.cgi_pass.find(line_split[1]);
 						if (ite != loc.cgi_pass.end()){
 							return err(line, index, "duplicate file extension CGI");
