@@ -10,21 +10,21 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= webserv
+NAME		:= webserv
 
 # **************************************************************************** #
 
-CC			= g++
-OBJ_EXT		= .o
-CODE_EXT	= .cpp
-HEAD_EXT	= .hpp
-INC			= -I include
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
-DEV_FLAGS	= -Wno-error=unused-parameter -Wno-error=unused-variable
-DLEVEL		= -1
-SANI		= 0
-DEBUG		= 0
-DEV_COMPIL	= 1
+CC			:= g++
+OBJ_EXT		:= .o
+CODE_EXT	:= .cpp
+HEAD_EXT	:= .hpp
+INC			:= -I include
+FLAGS		:= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
+DEV_FLAGS	:= -Wno-error=unused-parameter -Wno-error=unused-variable
+DLEVEL		:= -1
+SANI		:= 0
+DEBUG		:= 0
+DEV_COMPIL	:= 1
 
 ifeq ($(DEBUG), 1)
 	FLAGS += -g3
@@ -60,10 +60,10 @@ endif
 
 # **************************************************************************** #
 
-SRC_DIR		= src
-INC_DIR		= include
-OBJ_DIR 	= obj
-LIB_DIR		= lib
+SRC_DIR		:= src
+INC_DIR		:= include
+OBJ_DIR 	:= obj
+LIB_DIR		:= lib
 
 # **************************************************************************** #
 
@@ -71,39 +71,39 @@ SRCS		= $(SRCS_FIND)
 
 # **************************************************************************** #
 
-COLOR_NORMAL= \033[32;0m
-COLOR_RED	= \033[31;1m
-COLOR_BLUE	= \033[36;1m
-COLOR_GREEN	= \033[32;1m
-COLOR_YELLOW= \033[33;1m
+COLOR_NORMAL	:= \033[32;0m
+COLOR_RED		:= \033[31;1m
+COLOR_BLUE		:= \033[36;1m
+COLOR_GREEN		:= \033[32;1m
+COLOR_YELLOW	:= \033[33;1m
 
 # **************************************************************************** #
 
-VPATH		= $(shell find $(SRC_DIR)/ -type d)
+VPATH		:= $(shell find $(SRC_DIR)/ -type d)
 
 # Finds all sources in the SRC_DIR
-SRCS_FIND	= $(notdir $(shell find $(SRC_DIR) -type f -name "*$(CODE_EXT)"))
+SRCS_FIND	:= $(notdir $(shell find $(SRC_DIR) -type f -name "*$(CODE_EXT)"))
 
 # Compiles all SRCS into .o files in the OBJ_DIR
-OBJ			= $(addprefix $(OBJ_DIR)/, $(SRCS:$(CODE_EXT)=$(OBJ_EXT)))
+OBJ			:= $(addprefix $(OBJ_DIR)/, $(SRCS:$(CODE_EXT)=$(OBJ_EXT)))
 
 # Finds all folders in the LIB_DIR
-ALL_LIB		= $(shell find $(LIB_DIR)/ -maxdepth 1 -mindepth 1 -type d)
+ALL_LIB		:= $(shell find $(LIB_DIR)/ -maxdepth 1 -mindepth 1 -type d)
 
 # Finds all the compiled libraries in ALL_LIB
-LIB			= $(shell find $(LIB_DIR)/ -type f -name "*.a")
+LIB			:= $(shell find $(LIB_DIR)/ -type f -name "*.a")
 
 # Finds all headers in the SRC_DIR and creates links to the original header files
-HEADER		= $(addprefix $(INC_DIR)/, $(notdir $(shell find $(SRC_DIR)/ -type f -name "*$(HEAD_EXT)")))
+HEADER		:= $(addprefix $(INC_DIR)/, $(notdir $(shell find $(SRC_DIR)/ -type f -name "*$(HEAD_EXT)")))
 
 # All directories
-DIR			= $(SRC_DIR) $(INC_DIR) $(OBJ_DIR) $(LIB_DIR)
+DIR			:= $(SRC_DIR) $(INC_DIR) $(OBJ_DIR) $(LIB_DIR)
 
 # Path to here
-THISPATH	= $(shell pwd)
+THISPATH	:= $(shell pwd)
 
 # Remove Dev flags if dev mode is activated
-DEV_FLAGS := $(if $(filter 1,$(DEV_COMPIL)),${DEV_FLAGS},)
+DEV_FLAGS	:= $(if $(filter 1,$(DEV_COMPIL)),${DEV_FLAGS},)
 
 # **************************************************************************** #
 
