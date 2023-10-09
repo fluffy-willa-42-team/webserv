@@ -42,6 +42,7 @@ const string http(const int fd, const Config& config, const Env& env){
 			req_raw += new_cont;
 			if (new_cont.length() == 0){
 				if (verif > 100){
+					DEBUG_ << "The Request timed out" << endl;
 					return error(408);
 				}
 			}
