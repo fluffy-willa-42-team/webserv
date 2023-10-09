@@ -19,7 +19,7 @@ OBJ_EXT		:= .o
 CODE_EXT	:= .cpp
 HEAD_EXT	:= .hpp
 INC			:= -I include
-FLAGS		:= -W{all,extra,error} -std=c++98
+FLAGS		:= -W{all,extra,error} -std=c++98 -D UPLOAD_DIR="$(THISPATH)/static/upload"
 DEV_FLAGS	:= -Wno-error={unused-parameter,unused-variable} -Wfatal-errors
 DLEVEL		:= -1
 SANI		:= 0
