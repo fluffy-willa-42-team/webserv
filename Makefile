@@ -19,11 +19,12 @@ OBJ_EXT		= .o
 CODE_EXT	= .cpp
 HEAD_EXT	= .hpp
 INC			= -I include
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors\
-				-Wno-error=unused-parameter -Wno-error=unused-variable
+FLAGS		= -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
+DEV_FLAGS	= -Wno-error=unused-parameter -Wno-error=unused-variable
 DLEVEL		= -1
 SANI		= 0
 DEBUG		= 0
+DEV_COMPIL	= 1
 
 ifeq ($(DEBUG), 1)
 	FLAGS += -g3
@@ -101,6 +102,9 @@ DIR			= $(SRC_DIR) $(INC_DIR) $(OBJ_DIR) $(LIB_DIR)
 # Path to here
 THISPATH	= $(shell pwd)
 
+# Remove Dev flags if dev mode is activated
+DEV_FLAGS := $(if $(filter 1,$(DEV_COMPIL)),${DEV_FLAGS},)
+
 # **************************************************************************** #
 
 all: print $(DIR) $(ALL_LIB)
@@ -119,7 +123,7 @@ $(ALL_LIB):
 
 # Takes any C/CPP files and transforms into an object into the OBJ_DIR
 $(OBJ_DIR)/%$(OBJ_EXT): %$(CODE_EXT) $(HEADER)
-	@$(CC) $(FLAGS) $(INC) -o $@ -c $<
+	@$(CC) $(FLAGS) ${DEV_FLAGS} $(INC) -o $@ -c $<
 	@printf "$(COLOR_RED).$(COLOR_NORMAL)"
 
 # Takes any header files and creates a hard link in INC_DIR
@@ -129,11 +133,14 @@ $(INC_DIR)/%$(HEAD_EXT): %$(HEAD_EXT)
 
 # Takes an name of executable and compiles everything into it
 $(NAME): $(HEADER) $(OBJ)
-	@$(CC) $(FLAGS) $(OBJ) $(INC) $(LIB) -o $(NAME)
+	@$(CC) $(FLAGS) ${DEV_FLAGS} $(OBJ) $(INC) $(LIB) -o $(NAME)
 	@chmod 777 $(NAME)
 	@printf "\n"
 
 print:
+ifeq ($(DEV_COMPIL),1)
+	@printf "$(COLOR_YELLOW)[WARN] Dev flags are used in compilation\n   /!\\ remove them before submiting your project$(COLOR_NORMAL)\n"
+endif
 	@printf "$(COLOR_GREEN)$(NAME) : $(COLOR_NORMAL)"
 
 # **************************************************************************** #
