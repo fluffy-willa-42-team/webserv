@@ -109,6 +109,7 @@ DEV_FLAGS	:= $(if $(filter 1,$(DEV_COMPIL)),${DEV_FLAGS},)
 
 all: print $(DIR) $(ALL_LIB)
 	@make -j -s compile
+	@printf "\n"
 
 compile: $(NAME)
 
@@ -135,7 +136,6 @@ $(INC_DIR)/%$(HEAD_EXT): %$(HEAD_EXT)
 $(NAME): $(HEADER) $(OBJ)
 	@$(CC) $(FLAGS) ${DEV_FLAGS} $(OBJ) $(INC) $(LIB) -o $(NAME)
 	@chmod 777 $(NAME)
-	@printf "\n"
 
 print:
 ifeq ($(DEV_COMPIL),1)
