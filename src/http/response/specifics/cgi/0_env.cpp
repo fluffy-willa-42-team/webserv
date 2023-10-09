@@ -26,6 +26,8 @@ Env create_env(
 
 	add_env(req_env, "REDIRECT_STATUS", numberToString(default_codes[req.method]));
 
+	add_env(req_env, "UPLOAD_DIR",	string(UPLOAD_DIR));
+
 	Headers::const_iterator ite = req.headers.find(HEADER_CONTENT_TYPE);
 	if (ite != req.headers.end()){
 		add_env(req_env, "CONTENT_TYPE", ite->second);							

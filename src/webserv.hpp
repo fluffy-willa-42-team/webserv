@@ -33,6 +33,10 @@
 
 # define BUFFER_SIZE 100000
 
+#ifndef UPLOAD_DIR
+# define UPLOAD_DIR "/tmp"
+#endif /* UPLOAD_DIR */
+
 /* ************************************************************************** */
 
 typedef enum {
