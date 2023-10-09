@@ -17,7 +17,7 @@ if (!$filename) {
 }
 
 # Define the directory where files are stored (change this to your directory)
-my $upload_dir = '/home/willa/19/webserv/static/upload/';
+my $upload_dir = $ENV{'UPLOAD_DIR'};
 
 # Construct the full path to the file
 my $full_path = $upload_dir . $filename;

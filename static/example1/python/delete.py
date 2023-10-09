@@ -14,7 +14,7 @@ if not filename:
     print("Please enter a filename to delete.")
 else:
     # Define the directory where files are stored (change this to your directory)
-    upload_dir = '/home/willa/19/webserv/static/upload/'
+    upload_dir = os.environ.get('UPLOAD_DIR')
 
     # Construct the full path to the file
     full_path = os.path.join(upload_dir, filename)

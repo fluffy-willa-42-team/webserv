@@ -9,7 +9,7 @@ form = cgi.FieldStorage()
 print("Content-type: text/html\r\n\r\n")
 
 # Define the target directory where uploaded files will be stored
-target_directory = "/home/willa/19/webserv/static/upload/"
+target_directory = os.environ.get('UPLOAD_DIR')
 
 # Check if the request method is POST
 if os.environ.get("REQUEST_METHOD", "") == "POST":

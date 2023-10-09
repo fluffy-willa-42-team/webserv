@@ -9,7 +9,7 @@ print $cgi->header;
 if ($cgi->request_method eq "POST") {
     my $file_field = $cgi->upload("fileToUpload");
     if ($file_field) {
-        my $targetDirectory = "/home/willa/19/webserv/static/upload/";
+        my $targetDirectory = $ENV{'UPLOAD_DIR'};
         my $targetFile = $targetDirectory . $cgi->param("fileToUpload");
 
         if (-e $targetFile) {
