@@ -76,7 +76,7 @@ string get_autoindex(const string& req_path, const string& file_path){
 		autoindex_inputs.push_back(newInput);
 	}
 
-	closedir(dir); // TODO CHECK LEAK
+	closedir(dir);
 
 	string res = get_autoindex_html(req_path, gobacklink, autoindex_inputs);
 

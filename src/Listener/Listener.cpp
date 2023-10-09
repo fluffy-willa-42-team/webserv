@@ -102,9 +102,6 @@ Listener::Listener(string host_ip, string port)
 			throw runtime_error("Failed to bind socket");
 		}
 
-		// getsockname(listener_fd, host->ai_addr, &host->ai_addrlen);
-
-		//TODO WIP @Matthew-Dreemurr https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#listen
 		// start to listens to port for new TCP connection
 		if (listen(listener_fd, 1000) < 0){
 			DEBUG_ERROR_ << "Failed to listen socket: errno: " << strerror(errno) << endl;
@@ -123,24 +120,22 @@ Listener::~Listener(){
 		if (listener_fd >= 0){
 			const int check_close = close(listener_fd);
 			if (check_close < 0){
-				DEBUG_ERROR_ << "Failed to close listener_fd: " << listener_fd << endl;
+				DEBUG_ << "Failed to close listener_fd: " << listener_fd << endl;
 			}
 			listener_fd = -1;
 		}
 	}
-	DEBUG_ << "Listener closed" << endl;
 
 	DEBUG_INFO_ << "Try to close connection_fd: " << connection_fd << endl;
 	{
 		if (connection_fd >= 0){
 			const int check_close = close(connection_fd);
 			if (check_close < 0){
-				DEBUG_ERROR_ << "Failed to close connection_fd: " << connection_fd << endl;
+				DEBUG_ << "Failed to close connection_fd: " << connection_fd << endl;
 			}
 			connection_fd = -1;
 		}
 	}
-	DEBUG_ << "connection_fd closed" << endl;
 
 	DEBUG_ << "Try to freeaddrinfo(host)" << endl;
 	if (host){
@@ -150,58 +145,4 @@ Listener::~Listener(){
 	} else {
 		DEBUG_WARN_ << "host addrinfo is NULL" << endl;
 	}
-}
-
-// string Listener::read_buff(){
-// #ifdef KOS_DARWIN
-// 	int kq;
-// 	struct kevent change;
-// 	struct kevent event;
-
-// 	kq = kqueue();
-// 	if (kq == -1) {
-// 		DEBUG_ERROR_ << "Failed to create kqueue: errno: " << strerror(errno) << endl;
-// 		throw runtime_error("Failed to create kqueue");
-// 	}
-
-// 	EV_SET(&change, connection_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
-
-// 	const int kvent_check = kevent(kq, &change, 1, &event, 1, NULL);
-// 	if (kvent_check == 0) {
-// 		DEBUG_INFO_ << "Kevent: Time limit expire" << endl;
-// 	}
-// 	if (kvent_check == -1) {
-// 		DEBUG_ERROR_ << "Failed to kevent: errno: " << strerror(errno) << endl;
-// 		throw runtime_error("Failed to kevent");
-// 	}
-
-// 	if (event.flags & EV_EOF) {
-// 		DEBUG_WARN_ << "Kevent flag EV_EOF: reach EOF" << endl;
-// 		throw runtime_error("Kevent flag EV_EOF");
-// 	} else if (event.flags & EV_ERROR) {
-// 		DEBUG_WARN_ << "Kevent flag EV_ERROR: errno: " << strerror(errno) << endl;
-// 		throw runtime_error("Kevent flag EV_ERROR");
-// 	}
-
-// 	close (kq);
-// #endif
-
-// 	// Start reading events
-// 	memset(buffer, 0, BUFFER_SIZE);
-
-// 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
-// 	if (length_read == -1){
-// 		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
-// 	}
-
-// 	return string(buffer, length_read);
-// }
-
-const Listener& Listener::operator=(const Listener& other)
-{
-	listener_fd = -1;
-	connection_fd = -1;
-
-	host = other.host;
-	return *this;
 }

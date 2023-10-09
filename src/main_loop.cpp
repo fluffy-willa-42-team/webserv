@@ -12,33 +12,18 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 	}
 	DEBUG_ << "Start server" << endl;
 
-	//TODO WARN If a server failed it will be destroyed ?
-	const int listener_nb = listeners.size();
 	std::list<Poll> poll_queue;
 
 	//Store all listener pollfd
 	for (map<int, Listener*>::iterator ite = listeners.begin(); ite != listeners.end(); ++ite){
 		pollfd tmp;
-		// = {ite->second->listener_fd, POLLIN, 0}
 		tmp.events = POLLIN;
 		tmp.fd     = ite->second->listener_fd;
 		tmp.revents= 0;
 		poll_queue.push_back(Poll(LISTENER, tmp, ""));
 	}
 
-	// Execute try_exec of all server at each execution.
-	/*
-
-	| 1 | 2 | 3 |            | 1 | 2 | 3 |            | 1 | 2 | 3 |
-	|---|---|---|     =>     |---|---|---|     =>     |---|---|---|
-	| x |   |   |            |   | x |   |            |   |   | x |
-      ^															|
-	  |															|
-      O---------------------------------------------------------O
-	
-	*/
 	while (loop){
-		
 		for (std::list<Poll>::iterator ite = poll_queue.begin(); ite != poll_queue.end();) {
 			// cout << "poll queue size: " << poll_queue.size() << endl;
 			if (!loop && ite == poll_queue.end()) {
@@ -64,9 +49,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				continue ;
 			}
 
-
-			if (!loop) {// TODO check on macos if this fix the freez with ctrl+c
-				DEBUG_INFO_ << "Loop stoped just befor reading request!" << endl;
+			if (!loop) {
+				DEBUG_INFO_ << "Loop stopped just before reading request!" << endl;
 				return ;
 			}
 
@@ -90,7 +74,6 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				new_pollfd.events = POLLIN;
 				new_pollfd.fd     = connection_fd;
 				new_pollfd.revents= 0;
-				//TODO handle error
 				poll_queue.push_back(Poll(READ, new_pollfd, ""));
 				++ite;
 				continue ;
@@ -99,7 +82,6 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 			if (type == READ) {
 
 				DEBUG_ << "Read poll id: " << ite->id << endl;
-				//TODO handle error
 				ite->response = http(poll.fd, config, env);
 				ite->type = WRITE;
 				ite->poll.events = POLLOUT;
@@ -109,7 +91,6 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			if (type == WRITE) {
 				DEBUG_ << "Write poll id: " << ite->id << endl;
-				//TODO handle error
 				if (send(poll.fd, ite->response.c_str(), ite->response.length(), 0) < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
 				}

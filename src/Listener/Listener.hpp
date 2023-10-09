@@ -20,10 +20,7 @@ class Listener {
 		Listener(string host_ip, string port);
 		~Listener();
 
-		const Listener& operator=(const Listener& other);
-
 		const string get_address();
-		string read_buff();
 };
 
 /******************************************************************************/
