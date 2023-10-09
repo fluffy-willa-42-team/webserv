@@ -35,20 +35,23 @@ const string http(const int fd, const Config& config, const Env& env){
 		return error(400, "The Request is empty");
 	}
 	
-	u_int32_t verif = 0;
-	while (req_raw.find("\r\n\r\n") == string::npos){
-		try {
-			string new_cont = read_buff(fd);
-			req_raw += new_cont;
-			if (new_cont.length() == 0){
-				if (verif > 100){
-					DEBUG_ << "The Request timed out" << endl;
-					return error(408);
+	{
+		u_int32_t verif = 0;
+		while (req_raw.find("\r\n\r\n") == string::npos){
+			try {
+				string new_cont = read_buff(fd);
+				req_raw += new_cont;
+				if (new_cont.length() == 0){
+					verif++;
+					if (verif > 100){
+						DEBUG_ << "The Request timed out" << endl;
+						return error(408);
+					}
 				}
 			}
-		}
-		catch(const exception& e) {
-			return error(400);
+			catch(const exception& e) {
+				return error(400);
+			}
 		}
 	}
 
@@ -220,12 +223,21 @@ const string http(const int fd, const Config& config, const Env& env){
 
 			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
 			
+			u_int32_t verif = 0;
 			while (req.body.length() < content_length){
 				if (serv.has_max_body_size_been_set && serv.max_body_size < (u_int32_t) req.body.size()){
 					return error_serv(serv, 413);
 				}
 				try {
-					req.body += read_buff(fd);
+					string new_cont = read_buff(fd);
+					req.body += new_cont;
+					if (new_cont.length() == 0){
+						verif++;
+						if (verif > 100){
+							DEBUG_ << "The Request timed out" << endl;
+							return error(408);
+						}
+					}
 				}
 				catch(const exception& e) {
 					DEBUG_ << "Invalid \"Content-Length\" header" << endl;
