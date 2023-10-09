@@ -19,7 +19,6 @@ bool is_server_option_listen(vector<string>& line_split){
 	}
 	if (!isPositiveInteger(line_split[1])){
 		vector<string> splited = split(line_split[1], ":");
-		// TODO ? verify if host is valid
 		if (!(splited.size() == 2 && isPositiveInteger(splited[1]))
 		){
 			return false;

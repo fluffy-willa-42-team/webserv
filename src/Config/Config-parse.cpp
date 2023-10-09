@@ -53,7 +53,6 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				newServer.host = line_split[1];
 			}
 			else if (is_server_option_listen(line_split)){
-				//TODO ask @willaCS about this check.
 				if (newServer.port != 0){
 					return err(line, index, "Duplicate Parameter");
 				}
