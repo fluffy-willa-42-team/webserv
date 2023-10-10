@@ -23,7 +23,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 		tmp.events = POLLIN;
 		tmp.fd     = ite->second->listener_fd;
 		tmp.revents= 0;
-		poll_queue.push_back(Poll(LISTENER, tmp, ""));
+		poll_queue.push_back(Poll(LISTENER, tmp));
 	}
 
 	while (loop){
@@ -79,7 +79,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				new_pollfd.events = POLLIN;
 				new_pollfd.fd     = connection_fd;
 				new_pollfd.revents= 0;
-				poll_queue.push_back(Poll(READ_HEAD, new_pollfd, ""));
+				poll_queue.push_back(Poll(READ_HEAD, new_pollfd));
 				++ite;
 				continue ;
 			}
@@ -127,7 +127,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					if (!map_has_key(ite->req.headers, string(HEADER_CONTENT_LENGTH))) {
 						DEBUG_WARN_ << "Request dont have a content length for the body!, ignoring" << endl;
 						ite->type = WRITE;
-						ite->response = error(400, "The Header dont have a content length for the body!");
+						ite->req.response = error(400, "The Header dont have a content length for the body!");
 						// Respond directly to the request
 						// ++ite;
 						continue;
@@ -181,7 +181,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			if (type == WRITE) {
 				DEBUG_ << "Write poll id: " << ite->id << endl;
-				if (send(poll.fd, ite->response.c_str(), ite->response.length(), 0) < 0) {
+				if (send(poll.fd, ite->req.response.c_str(), ite->req.response.length(), 0) < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
 				}
 				if (close(poll.fd) < 0) {

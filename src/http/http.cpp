@@ -22,7 +22,7 @@ string read_buff(int connection_fd){
 	memset(buffer, 0, BUFFER_SIZE);
 
 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
-	if (length_read == -1){
+	if (length_read < 1){
 		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
 		throw exception();
 	}

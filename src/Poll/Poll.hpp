@@ -23,11 +23,10 @@ private:
 public:
 	PollType type;
 	pollfd poll;
-	string response;
 	string id;
 	Request	req;
 
-	Poll(PollType type, pollfd poll, string response);
+	Poll(PollType type, pollfd poll);
 	~Poll();
 };
 

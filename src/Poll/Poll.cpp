@@ -5,8 +5,8 @@
 # include <limits.h>
 #endif /* WDEBUG */
 
-Poll::Poll(PollType type, pollfd poll, string response)
-: type(type), poll(poll), response(response), id("")
+Poll::Poll(PollType type, pollfd poll)
+: type(type), poll(poll), id("")
 {
 #ifdef WDEBUG
 	static const char alphanum[] =
