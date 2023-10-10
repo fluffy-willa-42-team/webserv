@@ -124,9 +124,11 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				const string & method = ite->req.method;
 				ite->type = (method != "POST" && method != "DELETE") ? WRITE : READ_BODY;
 				if (ite->type == READ_BODY) {
+					DEBUG_ << "There is a body to read" << endl;
 					if (!map_has_key(ite->req.headers, string(HEADER_CONTENT_LENGTH))) {
 						DEBUG_WARN_ << "Request dont have a content length for the body!, ignoring" << endl;
 						ite->type = WRITE;
+						ite->poll.events = POLLOUT;
 						ite->req.response = error(400, "The Header dont have a content length for the body!");
 						// Respond directly to the request
 						// ++ite;
@@ -143,19 +145,26 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 							continue;
 						}
 					}
+				} else {
+					DEBUG_ << "There is no body to read" << endl;
 				}
+				ite->type = EXE_CGI;
+				ite->poll.events = POLLOUT;
+				// ite->poll.events = POLLOUT;
 				// Continue to read the same request
 				// ++ite;
 				continue;
 			}
 
 			if (type == READ_BODY) {
+				DEBUG_ << "Read body poll id: " << ite->id << endl;
 				try {
 					read_body(*ite);
 				}
 				catch(const std::exception& e) {
 					DEBUG_WARN_ << "Read Body failed, ignoring" << endl;
 					ite->type = WRITE;
+					ite->poll.events = POLLOUT;
 					std::cerr << e.what() << endl;
 					// Respond directly to the request
 					// ++ite;
@@ -164,6 +173,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 			}
 
 			if (type == EXE_CGI) {
+				DEBUG_ << "Execute CGI poll id: " << ite->id << endl;
 				try
 				{
 					execute_request(env, ite->req);
@@ -174,6 +184,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					std::cerr << e.what() << endl;
 				}
 				ite->type = WRITE;
+				ite->poll.events = POLLOUT;
 				// Respond directly to the request
 				// ++ite;
 				continue;

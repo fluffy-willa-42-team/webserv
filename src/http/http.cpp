@@ -23,7 +23,7 @@ string read_buff(int connection_fd){
 
 	int32_t length_read = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 	if (length_read < 1){
-		DEBUG_WARN_ << "Failed to read from socket: errno: " << strerror(errno) << endl;
+		DEBUG_ << "Connextion shutdown by peer!" << endl;
 		throw exception();
 	}
 
@@ -37,7 +37,6 @@ string read_buff(int connection_fd){
 void read_header(Poll &poll) {
 	try {
 		poll.req.raw += read_buff(poll.poll.fd);
-		DEBUG_ << "read_header: " << poll.req.raw << endl;
 	}
 	catch (const exception& e) {
 		DEBUG_ << "Failed to read header errno: " << strerror(errno) << endl;
