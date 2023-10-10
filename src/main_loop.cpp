@@ -94,16 +94,15 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					DEBUG_WARN_ << "Read header failed, ignoring" << endl;
 					ite->type = WRITE;
 					ite->poll.events = POLLOUT;
-					std::cerr << e.what() << endl;
 					// Respond directly to the request
-					// ++ite;
+					++ite;
 					continue;
 				}
 
 				// Check if the read_header is complete
 				if (ite->type != READ_BODY) {
 					// Continue to read the same request until all the header is read.
-					// ++ite;
+					++ite;
 					continue;
 				}
 
@@ -115,9 +114,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					DEBUG_WARN_ << "Pars header failed, ignoring" << endl;
 					ite->type = WRITE;
 					ite->poll.events = POLLOUT;
-					std::cerr << e.what() << endl;
 					// Respond directly to the request
-					// ++ite;
+					++ite;
 					continue;
 				}
 				// If there is no body skip reading body
@@ -131,7 +129,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 						ite->poll.events = POLLOUT;
 						ite->req.response = error(400, "The Header dont have a content length for the body!");
 						// Respond directly to the request
-						// ++ite;
+						++ite;
 						continue;
 					}
 
@@ -141,7 +139,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 							DEBUG_ << "Body exeed max_body_size!" << endl;
 							ite->req.response = error_serv(ite->req.serv, 413);
 							// Respond directly to the request
-							// ++ite;
+							++ite;
 							continue;
 						}
 					}
@@ -152,7 +150,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				ite->poll.events = POLLOUT;
 				// ite->poll.events = POLLOUT;
 				// Continue to read the same request
-				// ++ite;
+				++ite;
 				continue;
 			}
 
@@ -165,9 +163,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					DEBUG_WARN_ << "Read Body failed, ignoring" << endl;
 					ite->type = WRITE;
 					ite->poll.events = POLLOUT;
-					std::cerr << e.what() << endl;
 					// Respond directly to the request
-					// ++ite;
+					++ite;
 				}
 				continue;
 			}
@@ -181,12 +178,11 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				catch(const std::exception& e)
 				{
 					DEBUG_WARN_ << "Execute CGI failed, ignoring" << endl;
-					std::cerr << e.what() << endl;
 				}
 				ite->type = WRITE;
 				ite->poll.events = POLLOUT;
 				// Respond directly to the request
-				// ++ite;
+				++ite;
 				continue;
 			}
 
