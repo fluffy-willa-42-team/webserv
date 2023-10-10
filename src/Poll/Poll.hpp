@@ -3,6 +3,7 @@
 
 #include "using.hpp"
 #include <poll.h>
+#include "http.hpp"
 
 #ifdef WDEBUG
 # include <cstdlib>
@@ -10,7 +11,9 @@
 
 typedef enum {
 	LISTENER,
-	READ,
+	READ_HEAD,
+	READ_BODY,
+	EXE_CGI,
 	WRITE,
 } PollType;
 
@@ -22,6 +25,7 @@ public:
 	pollfd poll;
 	string response;
 	string id;
+	Request	req;
 
 	Poll(PollType type, pollfd poll, string response);
 	~Poll();

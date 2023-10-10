@@ -3,6 +3,9 @@
 #include <list>
 #include <unistd.h>
 #include "Poll.hpp"
+#include "response.hpp"
+
+
 
 void start(map<int, Listener*>& listeners, bool& loop, const Config& config, const Env& env) {
 	// Return if all failed to start
@@ -38,7 +41,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				++ite;
 				continue ;
 			}
-			if(poll_ret == 0){
+			if(ite->type == LISTENER && poll_ret == 0) {
 				// DEBUG_WARN_ << "No new connection, ignoring" << endl;
 				++ite;
 				continue ;
@@ -51,6 +54,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 
 			if (!loop) {
 				DEBUG_INFO_ << "Loop stopped just before reading request!" << endl;
+				DEBUG_INFO_ << "Try to response to all the request in the queue." << endl;
+				//TODO clear the queue
 				return ;
 			}
 
@@ -74,18 +79,103 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				new_pollfd.events = POLLIN;
 				new_pollfd.fd     = connection_fd;
 				new_pollfd.revents= 0;
-				poll_queue.push_back(Poll(READ, new_pollfd, ""));
+				poll_queue.push_back(Poll(READ_HEAD, new_pollfd, ""));
 				++ite;
 				continue ;
 			}
 
-			if (type == READ) {
+			if (type == READ_HEAD) {
+				DEBUG_ << "Read head poll id: " << ite->id << endl;
+				// Read header by BUFFER_SIZE until reach the header end sequence
+				try {
+					read_header(*ite);
+				}
+				catch(const std::exception& e) {
+					DEBUG_WARN_ << "Read header failed, ignoring" << endl;
+					ite->type = WRITE;
+					ite->poll.events = POLLOUT;
+					std::cerr << e.what() << endl;
+					// Respond directly to the request
+					// ++ite;
+					continue;
+				}
 
-				DEBUG_ << "Read poll id: " << ite->id << endl;
-				ite->response = http(poll.fd, config, env);
+				// Check if the read_header is complete
+				if (ite->type != READ_BODY) {
+					// Continue to read the same request until all the header is read.
+					// ++ite;
+					continue;
+				}
+
+				// Parse the header
+				try {
+					parse_header(config, ite->req);
+				}
+				catch(const std::exception& e) {
+					DEBUG_WARN_ << "Pars header failed, ignoring" << endl;
+					ite->type = WRITE;
+					ite->poll.events = POLLOUT;
+					std::cerr << e.what() << endl;
+					// Respond directly to the request
+					// ++ite;
+					continue;
+				}
+				// If there is no body skip reading body
+				const string & method = ite->req.method;
+				ite->type = (method != "POST" && method != "DELETE") ? WRITE : READ_BODY;
+				if (ite->type == READ_BODY) {
+					if (!map_has_key(ite->req.headers, string(HEADER_CONTENT_LENGTH))) {
+						DEBUG_WARN_ << "Request dont have a content length for the body!, ignoring" << endl;
+						ite->type = WRITE;
+						ite->response = error(400, "The Header dont have a content length for the body!");
+						// Respond directly to the request
+						// ++ite;
+						continue;
+					}
+
+					ite->req.content_length = stringToNumber(ite->req.headers[HEADER_CONTENT_LENGTH]);
+					if (ite->req.serv.has_max_body_size_been_set) {
+						if (ite->req.serv.max_body_size < (u_int32_t) ite->req.body.size()) {
+							DEBUG_ << "Body exeed max_body_size!" << endl;
+							ite->req.response = error_serv(ite->req.serv, 413);
+							// Respond directly to the request
+							// ++ite;
+							continue;
+						}
+					}
+				}
+				// Continue to read the same request
+				// ++ite;
+				continue;
+			}
+
+			if (type == READ_BODY) {
+				try {
+					read_body(*ite);
+				}
+				catch(const std::exception& e) {
+					DEBUG_WARN_ << "Read Body failed, ignoring" << endl;
+					ite->type = WRITE;
+					std::cerr << e.what() << endl;
+					// Respond directly to the request
+					// ++ite;
+				}
+				continue;
+			}
+
+			if (type == EXE_CGI) {
+				try
+				{
+					execute_request(env, ite->req);
+				}
+				catch(const std::exception& e)
+				{
+					DEBUG_WARN_ << "Execute CGI failed, ignoring" << endl;
+					std::cerr << e.what() << endl;
+				}
 				ite->type = WRITE;
-				ite->poll.events = POLLOUT;
-				++ite;
+				// Respond directly to the request
+				// ++ite;
 				continue;
 			}
 

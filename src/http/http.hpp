@@ -9,6 +9,7 @@
 #include "Listener.hpp"
 #include "request_validation.hpp"
 
+class Poll;
 /******************************************************************************/
 
 typedef map<string, string> Headers;
@@ -35,6 +36,7 @@ typedef struct {
 	string		param;
 	Headers		headers;
 	string		body;
+	u_int32_t	content_length;
 	
 	string		response;
 	
@@ -51,8 +53,11 @@ string error_serv(const Server& serv, u_int32_t code, const string& message = ""
 const Server& find_server(const Config& config, Headers headers);
 const Location& find_location(const Server& serv, const string& req_path_param);
 
-const string http(const int fd, const Config& config, const Env& env);
+void read_header(Poll &poll);
+void parse_header(const Config& config, Request& req);
+void read_body(Poll &poll);
 
+void execute_request(const Env& env, Request& req);
 /******************************************************************************/
 
 #endif /* HTTP_HPP */

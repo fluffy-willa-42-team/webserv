@@ -1,5 +1,6 @@
 #include "http.hpp"
 #include "response.hpp"
+#include "Poll.hpp"
 
 #include "debug.hpp"
 
@@ -10,6 +11,11 @@
 
 string remove_end_backslash(string req_path_param);
 string remove_param(string req_path_param);
+
+e_status ret(e_status status, Request& req, const string& response){
+	req.response = response;
+	return status;
+}
 
 string read_buff(int connection_fd){
 	static char buffer[BUFFER_SIZE];
@@ -24,12 +30,28 @@ string read_buff(int connection_fd){
 	return string(buffer, length_read);
 }
 
-e_status ret(e_status status, Request& req, const string& response){
-	req.response = response;
-	return status;
+/**
+ * Read header by BUFFER_SIZE len, if the header end sequence is find change the
+ * type of Poll
+*/
+void read_header(Poll &poll) {
+	try {
+		poll.req.raw += read_buff(poll.poll.fd);
+		DEBUG_ << "read_header: " << poll.req.raw << endl;
+	}
+	catch (const exception& e) {
+		DEBUG_ << "Failed to read header errno: " << strerror(errno) << endl;
+		throw runtime_error("Failed to read header errno: " + string(strerror(errno)));
+	}
+
+	if (poll.req.raw.find("\r\n\r\n") != string::npos) {
+		poll.type = READ_BODY;
+		poll.poll.events = POLLIN;
+		DEBUG_ << "Request: " << endl << BLUE << poll.req.raw << RESET << endl;
+	}
 }
 
-e_status parse_header(const Config& config, Request& req){
+void parse_header(const Config& config, Request& req){
 	stringstream ss_line_by_line(req.raw);
 	string line;
 
@@ -46,14 +68,16 @@ e_status parse_header(const Config& config, Request& req){
 
 	if (!getline(ss_line_by_line, line)){
 		DEBUG_ << "The Request is empty" << endl;
-		return ret(S_STOP, req, error(400, "The Request is empty"));
+		ret(S_STOP, req, error(400, "The Request is empty"));
+		throw exception();
 	}
 	removeCarriageReturn(line);
 
 	vector<string> initline = split(line, " ");
 	if (initline.size() != 3){
 		DEBUG_ << "Init line is invalid" << endl;
-		return ret(S_STOP, req, error(400, "Init line is invalid"));
+		ret(S_STOP, req, error(400, "Init line is invalid"));
+		throw exception();
 	}
 
 
@@ -64,11 +88,13 @@ e_status parse_header(const Config& config, Request& req){
 		e_validation_status validation_status = is_method_valid(req.method);
 		if (validation_status == NOT_ALLOWED){
 			DEBUG_ << "Method is not allowed" << endl;
-			return ret(S_STOP, req, error(405));
+			ret(S_STOP, req, error(405));
+			throw exception();
 		}
 		else if (validation_status == BAD_REQUEST){
 			DEBUG_ << "Method is invalid" << endl;
-			return ret(S_STOP, req, error(400, "Method is invalid"));
+			ret(S_STOP, req, error(400, "Method is invalid"));
+			throw exception();
 		}
 	}
 
@@ -77,7 +103,8 @@ e_status parse_header(const Config& config, Request& req){
 		string req_path_param = initline[1];
 		if (!is_path_valid(req_path_param)){
 			DEBUG_ << "Path is invalid" << endl;
-			return ret(S_STOP, req, error(400, "Path is invalid"));
+			ret(S_STOP, req, error(400, "Path is invalid"));
+			throw exception();
 		}
 		replace_string(req_path_param, "%20", " ");
 		if (req_path_param.find_first_of('?') != string::npos){
@@ -99,11 +126,13 @@ e_status parse_header(const Config& config, Request& req){
 		e_validation_status validation_status = is_method_valid(req.method);
 		if (validation_status == NOT_ALLOWED){
 			DEBUG_ << "Protocol is not allowed" << endl;
-			return ret(S_STOP, req, error(505)); // HTTP Version not allowed
+			ret(S_STOP, req, error(505)); // HTTP Version not allowed
+			throw exception();
 		}
 		else if (validation_status == BAD_REQUEST){
 			DEBUG_ << "Protocol is invalid" << endl;
-			return ret(S_STOP, req, error(400, "Protocol is invalid"));
+			ret(S_STOP, req, error(400, "Protocol is invalid"));
+			throw exception();
 		}
 	}
 
@@ -117,14 +146,15 @@ e_status parse_header(const Config& config, Request& req){
 	Ex:
 	Accept-Language: en-US,en
 	*/
-    while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
+	while (getline(ss_line_by_line, line) && removeCarriageReturn(line) && !line.empty()) {
 		vector<string> headerline = splitFirst(line, ": ");
 		if (is_header_valid(headerline) == BAD_REQUEST){
 			DEBUG_ << "Headers are invalid" << endl;
-			return ret(S_STOP, req, error(400, "Headers are invalid"));
+			ret(S_STOP, req, error(400, "Headers are invalid"));
+			throw exception();
 		}
-        req.headers[headerline[0]] = headerline[1];
-    }
+		req.headers[headerline[0]] = headerline[1];
+	}
 
 
 
@@ -143,7 +173,8 @@ e_status parse_header(const Config& config, Request& req){
 	{
 		if (!map_has_key(req.headers, string(HEADER_HOST))){
 			DEBUG_ << "Missing host header" << endl;
-			return ret(S_STOP, req, error(400, "Missing host header"));
+			ret(S_STOP, req, error(400, "Missing host header"));
+			throw exception();
 		}
 	}
 
@@ -162,30 +193,53 @@ e_status parse_header(const Config& config, Request& req){
 		req.serv = find_server(config, req.headers);
 	}
 	catch(const exception& e) {
-		return ret(S_STOP, req, error(404, "This host has not been found"));
+		DEBUG_ << "Host has not been found" << endl;
+		ret(S_STOP, req, error(404, "This host has not been found"));
+		throw exception(e);
 	}
 
 	try {
 		req.loc = find_location(req.serv, req.path);
 	}
 	catch(const exception& e) {
-		return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+		DEBUG_ << "Location has not been found" << endl;
+		ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+		throw exception(e);
 	}
 
 	DEBUG_INFO_ << "Location: " << req.loc.path << endl;
 
 	if (!vec_has(req.loc.allowed_methods, req.method)){
-		return ret(S_STOP, req, error_serv(req.serv, 404));
+		DEBUG_ << "Method is not allowed" << endl;
+		ret(S_STOP, req, error_serv(req.serv, 404));
+		throw exception();
 	}
-
-
-
-
 
 	stringstream remainingContentStream;
 	remainingContentStream << ss_line_by_line.rdbuf();
 	req.body = remainingContentStream.str();
-	return S_CONTINUE;
+}
+
+void read_body(Poll &poll) {
+	if (poll.req.body.length() < poll.req.content_length) {
+		
+		try {
+			poll.req.body += read_buff(poll.poll.fd);
+		}
+		catch(const exception& e) {
+			DEBUG_ << "Fail Readbuf in body" << endl;
+			poll.req.response = error_serv(poll.req.serv, 400);
+			throw exception();
+		}
+	} else {
+		// We have all the body stored, next poll respond to client
+		poll.type = WRITE;
+	}
+	if (poll.req.body.length() > poll.req.content_length) {
+		DEBUG_ << "Body exeed max_body_size!" << endl;
+		poll.req.response = error_serv(poll.req.serv, 413);
+		throw exception();
+	}
 }
 
 /*===-----					Execute the Location found				  -----===*\
@@ -230,7 +284,7 @@ switch (req.method){
 	}
 }
 */
-e_status execute_request(const Env& env, Request& req){
+void execute_request(const Env& env, Request& req){
 	if (req.method == "GET"){
 		if (!req.loc.root.empty()){
 			string file_path = req.loc.root + "/" + req.path.substr(req.loc.path.size());
@@ -243,42 +297,52 @@ e_status execute_request(const Env& env, Request& req){
 
 			struct stat path_info;
 			if (stat(file_path.c_str(), &path_info) == -1) {
-				return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+				ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+				throw exception();
 			}
 
 			if (S_ISREG(path_info.st_mode)){ // Check if is file
 				if (!req.loc.cgi_pass.empty()){
 					string cgi_bin;
 					if (is_file_cgi(req.loc, file_path, cgi_bin)){
-						return ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, file_path, req));
+						ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, file_path, req));
+						return;
 					}
 				}
-				return ret(S_STOP, req, get_file_res(file_path, req.loc.download));
+				ret(S_STOP, req, get_file_res(file_path, req.loc.download));
+				return;
 			}
 			else if (S_ISDIR(path_info.st_mode)){ // Check if is folder
 				if (!req.loc.autoindex){
-					return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+					ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+					throw exception();
 				}
-				return ret(S_STOP, req, get_autoindex(req.path, file_path));
+				ret(S_STOP, req, get_autoindex(req.path, file_path));
+				return;
 			}
 			else {
-				return ret(S_STOP, req, error_serv(req.serv, 403, "Only files and folder are allowed to be read"));
+				ret(S_STOP, req, error_serv(req.serv, 403, "Only files and folder are allowed to be read"));
+				throw exception();
 			}
 		}
 		else if (!req.loc.index.empty()){
 			if (req.path != req.loc.path){
-				return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+				ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+				throw exception();
 			}
 			if (!req.loc.cgi_pass.empty()){
 				string cgi_bin;
 				if (is_file_cgi(req.loc, req.loc.index, cgi_bin)){
-					return ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, req.loc.index, req));
+					ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, req.loc.index, req));
+					return;
 				}
 			}
-			return ret(S_STOP, req, get_file_res(req.loc.index, req.loc.download));
+			ret(S_STOP, req, get_file_res(req.loc.index, req.loc.download));
+			return;
 		}
 		else if (req.loc.redirect_code != 0){
-			return ret(S_STOP, req, redirect(req.loc.redirect_code, req.loc.redirect_path));
+			ret(S_STOP, req, redirect(req.loc.redirect_code, req.loc.redirect_path));
+			return;
 		}
 	}
 	else if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE"){
@@ -287,94 +351,18 @@ e_status execute_request(const Env& env, Request& req){
 			file_path = mergeFilePaths(req.loc.root, req.loc.index);
 		}
 		if (req.loc.cgi_pass.empty()){
-			return ret(S_STOP, req, error(404, NOT_FOUND_DESCRIPTION));
+			ret(S_STOP, req, error(404, NOT_FOUND_DESCRIPTION));
+			throw exception();
 		}
 		string cgi_bin;
 		if (!is_file_cgi(req.loc, file_path, cgi_bin)){
-			return ret(S_STOP, req, error(404, NOT_FOUND_DESCRIPTION));
+			ret(S_STOP, req, error(404, NOT_FOUND_DESCRIPTION));
+			throw exception();
 		}
-		return ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, file_path, req));
+		ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, file_path, req));
+		return;
 	}
 
-	return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
-}
-
-const string http(const int fd, const Config& config, const Env& env){
-	Request req;
-
-	try {
-		req.raw += read_buff(fd);
-	}
-	catch(const exception& e) {
-		DEBUG_ << "The Request is empty" << endl;
-		return error(400, "The Request is empty");
-	}
-	
-	{
-		u_int32_t verif = 0;
-		while (req.raw.find("\r\n\r\n") == string::npos){
-			try {
-				string new_cont = read_buff(fd);
-				req.raw += new_cont;
-				if (new_cont.length() == 0){
-					verif++;
-					if (verif > 100){
-						DEBUG_ << "The Request timed out" << endl;
-						return error(408);
-					}
-				}
-			}
-			catch(const exception& e) {
-				return error(400);
-			}
-		}
-	}
-
-	DEBUG_ << "Request: " << endl << BLUE << req.raw << RESET << endl;
-
-	
-	//// PART 1
-	{
-		e_status status = parse_header(config, req);
-		if (status == S_STOP){
-			return req.response;
-		}
-	}
-
-	/*===-----						Body							  -----===*/
-	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
-	{
-		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
-			
-
-			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
-			
-			u_int32_t verif = 0;
-			while (req.body.length() < content_length){
-				if (req.serv.has_max_body_size_been_set && req.serv.max_body_size < (u_int32_t) req.body.size()){
-					return error_serv(req.serv, 413);
-				}
-				try {
-					string new_cont = read_buff(fd);
-					req.body += new_cont;
-					if (new_cont.length() == 0){
-						verif++;
-						if (verif > 100){
-							DEBUG_ << "The Request timed out" << endl;
-							return error(408);
-						}
-					}
-				}
-				catch(const exception& e) {
-					DEBUG_ << "Fail Readbuf in body" << endl;
-					return error_serv(req.serv, 400);
-				}
-			}
-		}
-	}
-
-
-	//// PART 2
-	execute_request(env, req);
-	return req.response;
+	ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+	throw exception();
 }
