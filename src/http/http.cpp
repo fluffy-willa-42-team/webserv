@@ -79,6 +79,7 @@ e_status parse_header(const Config& config, Request& req){
 			DEBUG_ << "Path is invalid" << endl;
 			return ret(S_STOP, req, error(400, "Path is invalid"));
 		}
+		replace_string(req_path_param, "%20", " ");
 		if (req_path_param.find_first_of('?') != string::npos){
 			req.path = remove_end_backslash(req_path_param.substr(0, req_path_param.find_first_of('?')));
 			req.param = req_path_param.substr(req_path_param.find_first_of('?') + 1, req_path_param.size());
