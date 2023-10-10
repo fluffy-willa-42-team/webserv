@@ -229,7 +229,7 @@ switch (req.method){
 	}
 }
 */
-e_status execute_request(const Config& config, const Env& env, Request& req){
+e_status execute_request(const Env& env, Request& req){
 	if (req.method == "GET"){
 		if (!req.loc.root.empty()){
 			string file_path = req.loc.root + "/" + req.path.substr(req.loc.path.size());
@@ -374,6 +374,6 @@ const string http(const int fd, const Config& config, const Env& env){
 
 
 	//// PART 2
-	execute_request(config, env, req);
+	execute_request(env, req);
 	return req.response;
 }
