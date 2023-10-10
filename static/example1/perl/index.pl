@@ -8,6 +8,8 @@ if ($ENV{'REDIRECT_STATUS'} eq '200'){
 	$message = 'This is a Perl generated message for redirect';
 }
 
+my $test = `date`;
+
 print $cgi->header;
 print <<HTML;
 <html>
@@ -17,17 +19,7 @@ print <<HTML;
 	<body>
 		<h1>Perl index</h1>
 		<h2>$message</h2>
-		<form action="/perl/post.pl" method="post" enctype="multipart/form-data">
-			<label for="hello">Drop file</label>
-			<input type="file" id="hello" name="fileToUpload">
-
-			<input type="submit" value="submit">
-		</form>
-		<form action="/perl/delete.pl" method="POST">
-			<label for="filename">Enter the filename to delete: </label>
-			<input type="text" name="filename">
-			<input type="submit" value="Delete">
-		</form>
+		<h2>$test</h2>
 	</body>
 </html>
 HTML
