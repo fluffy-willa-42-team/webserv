@@ -187,128 +187,6 @@ e_status parse_header(const Config& config, Request& req){
 	return S_CONTINUE;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const string http(const int fd, const Config& config, const Env& env){
-	Request req;
-
-	try {
-		req.raw += read_buff(fd);
-	}
-	catch(const exception& e) {
-		DEBUG_ << "The Request is empty" << endl;
-		return error(400, "The Request is empty");
-	}
-	
-	{
-		u_int32_t verif = 0;
-		while (req.raw.find("\r\n\r\n") == string::npos){
-			try {
-				string new_cont = read_buff(fd);
-				req.raw += new_cont;
-				if (new_cont.length() == 0){
-					verif++;
-					if (verif > 100){
-						DEBUG_ << "The Request timed out" << endl;
-						return error(408);
-					}
-				}
-			}
-			catch(const exception& e) {
-				return error(400);
-			}
-		}
-	}
-
-	DEBUG_ << "Request: " << endl << BLUE << req.raw << RESET << endl;
-
-	
-	//// PART 1
-
-
-	/*===-----						Body							  -----===*/
-	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
-	{
-		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
-			
-
-			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
-			
-			u_int32_t verif = 0;
-			while (req.body.length() < content_length){
-				if (req.serv.has_max_body_size_been_set && req.serv.max_body_size < (u_int32_t) req.body.size()){
-					return error_serv(req.serv, 413);
-				}
-				try {
-					string new_cont = read_buff(fd);
-					req.body += new_cont;
-					if (new_cont.length() == 0){
-						verif++;
-						if (verif > 100){
-							DEBUG_ << "The Request timed out" << endl;
-							return error(408);
-						}
-					}
-				}
-				catch(const exception& e) {
-					DEBUG_ << "Fail Readbuf in body" << endl;
-					return error_serv(req.serv, 400);
-				}
-			}
-		}
-	}
-
-
-	//// PART 2
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*===-----					Execute the Location found				  -----===*\
 Now that we have the right Location and Server to execute, we will find the
 right method and the right response to generate.
@@ -352,7 +230,6 @@ switch (req.method){
 }
 */
 e_status execute_request(const Config& config, const Env& env, Request& req){
-
 	if (req.method == "GET"){
 		if (!req.loc.root.empty()){
 			string file_path = req.loc.root + "/" + req.path.substr(req.loc.path.size());
@@ -414,10 +291,89 @@ e_status execute_request(const Config& config, const Env& env, Request& req){
 		string cgi_bin;
 		if (!is_file_cgi(req.loc, file_path, cgi_bin)){
 			return ret(S_STOP, req, error(404, NOT_FOUND_DESCRIPTION));
-			return ;
 		}
 		return ret(S_STOP, req, cgi(env, req.serv, req.loc, cgi_bin, file_path, req));
 	}
 
 	return ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+}
+
+const string http(const int fd, const Config& config, const Env& env){
+	Request req;
+
+	try {
+		req.raw += read_buff(fd);
+	}
+	catch(const exception& e) {
+		DEBUG_ << "The Request is empty" << endl;
+		return error(400, "The Request is empty");
+	}
+	
+	{
+		u_int32_t verif = 0;
+		while (req.raw.find("\r\n\r\n") == string::npos){
+			try {
+				string new_cont = read_buff(fd);
+				req.raw += new_cont;
+				if (new_cont.length() == 0){
+					verif++;
+					if (verif > 100){
+						DEBUG_ << "The Request timed out" << endl;
+						return error(408);
+					}
+				}
+			}
+			catch(const exception& e) {
+				return error(400);
+			}
+		}
+	}
+
+	DEBUG_ << "Request: " << endl << BLUE << req.raw << RESET << endl;
+
+	
+	//// PART 1
+	{
+		e_status status = parse_header(config, req);
+		if (status == S_STOP){
+			return req.response;
+		}
+	}
+
+	/*===-----						Body							  -----===*/
+	if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE")
+	{
+		if (map_has_key(req.headers, string(HEADER_CONTENT_LENGTH))){
+			
+
+			u_int32_t content_length = stringToNumber(req.headers[HEADER_CONTENT_LENGTH]);
+			
+			u_int32_t verif = 0;
+			while (req.body.length() < content_length){
+				if (req.serv.has_max_body_size_been_set && req.serv.max_body_size < (u_int32_t) req.body.size()){
+					return error_serv(req.serv, 413);
+				}
+				try {
+					string new_cont = read_buff(fd);
+					req.body += new_cont;
+					if (new_cont.length() == 0){
+						verif++;
+						if (verif > 100){
+							DEBUG_ << "The Request timed out" << endl;
+							return error(408);
+						}
+					}
+				}
+				catch(const exception& e) {
+					DEBUG_ << "Fail Readbuf in body" << endl;
+					return error_serv(req.serv, 400);
+				}
+			}
+		}
+	}
+
+
+	//// PART 2
+	execute_request(config, env, req);
+	return req.response;
 }

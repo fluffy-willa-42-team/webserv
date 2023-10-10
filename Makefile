@@ -24,7 +24,7 @@ DEV_FLAGS	:= -Wno-error={unused-parameter,unused-variable} -Wfatal-errors
 DLEVEL		:= -1
 SANI		:= 0
 DEBUG		:= 0
-DEV_COMPIL	:= 0
+DEV_COMPIL	:= 1
 
 ifeq ($(DEBUG), 1)
 	FLAGS += -g3
