@@ -28,11 +28,18 @@ typedef struct {
 } AutoindexInput;
 
 typedef struct {
-	string	method;
-	string	path;
-	string	param;
-	Headers	headers;
-	string	body;
+	string		raw;
+
+	string		method;
+	string		path;
+	string		param;
+	Headers		headers;
+	string		body;
+	
+	string		response;
+	
+	Location	loc;
+	Server		serv;
 }	Request;
 
 
