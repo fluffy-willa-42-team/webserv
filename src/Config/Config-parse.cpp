@@ -101,6 +101,7 @@ e_status Config::parse_conf_file(ifstream& config_file){
 				bool has_redirect	= false;
 				bool has_index		= false;
 				bool has_root		= false;
+				bool has_location_allow_methods	= false;
 
 				loc.path = line_split[1];
 				// Parse all line with {} for Location
@@ -139,6 +140,10 @@ e_status Config::parse_conf_file(ifstream& config_file){
 						if (has_redirect){
 							return err(line, index, "Incompatible location arguments");
 						}
+						if (!has_location_allow_methods){
+							loc.allowed_methods.clear();
+						}
+						has_location_allow_methods = true;
 						for (u_int32_t i = 1; i < line_split.size(); i++){
 							loc.allowed_methods.push_back(line_split[i]);
 						}

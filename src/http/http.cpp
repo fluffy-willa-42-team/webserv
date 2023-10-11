@@ -210,7 +210,7 @@ void parse_header(const Config& config, Request& req){
 
 	if (!vec_has(req.loc.allowed_methods, req.method)){
 		DEBUG_ << "Method is not allowed" << endl;
-		ret(S_STOP, req, error_serv(req.serv, 404));
+		ret(S_STOP, req, error_serv(req.serv, 405));
 		throw exception();
 	}
 
