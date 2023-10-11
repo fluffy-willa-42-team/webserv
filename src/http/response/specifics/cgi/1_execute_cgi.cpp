@@ -69,12 +69,10 @@ e_status exec_cgi(
 		DEBUG_ERROR_ << "CGI: Could not create a pipe" << endl;
 		return S_ERROR;
 	}
-	if (!req_body.empty()){
-		if (pipe((int *) &pipe2) < 0){
-			free_exec_cgi(env, env_cast, pipe1, pipe2);
-			DEBUG_ERROR_ << "CGI: Could not create a pipe" << endl;
-			return S_ERROR;
-		}
+	if (pipe((int *) &pipe2) < 0){
+		free_exec_cgi(env, env_cast, pipe1, pipe2);
+		DEBUG_ERROR_ << "CGI: Could not create a pipe" << endl;
+		return S_ERROR;
 	}
 
 	pid_t pid = fork();
@@ -84,21 +82,25 @@ e_status exec_cgi(
 		return S_ERROR;
 	}
 	else if (pid == 0){
+		if (dup2(pipe2.read, STDIN_FILENO) < 0){
+			free_exec_cgi(env, env_cast, pipe1, pipe2);
+			exit(EXIT_FAILURE);
+		}
 		if (!req_body.empty()){
-			if (dup2(pipe2.read, STDIN_FILENO) < 0){
-				free_exec_cgi(env, env_cast, pipe1, pipe2);
-				exit(EXIT_FAILURE);
-			}
-			
+			DEBUG_ERROR_ << "Has Body" << endl;
 			ssize_t write_c = write(pipe2.write, req_body.c_str(), req_body.size());
 			if (write_c == -1){
 				exit(EXIT_FAILURE);
 			}
-			
-			
-			close(pipe2.write);
-			close(pipe2.read);
 		}
+		else {
+			DEBUG_ERROR_ << "Has No Body" << endl;
+			ssize_t write_c = write(pipe2.write, "\0", 1);
+			if (write_c == -1){
+				exit(EXIT_FAILURE);
+			}
+		}
+
 		if (dup2(pipe1.write, STDOUT_FILENO) < 0){
 			free_exec_cgi(env, env_cast, pipe1, pipe2);
 			exit(EXIT_FAILURE);
@@ -107,11 +109,14 @@ e_status exec_cgi(
 		// e_status stat = S_CONTINUE;
 		// string response = read_buff_cgi(STDIN_FILENO, stat);
 
+		close(pipe2.write);
+		close(pipe2.read);
 		close(pipe1.write);
 		close(pipe1.read);
 
 		// cerr << "Read [" << stat << "]: " << RED << response << RESET << endl;
 
+		DEBUG_ERROR_ << "execve" << endl;
 		execve(argv[0], argv, env_cast);
 
 		free_exec_cgi(env, env_cast, pipe1, pipe2);
