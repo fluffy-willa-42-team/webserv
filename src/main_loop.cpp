@@ -139,10 +139,16 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 							DEBUG_ << "Body exeed max_body_size!" << endl;
 							ite->req.response = error_serv(ite->req.serv, 413);
 							// Respond directly to the request
+							ite->type = READ_BODY;
+							ite->poll.events = POLLIN;
 							++ite;
 							continue;
 						}
 					}
+					ite->type = READ_BODY;
+					ite->poll.events = POLLIN;
+					++ite;
+					continue;
 				} else {
 					DEBUG_ << "There is no body to read" << endl;
 				}

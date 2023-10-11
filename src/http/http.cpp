@@ -220,7 +220,7 @@ void parse_header(const Config& config, Request& req){
 }
 
 void read_body(Poll &poll) {
-	if (poll.req.body.length() < poll.req.content_length) {
+	if (poll.req.body.size() < poll.req.content_length) {
 		
 		try {
 			poll.req.body += read_buff(poll.poll.fd);
@@ -230,10 +230,10 @@ void read_body(Poll &poll) {
 			poll.req.response = error_serv(poll.req.serv, 400);
 			throw exception();
 		}
-	} else {
-		// We have all the body stored, next poll respond to client
-		poll.type = WRITE;
+		return;
 	}
+	// We have all the body stored, next poll respond to client
+	poll.type = EXE_CGI;	
 	if (poll.req.body.length() > poll.req.content_length) {
 		DEBUG_ << "Body exeed max_body_size!" << endl;
 		poll.req.response = error_serv(poll.req.serv, 413);
