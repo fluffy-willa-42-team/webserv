@@ -86,38 +86,39 @@ e_status exec_cgi(
 			free_exec_cgi(env, env_cast, pipe1, pipe2);
 			exit(EXIT_FAILURE);
 		}
+		if (dup2(pipe1.write, STDOUT_FILENO) < 0){
+			free_exec_cgi(env, env_cast, pipe1, pipe2);
+			exit(EXIT_FAILURE);
+		}
+		
 		if (!req_body.empty()){
 			DEBUG_ERROR_ << "Has Body: " << req_body.size() << endl;
 			ssize_t write_c = write(pipe2.write, req_body.c_str(), req_body.size());
 			if (write_c == -1){
+				DEBUG_ERROR_ << "CGI write fail " << strerror(errno) << endl;
 				exit(EXIT_FAILURE);
 			}
+			DEBUG_ERROR_ << "Has Body: " << req_body.size() << endl;
 		}
 		else {
 			DEBUG_ERROR_ << "Has No Body" << endl;
 			ssize_t write_c = write(pipe2.write, "\0", 1);
 			if (write_c == -1){
+				DEBUG_ERROR_ << "CGI write fail " << strerror(errno) << endl;
 				exit(EXIT_FAILURE);
 			}
 		}
 
-		if (dup2(pipe1.write, STDOUT_FILENO) < 0){
-			free_exec_cgi(env, env_cast, pipe1, pipe2);
-			exit(EXIT_FAILURE);
-		}
+		DEBUG_ERROR_ << "execve ee" << endl;
 
-		// e_status stat = S_CONTINUE;
-		// string response = read_buff_cgi(STDIN_FILENO, stat);
-
-		close(pipe2.write);
-		close(pipe2.read);
 		close(pipe1.write);
 		close(pipe1.read);
-
-		// cerr << "Read [" << stat << "]: " << RED << response << RESET << endl;
+		close(pipe2.write);
+		close(pipe2.read);
 
 		DEBUG_ERROR_ << "execve" << endl;
 		execve(argv[0], argv, env_cast);
+		DEBUG_ERROR_ << "Failed execve" << endl;
 
 		free_exec_cgi(env, env_cast, pipe1, pipe2);
 		exit(EXIT_FAILURE);
@@ -129,6 +130,8 @@ e_status exec_cgi(
 
 		int child_status = 0;
 		waitpid(pid, &child_status, 0);
+
+		DEBUG_ERROR_ << "End execve" << endl;
 
 		int flags = fcntl(pipe1.read, F_GETFL, 0);
 		if (flags == -1) {
