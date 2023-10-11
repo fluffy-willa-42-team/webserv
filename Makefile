@@ -6,7 +6,7 @@
 #    By: awillems <awillems@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/09 08:35:24 by awillems          #+#    #+#              #
-#    Updated: 2023/09/29 12:07:10 by mahadad          ###   ########.fr        #
+#    Updated: 2023/10/11 10:48:31 by awillems         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ DEV_FLAGS	:= -Wno-error={unused-parameter,unused-variable} -Wfatal-errors
 DLEVEL		:= -1
 SANI		:= 0
 DEBUG		:= 0
-DEV_COMPIL	:= 1
+DEV_COMPIL	:= 0
 
 ifeq ($(DEBUG), 1)
 	FLAGS += -g3
