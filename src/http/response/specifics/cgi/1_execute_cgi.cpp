@@ -94,9 +94,7 @@ e_status exec_cgi(
 		close(pipe_in.write);
 		close(pipe_out.read);
 
-		DEBUG_ERROR_ << "execve" << endl;
 		execve(argv[0], argv, env_cast);
-		DEBUG_ERROR_ << "Failed execve" << endl;
 
 		close(pipe_out.write);
 		close(pipe_in.read);
@@ -106,24 +104,19 @@ e_status exec_cgi(
 	}
 	else {
 		if (!req_body.empty()){
-			DEBUG_ERROR_ << "Has Body: " << req_body.size() << " | " << endl;
 			ssize_t write_c = write(pipe_in.write, req_body.c_str(), req_body.size());
 			if (write_c == -1){
 				DEBUG_ERROR_ << "CGI write fail " << strerror(errno) << endl;
 				exit(EXIT_FAILURE);
 			}
-			DEBUG_ERROR_ << "Has Body: " << req_body.size() << endl;
 		}
 		else {
-			DEBUG_ERROR_ << "Has No Body" << endl;
 			ssize_t write_c = write(pipe_in.write, "\0", 1);
 			if (write_c == -1){
 				DEBUG_ERROR_ << "CGI write fail " << strerror(errno) << endl;
 				exit(EXIT_FAILURE);
 			}
 		}
-
-		DEBUG_ERROR_ << "execve ee" << endl;
 		
 		close(pipe_in.read);
 		close(pipe_in.write);
@@ -131,8 +124,6 @@ e_status exec_cgi(
 
 		int child_status = 0;
 		waitpid(pid, &child_status, 0);
-
-		DEBUG_ERROR_ << "End execve" << endl;
 
 		if (!WIFEXITED(child_status)){
 			free_exec_cgi(env, env_cast, pipe_out, pipe_in);
