@@ -6,7 +6,7 @@
 #    By: awillems <awillems@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/09 08:35:24 by awillems          #+#    #+#              #
-#    Updated: 2023/10/11 10:48:31 by awillems         ###   ########.fr        #
+#    Updated: 2023/10/11 15:11:17 by awillems         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CODE_EXT	:= .cpp
 HEAD_EXT	:= .hpp
 INC			:= -I include
 FLAGS		:= -W{all,extra,error} -std=c++98 -D UPLOAD_DIR="\"$(shell pwd)/static/upload/\""
-DEV_FLAGS	:= -Wno-error={unused-parameter,unused-variable} -Wfatal-errors
+DEV_FLAGS	:= -Wno-error=unused-{parameter,variable,value} -Wfatal-errors
 DLEVEL		:= -1
 SANI		:= 0
 DEBUG		:= 0

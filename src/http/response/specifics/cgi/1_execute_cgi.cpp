@@ -82,6 +82,29 @@ e_status exec_cgi(
 		return S_ERROR;
 	}
 	else if (pid == 0){
+		if (dup2(pipe_in.read, STDIN_FILENO) < 0){
+			free_exec_cgi(env, env_cast, pipe_out, pipe_in);
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(pipe_out.write, STDOUT_FILENO) < 0){
+			free_exec_cgi(env, env_cast, pipe_out, pipe_in);
+			exit(EXIT_FAILURE);
+		}
+
+		close(pipe_in.write);
+		close(pipe_out.read);
+
+		DEBUG_ERROR_ << "execve" << endl;
+		execve(argv[0], argv, env_cast);
+		DEBUG_ERROR_ << "Failed execve" << endl;
+
+		close(pipe_out.write);
+		close(pipe_in.read);
+
+		free_exec_cgi(env, env_cast, pipe_out, pipe_in);
+		exit(EXIT_FAILURE);
+	}
+	else {
 		if (!req_body.empty()){
 			DEBUG_ERROR_ << "Has Body: " << req_body.size() << " | " << endl;
 			ssize_t write_c = write(pipe_in.write, req_body.c_str(), req_body.size());
@@ -102,29 +125,6 @@ e_status exec_cgi(
 
 		DEBUG_ERROR_ << "execve ee" << endl;
 		
-		close(pipe_in.write);
-		close(pipe_out.read);
-
-		if (dup2(pipe_in.read, STDIN_FILENO) < 0){
-			free_exec_cgi(env, env_cast, pipe_out, pipe_in);
-			exit(EXIT_FAILURE);
-		}
-		if (dup2(pipe_out.write, STDOUT_FILENO) < 0){
-			free_exec_cgi(env, env_cast, pipe_out, pipe_in);
-			exit(EXIT_FAILURE);
-		}
-
-		close(pipe_out.write);
-		close(pipe_in.read);
-
-		DEBUG_ERROR_ << "execve" << endl;
-		execve(argv[0], argv, env_cast);
-		DEBUG_ERROR_ << "Failed execve" << endl;
-
-		free_exec_cgi(env, env_cast, pipe_out, pipe_in);
-		exit(EXIT_FAILURE);
-	}
-	else {
 		close(pipe_in.read);
 		close(pipe_in.write);
 		close(pipe_out.write);
