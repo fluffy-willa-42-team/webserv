@@ -87,7 +87,7 @@ e_status exec_cgi(
 			exit(EXIT_FAILURE);
 		}
 		if (!req_body.empty()){
-			DEBUG_ERROR_ << "Has Body" << endl;
+			DEBUG_ERROR_ << "Has Body: " << req_body.size() << endl;
 			ssize_t write_c = write(pipe2.write, req_body.c_str(), req_body.size());
 			if (write_c == -1){
 				exit(EXIT_FAILURE);
