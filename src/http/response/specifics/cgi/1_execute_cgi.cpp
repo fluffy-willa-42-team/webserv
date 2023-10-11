@@ -85,15 +85,17 @@ e_status exec_cgi(
 	}
 	else if (pid == 0){
 		if (!req_body.empty()){
+			if (dup2(pipe2.read, STDIN_FILENO) < 0){
+				free_exec_cgi(env, env_cast, pipe1, pipe2);
+				exit(EXIT_FAILURE);
+			}
+			
 			ssize_t write_c = write(pipe2.write, req_body.c_str(), req_body.size());
 			if (write_c == -1){
 				exit(EXIT_FAILURE);
 			}
 			
-			if (dup2(pipe2.read, STDIN_FILENO) < 0){
-				free_exec_cgi(env, env_cast, pipe1, pipe2);
-				exit(EXIT_FAILURE);
-			}
+			
 			close(pipe2.write);
 			close(pipe2.read);
 		}
