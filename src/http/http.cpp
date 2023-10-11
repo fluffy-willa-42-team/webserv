@@ -230,14 +230,16 @@ void read_body(Poll &poll) {
 			poll.req.response = error_serv(poll.req.serv, 400);
 			throw exception();
 		}
-		return;
 	}
 	// We have all the body stored, next poll respond to client
-	poll.type = EXE_CGI;	
 	if (poll.req.body.length() > poll.req.content_length) {
 		DEBUG_ << "Body exeed max_body_size!" << endl;
 		poll.req.response = error_serv(poll.req.serv, 413);
 		throw exception();
+	}
+	if (poll.req.body.length() == poll.req.content_length){
+		poll.type = WRITE;
+		poll.poll.events = POLLOUT;
 	}
 }
 

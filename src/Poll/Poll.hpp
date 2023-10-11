@@ -13,7 +13,6 @@ typedef enum {
 	LISTENER,
 	READ_HEAD,
 	READ_BODY,
-	EXE_CGI,
 	WRITE,
 } PollType;
 

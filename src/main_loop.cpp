@@ -152,9 +152,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				} else {
 					DEBUG_ << "There is no body to read" << endl;
 				}
-				ite->type = EXE_CGI;
+				ite->type = WRITE;
 				ite->poll.events = POLLOUT;
-				// ite->poll.events = POLLOUT;
 				// Continue to read the same request
 				++ite;
 				continue;
@@ -175,24 +174,18 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				continue;
 			}
 
-			if (type == EXE_CGI) {
-				DEBUG_ << "Execute CGI poll id: " << ite->id << endl;
-				try
-				{
-					execute_request(env, ite->req);
-				}
-				catch(const std::exception& e)
-				{
-					DEBUG_WARN_ << "Execute CGI failed, ignoring" << endl;
-				}
-				ite->type = WRITE;
-				ite->poll.events = POLLOUT;
-				// Respond directly to the request
-				++ite;
-				continue;
-			}
-
 			if (type == WRITE) {
+				if (ite->req.response.size() == 0) {
+					DEBUG_ << "Execute CGI poll id: " << ite->id << endl;
+					try
+					{
+						execute_request(env, ite->req);
+					}
+					catch(const std::exception& e)
+					{
+						DEBUG_WARN_ << "Execute CGI failed, ignoring" << endl;
+					}
+				}
 				DEBUG_ << "Write poll id: " << ite->id << endl;
 				if (send(poll.fd, ite->req.response.c_str(), ite->req.response.length(), 0) < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
