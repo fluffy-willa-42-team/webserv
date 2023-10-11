@@ -139,8 +139,8 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 							DEBUG_ << "Body exeed max_body_size!" << endl;
 							ite->req.response = error_serv(ite->req.serv, 413);
 							// Respond directly to the request
-							ite->type = READ_BODY;
-							ite->poll.events = POLLIN;
+							ite->type = WRITE;
+							ite->poll.events = POLLOUT;
 							++ite;
 							continue;
 						}
