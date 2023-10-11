@@ -107,7 +107,7 @@ Listener::Listener(string host_ip, string port)
 			DEBUG_ERROR_ << "Failed to listen socket: errno: " << strerror(errno) << endl;
 			throw runtime_error("Failed to listen socket");
 		}
-	} catch (const exception& e) {
+	} catch (const runtime_error& e) {
 		this->~Listener();
 		throw e;
 	}
