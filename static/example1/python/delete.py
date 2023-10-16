@@ -20,7 +20,7 @@ except (ValueError, KeyError):
 # Check if 'filename' parameter is in the JSON data
 if 'filename' in data:
     filename = data['filename']
-    directory = '/path/to/your/directory/'  # Change this to the directory where the file is located
+    directory = os.environ.get('UPLOAD_DIR')
 
     # Construct the full path to the file
     file_path = os.path.join(directory, filename)
