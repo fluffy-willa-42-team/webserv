@@ -144,12 +144,13 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 							++ite;
 							continue;
 						}
-						else if (ite->req.body.length() == ite->req.content_length){
-							ite->type = WRITE;
-							ite->poll.events = POLLOUT;
-							++ite;
-							continue;
-						}
+
+					}
+					if (ite->req.body.length() == ite->req.content_length){
+						ite->type = WRITE;
+						ite->poll.events = POLLOUT;
+						++ite;
+						continue;
 					}
 					ite->type = READ_BODY;
 					ite->poll.events = POLLIN;
