@@ -178,6 +178,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					// Respond directly to the request
 					++ite;
 				}
+				++ite;
 				continue;
 			}
 
@@ -200,6 +201,7 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 				}
 				if (length_writen != static_cast<ssize_t>(ite->req.response.length())) {
 					ite->req.response.erase(0, length_writen);
+					++ite;
 					continue;
 				}
 				if (close(poll.fd) < 0) {
