@@ -27,7 +27,7 @@
 			// "preLaunchTask": "cube3d debug compile",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceRoot}/cube3d",
+			"program": "${workspaceFolder}/webserv",
 			"args": ["${input:config_file}"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceRoot}",
