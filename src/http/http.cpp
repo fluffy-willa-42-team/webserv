@@ -196,13 +196,16 @@ void parse_header(const Config& config, Request& req){
 		ret(S_STOP, req, error(404, "This host has not been found"));
 		throw exception(e);
 	}
+	
+	u_int32_t err_code = 0;
+	string err_message;
 
 	try {
-		req.loc = find_location(req.serv, req.path);
+		req.loc = find_location(req.serv, req.method, req.path, err_code, err_message);
 	}
 	catch(const exception& e) {
 		DEBUG_ << "Location has not been found" << endl;
-		ret(S_STOP, req, error_serv(req.serv, 404, NOT_FOUND_DESCRIPTION));
+		ret(S_STOP, req, error_serv(req.serv, err_code, err_message));
 		throw exception(e);
 	}
 
@@ -346,7 +349,7 @@ void execute_request(const Env& env, Request& req){
 			return;
 		}
 	}
-	else if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE"){
+	else if (req.method == "POST" || req.method == "DELETE"){
 		string file_path = req.loc.root + "/" + req.path.substr(req.loc.path.size());
 		if (!req.loc.index.empty() && req.loc.path == req.path){
 			file_path = mergeFilePaths(req.loc.root, req.loc.index);

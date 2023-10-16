@@ -1,9 +1,12 @@
 #include "request_validation.hpp"
 
+static vector<string> default_allowed_method;
 static vector<string> allowed_method;
 static vector<string> not_allowed_method;
 
 void init_allowed_method_vector(){
+	default_allowed_method.push_back("GET");
+
 	allowed_method.push_back("GET");
 	allowed_method.push_back("POST");
 	allowed_method.push_back("DELETE");
@@ -34,5 +37,5 @@ e_validation_status is_method_valid(const string& method){
 }
 
 vector<string>& get_allowed_method(){
-	return allowed_method;
+	return default_allowed_method;
 }

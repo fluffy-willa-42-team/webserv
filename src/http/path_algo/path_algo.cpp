@@ -26,12 +26,20 @@ const Server& find_server(const Config& config, Headers req_headers){
 	throw exception();
 }
 
-const Location& find_location(const Server& serv, const string& req_path){
+const Location& find_location(const Server& serv, const string& req_method, const string& req_path, u_int32_t& err_code, string& err_message){
 	for (vector<Location>::const_iterator loc = serv.locations.begin(); loc != serv.locations.end(); loc++){
 		if (req_path == loc->path || startsWith(req_path, loc->path == "/" ? "/" : loc->path + "/")){
-			DEBUG_INFO_ << "Server Location Found: " << req_path << " (" << loc->path << "}" << endl;
-			return *loc;
+			if (vec_has(loc->allowed_methods, req_method)){
+				DEBUG_INFO_ << "Server Location Found: " << req_path << " (" << loc->path << "}" << endl;
+				return *loc;
+			}
+			else {
+				err_code = 405;
+				throw exception();
+			}
 		}
 	}
+	err_code = 404;
+	err_message = "test";
 	throw exception();
 }
