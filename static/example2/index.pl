@@ -23,11 +23,21 @@ print <<HTML;
 
 			<input type="submit" value="submit">
 		</form>
-		<form action="/delete" method="delete">
+		<form id="deleteForm">
 			<label for="filename">Enter the filename to delete: </label>
-			<input type="text" name="filename">
-			<input type="submit" value="Delete">
+			<input type="text" id="filename" name="filename">
+			<button type="button" id="deleteButton">Delete</button>
 		</form>
+
+		<script>
+			document.getElementById('deleteButton').addEventListener('click', function() {
+				var xhr = new XMLHttpRequest();
+				xhr.open('DELETE', '/delete', true);
+
+				xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+				xhr.send(JSON.stringify({ filename: document.getElementById('filename').value }));
+			});
+		</script>
 	</body>
 </html>
 HTML
