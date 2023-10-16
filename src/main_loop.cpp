@@ -193,8 +193,13 @@ void start(map<int, Listener*>& listeners, bool& loop, const Config& config, con
 					}
 				}
 				DEBUG_ << "Write poll id: " << ite->id << endl;
-				if (send(poll.fd, ite->req.response.c_str(), ite->req.response.length(), 0) < 0) {
+				ssize_t length_writen = send(poll.fd, ite->req.response.c_str(), ite->req.response.length(), 0);
+				if (length_writen < 0) {
 					DEBUG_WARN_ << "Failed to write to socket" << endl;
+				}
+				if (length_writen != static_cast<ssize_t>(ite->req.response.length())) {
+					ite->req.response.erase(0, length_writen);
+					continue;
 				}
 				if (close(poll.fd) < 0) {
 					DEBUG_WARN_ << "Failed to close socket" << endl;
