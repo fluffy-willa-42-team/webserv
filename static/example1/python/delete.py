@@ -1,32 +1,42 @@
-#!/usr/bin/env python3
-import cgi
+#!/usr/bin/python3
+
+import sys
+import json
 import os
 
-# Create a CGI object
-cgi_form = cgi.FieldStorage()
+# Set the content type to JSON
+print("Content-Type: application/json")
 
-# Get the filename from the form input
-filename = cgi_form.getvalue('filename')
+# Read the JSON data from the request body
+try:
+    content_length = int(os.environ["CONTENT_LENGTH"])
+    request_body = sys.stdin.read(content_length)
+    data = json.loads(request_body)
+except (ValueError, KeyError):
+    print("Status: 400 BAD REQUEST\r\n\r")
+    print(json.dumps({"status": "error", "message": "Invalid JSON input"}))
+    exit()
 
-# Check if the filename is provided
-if not filename:
-    print("Content-type: text/html\r\n\r\n")
-    print("Please enter a filename to delete.")
-else:
-    # Define the directory where files are stored (change this to your directory)
-    upload_dir = os.environ.get('UPLOAD_DIR')
+# Check if 'filename' parameter is in the JSON data
+if 'filename' in data:
+    filename = data['filename']
+    directory = '/path/to/your/directory/'  # Change this to the directory where the file is located
 
     # Construct the full path to the file
-    full_path = os.path.join(upload_dir, filename)
+    file_path = os.path.join(directory, filename)
 
-    # Attempt to delete the file
-    try:
-        os.remove(full_path)
-        print("Content-type: text/html\r\n\r\n")
-        print(f"File '{filename}' has been deleted.")
-    except FileNotFoundError:
-        print("Content-type: text/html\r\n\r\n")
-        print(f"File '{filename}' not found.")
-    except Exception as e:
-        print("Content-type: text/html\r\n\r\n")
-        print(f"Error deleting file '{filename}': {e}")
+    # Check if the file exists and delete it
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+            print("Status: 204 SUCCESS\r\n\r")
+            print(json.dumps({"status": "success", "message": "File deleted successfully"}))
+        except Exception as e:
+            print("Status: 404 FAILED\r\n\r")
+            print(json.dumps({"status": "error", "message": f"Failed to delete the file: {str(e)}"}))
+    else:
+        print("Status: 404 FAILED\r\n\r")
+        print(json.dumps({"status": "error", "message": "File not found"}))
+else:
+    print("Status: 404 FAILED\r\n\r")
+    print(json.dumps({"status": "error", "message": "Missing 'filename' parameter"}))
